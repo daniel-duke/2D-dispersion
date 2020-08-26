@@ -1,10 +1,12 @@
 clear; close all;
 const.a = 1; % [m]
-const.N_ele = 80;
+const.N_ele = 320;
 const.N_pix = 1;
 const.N_k = 16;
 const.N_eig = 8;
 const.isUseGPU = false;
+const.isUseUltraVec = true;
+const.isUseFastT = true;
 
 %% Dispersive cell
 % const.design(:,:,1) = zeros(const.N_pix); % the first pane is E
@@ -18,6 +20,11 @@ const.design(:,:,1) = ones(const.N_pix); % the first pane is E
 const.design(:,:,2) = const.design(:,:,1); % the second pane is rho
 const.design(:,:,3) = .6*ones(const.N_pix); % the third pane is poisson's ratio
 
+%% Counting cell
+% const.design(:,:,1) = reshape(1:(const.N_pix*const.N_pix),const.N_pix,const.N_pix)./(const.N_pix*const.N_pix);
+% const.design(:,:,2) = const.design(:,:,1);
+% const.design(:,:,3) = .6*ones(const.N_pix);
+
 const.E_min = 2e9;
 const.E_max = 200e9;
 const.rho_min = 1e3;
@@ -28,7 +35,7 @@ const.t = 1;
 const.sigma_eig = 1;
 
 %% Plot the design
-plot_design(const.design);
+% plot_design(const.design);
 
 %% Solve the dispersion problem
 [wn,fr,ev,wv] = dispersion(const);
@@ -53,4 +60,4 @@ k_idx = 1;
 eig_idx = 8;
 eig_vecs = squeeze(ev(:,k_idx,:));
 wavevector = wv(:,k_idx);
-plot_mode(eig_vecs,eig_idx,wavevector,const)
+% plot_mode(eig_vecs,eig_idx,wavevector,const)

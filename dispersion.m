@@ -10,7 +10,9 @@ function [wn,fr,ev,wv] = dispersion(const)
     [K,M] = get_system_matrices(const);
     parfor k_idx = 1:(3*const.N_k - 3)
         wavevector = wavevectors(:,k_idx);
-        [Kr,Mr] = get_reduced_matrices(K,M,wavevector,const);
+        T = get_transformation_matrix(wavevector,const);
+        Kr = T'*K*T;
+        Mr = T'*M*T;
         
         if ~const.isUseGPU
             % DONT USE THE GPU WITH EIGS
