@@ -1,5 +1,5 @@
 function plot_design(design)
-    figure2();
+    figure();
     subplot(1,3,1)
     imagesc(squeeze(design(:,:,1)));
     colormap('gray');

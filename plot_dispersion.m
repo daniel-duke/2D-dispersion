@@ -1,5 +1,5 @@
 function plot_dispersion(wn,fr)
-    figure2();
+    figure();
     plot(wn',fr','k.-');
     hold on
     xline(0);
