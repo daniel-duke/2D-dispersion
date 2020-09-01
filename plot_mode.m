@@ -4,21 +4,16 @@ function plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,const)
     [X,Y] = meshgrid(original_nodal_locations,original_nodal_locations);
     [X_h,Y_h] = meshgrid(high_resolution_locations,high_resolution_locations);
     u_reduced = squeeze(ev(eig_idx,k_idx,:));
-    u_reduced = u_reduced/max(u_reduced)*(1/10)*const.a;
+%     u_reduced = u_reduced/max(u_reduced)*(1/10)*const.a;
     T = get_transformation_matrix(wv(:,k_idx),const);
-    u = T*u_reduced;
+    u = conj(T)*u_reduced;
+    u = u/max(abs(u))*(1/10)*const.a;
     U_vec = u(1:2:end);
     U_mat = reshape(U_vec,const.N_ele*const.N_pix + 1,const.N_ele*const.N_pix + 1)';
-    
-%     U_mat = U_mat(1:(end-1),1:(end-1));
-%     X = X(1:(end-1),1:(end-1));
-%     Y = Y(1:(end-1),1:(end-1));
     
     U_mat_h = interp2(X,Y,U_mat,X_h,Y_h);
     V_vec = u(2:2:end);
     V_mat = reshape(V_vec,const.N_ele*const.N_pix + 1,const.N_ele*const.N_pix + 1)';
-    
-%     V_mat = V_mat(1:(end-1),1:(end-1));
     
     V_mat_h = interp2(X,Y,V_mat,X_h,Y_h);
     
@@ -55,7 +50,7 @@ function plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,const)
     
     function plot_animation()
         p1 = plot(X,Y,'k.');
-        axis([-.1 1.1 -.1 1.1]*const.a);
+        axis([-.2 1.2 -.2 1.2]*const.a);
         daspect([1 1 1])
         hold on
         N_cycles = 3.25;
@@ -70,10 +65,10 @@ function plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,const)
     end
     
     function plot_still()
-        contour_scale = 2;
+        contour_scale = 1;
         contourf(real(X_h + contour_scale*U_mat_h),real(Y_h + contour_scale*V_mat_h),sqrt(real(U_mat_h).^2 + real(V_mat_h).^2),100,'LineColor','none');
         colorbar
-        axis([-.1 1.1 -.1 1.1]*const.a);
+        axis([-.2 1.2 -.2 1.2]*const.a);
         line([0 const.a const.a 0 0],[0 0 const.a const.a 0],'Color','r','LineStyle','--');
         daspect([1 1 1])
         xlabel('x + u')

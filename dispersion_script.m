@@ -5,11 +5,12 @@ const.N_pix = 1;
 const.N_k = 13;
 const.N_eig = 8;
 const.isUseGPU = false;
-const.isUseImprovement = false;
+const.isUseImprovement = true;
 const.isUseParallel = false;
 
-% const.wavevectors = create_wavevector_array(const.N_k,const.a);
-const.wavevectors = [1.309; 0];
+const.wavevectors = create_wavevector_array(const.N_k,const.a);
+% const.wavevectors = [0, 1.309, pi/2, pi/const.a;
+%                      0, 0,     0,    0        ];
 
 %% Dispersive cell - Orthotropic
 % const.design(:,:,1) = zeros(const.N_pix); % the first pane is E
@@ -70,8 +71,8 @@ hold off
 plot_dispersion(wn,fr);
 
 %% Plot the modes
-k_idx = 1;
+k_idx = 2;
 eig_idx = 5;
 wavevector = wv(:,k_idx);
-% plot_mode_ui(wv,fr,ev,const);
-plot_mode(wv,fr,ev,eig_idx,k_idx,'both',const)
+plot_mode_ui(wv,fr,ev,const);
+% plot_mode(wv,fr,ev,eig_idx,k_idx,'both',const)
