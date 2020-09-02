@@ -8,7 +8,3 @@ LOCAL/
 *.lock
 
 dispersion_script_explore.m
-
-get_design_original_setting.m
-
-upix2mat.m
