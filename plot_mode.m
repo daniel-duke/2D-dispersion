@@ -1,8 +1,8 @@
 function plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,const)
     original_nodal_locations = linspace(0,const.a,const.N_ele*const.N_pix + 1); %const.a*(0:(const.N_ele*const.N_pix))./(const.N_ele*const.N_pix);
     high_resolution_locations = linspace(0,const.a,100);
-    [X,Y] = meshgrid(original_nodal_locations,original_nodal_locations);
-    [X_h,Y_h] = meshgrid(high_resolution_locations,high_resolution_locations);
+    [X,Y] = meshgrid(original_nodal_locations,flip(original_nodal_locations));
+    [X_h,Y_h] = meshgrid(high_resolution_locations,flip(high_resolution_locations));
     u_reduced = squeeze(ev(eig_idx,k_idx,:));
 %     u_reduced = u_reduced/max(u_reduced)*(1/10)*const.a;
     T = get_transformation_matrix(wv(:,k_idx),const);

@@ -1,13 +1,6 @@
 function T = get_transformation_matrix(wavevector,const)
     
     N_node = (const.N_ele*const.N_pix) + 1;
-    N_node_reduced = N_node - 1;
-    N_dof = 2*(N_node^2);
-    N_dof_reduced = 2*(N_node_reduced^2);
-            
-    row_idxs = zeros(N_dof,1);
-    col_idxs = zeros(N_dof,1);
-    value_T = zeros(N_dof,1);
     
     r = [const.a; 0];
     xphase = exp(1i*dot(wavevector,r));
