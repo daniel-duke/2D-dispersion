@@ -45,7 +45,7 @@ const.t = 1;
 const.sigma_eig = 1;
 
 %% Plot the design
-plot_design(const.design);
+% plot_design(const.design);
 
 %% Solve the dispersion problem
 [wv,fr,ev] = dispersion(const,const.wavevectors);
@@ -55,7 +55,7 @@ wn = linspace(0,3,size(const.wavevectors,2) + 1);
 wn = repmat(wn,const.N_eig,1);
 
 %% Plot the discretized Irreducible Brillouin Zone
-figure2();
+figure();
 hold on
 % axis([-pi/const.a pi/const.a -pi/const.a pi/const.a])
 scatter(wv(1,:),wv(2,:),[],[0 0 0],'MarkerFaceColor',[0 0 0],'MarkerFaceAlpha',.5)
