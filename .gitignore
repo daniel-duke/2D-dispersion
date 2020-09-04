@@ -8,3 +8,5 @@ LOCAL/
 *.lock
 
 dispersion_script_explore.m
+
+OUTPUT/
