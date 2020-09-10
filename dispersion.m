@@ -2,14 +2,18 @@ function [wv,fr,ev] = dispersion(const,wavevectors)
     
     fr = zeros(const.N_eig,size(wavevectors,2));
     ev = zeros(const.N_eig,size(wavevectors,2),((const.N_ele*const.N_pix)^2)*2);
-    [K,M] = get_system_matrices(const);
+    if const.isUseImprovement
+        [K,M] = get_system_matrices_VEC(const);
+    else
+        [K,M] = get_system_matrices(const);
+    end
     if const.isUseParallel
         parforArg = Inf;
     else
         parforArg = 0;
     end
-    for k_idx = 1:size(wavevectors,2)
-%     parfor (k_idx = 1:size(wavevectors,2), parforArg)
+%     for k_idx = 1:size(wavevectors,2) % USE THIS TO DEBUG
+    parfor (k_idx = 1:size(wavevectors,2), parforArg)
         wavevector = wavevectors(:,k_idx);
         T = get_transformation_matrix(wavevector,const);
         Kr = T'*K*T;

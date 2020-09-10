@@ -1,11 +1,11 @@
 clear; close all; %delete(findall(0));
 const.a = 1; % [m]
-const.N_ele = 4;
+const.N_ele = 50;
 const.N_pix = 4;
 const.N_k = 30;
 const.N_eig = 8;
 const.isUseGPU = false;
-const.isUseImprovement = true;
+const.isUseImprovement = false;
 const.isUseParallel = true;
 
 const.wavevectors = create_wavevector_array(const.N_k,const.a);
