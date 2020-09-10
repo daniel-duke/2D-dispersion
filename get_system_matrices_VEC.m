@@ -1,4 +1,4 @@
-function [K,M] = get_system_matrices(const)
+function [K,M] = get_system_matrices_VEC(const)
 
 N_ele_x = const.N_pix*const.N_ele; % Total number of elements along x direction
 N_ele_y = const.N_pix*const.N_ele; % Total number of elements along y direction
@@ -18,8 +18,8 @@ edofVec = reshape(2*nodenrs(1:end-1,1:end-1)-1,N_ele_x*N_ele_y,1);
 edofMat = repmat(edofVec,1,8)+repmat([2*(N_ele_y+1)+[0 1 2 3] 2 3 0 1],N_ele_x*N_ele_y,1);
 row_idxs = reshape(kron(edofMat,ones(8,1))',64*N_ele_x*N_ele_y,1);
 col_idxs = reshape(kron(edofMat,ones(1,8))',64*N_ele_x*N_ele_y,1);
-AllLEle = get_element_stiffness(E(:),nu(:),t)';
-AllLMat = get_element_mass(rho(:),t,const)';
+AllLEle = get_element_stiffness_VEC(E(:),nu(:),t)';
+AllLMat = get_element_mass_VEC(rho(:),t,const)';
 value_K = AllLEle(:);
 value_M = AllLMat(:);
 
