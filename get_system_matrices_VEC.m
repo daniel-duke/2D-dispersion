@@ -3,10 +3,8 @@ function [K,M] = get_system_matrices_VEC(const)
 N_ele_x = const.N_pix*const.N_ele; % Total number of elements along x direction
 N_ele_y = const.N_pix*const.N_ele; % Total number of elements along y direction
 
-const.design = permute(const.design,[2 1 3]);
 const.design = repelem(const.design,const.N_ele,const.N_ele,1);  
 
-% [idx_x,idx_y] = meshgrid(1:N_ele_x,1:N_ele_y);
 E = (const.E_min + const.design(:,:,1).*(const.E_max - const.E_min))';
 nu = (const.poisson_min + const.design(:,:,3).*(const.poisson_max - const.poisson_min))';
 t = const.t';
