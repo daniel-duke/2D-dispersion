@@ -7,10 +7,10 @@ const.design = permute(const.design,[2 1 3]);
 const.design = repelem(const.design,const.N_ele,const.N_ele,1);  
 
 % [idx_x,idx_y] = meshgrid(1:N_ele_x,1:N_ele_y);
-E = const.E_min + const.design(:,:,1).*(const.E_max - const.E_min);
-nu = const.poisson_min + const.design(:,:,3).*(const.poisson_max - const.poisson_min);
-t = const.t;
-rho = const.rho_min + const.design(:,:,2).*(const.rho_max - const.rho_min);
+E = (const.E_min + const.design(:,:,1).*(const.E_max - const.E_min))';
+nu = (const.poisson_min + const.design(:,:,3).*(const.poisson_max - const.poisson_min))';
+t = const.t';
+rho = (const.rho_min + const.design(:,:,2).*(const.rho_max - const.rho_min))';
 
 nodenrs = reshape(1:(1+N_ele_x)*(1+N_ele_y),1+N_ele_y,1+N_ele_x);
 edofVec = reshape(2*nodenrs(1:end-1,1:end-1)-1,N_ele_x*N_ele_y,1);
