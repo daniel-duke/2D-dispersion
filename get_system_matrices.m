@@ -3,9 +3,7 @@ function [K,M] = get_system_matrices(const)
 N_ele_x = const.N_pix*const.N_ele; % Total number of elements along x direction
 N_ele_y = const.N_pix*const.N_ele; % Total number of elements along y direction
 
-if size(const.design,1)==1
-    const.design = repmat(const.design,N_ele_x,N_ele_y);
-end   
+const.design = repelem(const.design,const.N_ele,const.N_ele,1);  
 
 % [idx_x,idx_y] = meshgrid(1:N_ele_x,1:N_ele_y);
 E = const.E_min + const.design(:,:,1).*(const.E_max - const.E_min);
