@@ -1,8 +1,10 @@
 function plot_dispersion(wn,fr)
-    figure2();
-    plot(wn',fr','k.-');
+    plot(wn',real(fr'),'k.-');
+    ax = gca();
+    ax.YMinorGrid = 'on';
+    ax.XMinorGrid = 'on';
     hold on
-    grid minor
+%     grid minor
     xline(0);
     xline(1);
     xline(2);

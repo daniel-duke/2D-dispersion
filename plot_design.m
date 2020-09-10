@@ -1,20 +1,18 @@
 function plot_design(design)
     figure2();
-    subplot(1,3,1)
-    imagesc(squeeze(design(:,:,1)));
-    colormap('gray');
-    daspect([1 1 1]);
-    title('Modulus');
+    N_prop = 3;
+    titles = {'Modulus','Density','Poisson'};
     
-    subplot(1,3,2)
-    imagesc(squeeze(design(:,:,2)));
-    colormap('gray');
-    daspect([1 1 1]);
-    title('Density')
+    for prop_idx = 1:N_prop
+        subplot(1,3,prop_idx)
+        imagesc(squeeze(design(:,:,prop_idx)));
+        colormap('gray');
+        daspect([1 1 1]);
+        title(titles{prop_idx});
+    end
     
-    subplot(1,3,3)
-    imagesc(squeeze(design(:,:,3)));
-    colormap('gray');
-    daspect([1 1 1]);
-    title('Poisson')
+    c = colorbar('southoutside');
+    c.Position = [.2 .2 .6 .02];
+    caxis([0 1]);
+    
 end

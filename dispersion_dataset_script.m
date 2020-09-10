@@ -1,12 +1,12 @@
 clear; close all;
 
 isSaveOutput = true;
-N_struct = 400;
+N_struct = 500;
 
 const.a = 1; % [m]
-const.N_ele = 8;
+const.N_ele = 3;
 const.N_pix = 4;
-const.N_k = 100;
+const.N_k = 30;
 const.N_eig = 8;
 const.isUseGPU = false;
 const.isUseImprovement = true;
@@ -22,7 +22,9 @@ const.t = 1;
 const.sigma_eig = 1;
 
 % const.wavevectors = create_wavevector_array(const.N_k,const.a);
-const.wavevectors = linspaceNDim([0;0],[pi/const.a;0],const.N_k);
+const.wavevectors = create_IBZ_wavevectors(const.N_k,const.a);
+        
+% const.wavevectors = linspaceNDim([0;0],[pi/const.a;0],const.N_k);
 
 const.design = ones(const.N_pix,const.N_pix,3);
 
@@ -37,6 +39,8 @@ if isSaveOutput
     mkdir(output_folder);
     copyfile([mfilename('fullpath') '.m'],[output_folder '/' mfilename '.m']);
 end
+
+plot_wavevectors(const.wavevectors)
 
 %% Generate dataset
 pfwb = parfor_wait(N_struct,'Waitbar', true);
@@ -67,12 +71,21 @@ for eig_idx = 1:const.N_eig
     line(squeeze(WAVEVECTOR_DATA(:,1,:))',squeeze(EIGENVALUE_DATA(:,eig_idx,:))','CreateFcn',@(l,e) set(l,'Color',[0 0 0 .1]),'Color',[0 0 0 .1])
 end
 
-% struct_idx = 4;
-% figure2();
-% hold on
-% for eig_idx = 1:const.N_eig
-% line(squeeze(WAVEVECTOR_DATA(struct_idx,1,:))',squeeze(EIGENVALUE_DATA(struct_idx,eig_idx,:))','CreateFcn',@(l,e) set(l,'Color',[0 0 0 .1]),'Color',[0 0 0 .1])
-% end
+Z = nan(const.N_k);
+Z(triu(true(const.N_k))) = squeeze(EIGENVALUE_DATA(1,1,:));
+
+X = nan(const.N_k);
+X(triu(true(const.N_k))) = squeeze(WAVEVECTOR_DATA(1,1,:));
+
+Y = nan(const.N_k);
+Y(triu(true(const.N_k))) = squeeze(WAVEVECTOR_DATA(1,2,:));
+
+figure2()
+surf(X,Y,Z)
+xlabel('k_x')
+ylabel('k_y')
+zlabel('\omega')
+daspect([pi/const.a pi/const.a max(max(Z))])
 
 %% Save the results
 if isSaveOutput

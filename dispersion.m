@@ -8,7 +8,8 @@ function [wv,fr,ev] = dispersion(const,wavevectors)
     else
         parforArg = 0;
     end
-    parfor (k_idx = 1:size(wavevectors,2), parforArg)
+    for k_idx = 1:size(wavevectors,2)
+%     parfor (k_idx = 1:size(wavevectors,2), parforArg)
         wavevector = wavevectors(:,k_idx);
         T = get_transformation_matrix(wavevector,const);
         Kr = T'*K*T;
@@ -19,7 +20,7 @@ function [wv,fr,ev] = dispersion(const,wavevectors)
             [eig_vecs,eig_vals] = eigs(Kr,Mr,const.N_eig,const.sigma_eig);
             [eig_vals,idxs] = sort(diag(eig_vals));
             eig_vecs = eig_vecs(:,idxs);
-            ev(:,k_idx,:) = eig_vecs';
+            ev(:,k_idx,:) = (eig_vecs./(diag(eig_vecs'*Mr*eig_vecs)'))';
             fr(:,k_idx) = sqrt(real(eig_vals));
             fr(:,k_idx) = fr(:,k_idx)/(2*pi);
         elseif const.isUseGPU

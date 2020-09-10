@@ -1,4 +1,4 @@
-function plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,const)
+function plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,scale,const)
     original_nodal_locations = linspace(0,const.a,const.N_ele*const.N_pix + 1); %const.a*(0:(const.N_ele*const.N_pix))./(const.N_ele*const.N_pix);
     high_resolution_locations = linspace(0,const.a,100);
     [X,Y] = meshgrid(original_nodal_locations,flip(original_nodal_locations));
@@ -54,19 +54,18 @@ function plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,const)
         daspect([1 1 1])
         hold on
         N_cycles = 3.25;
-        animation_scale = 1;
         for t = 1:100
-            c = animation_scale*sin(2*pi*t*N_cycles/100);
+            c = scale*sin(2*pi*t*N_cycles/100);
             p2 = plot(real(X_plot + c*U_plot), real(Y_plot + c*V_plot),'r.');
             pause(.1)
             delete(p2);
         end
-        p2 = plot(real(X_plot + U_plot), real(Y_plot + V_plot),'r.');
+        p2 = plot(real(X_plot + scale*U_plot), real(Y_plot + scale*V_plot),'r.');
     end
     
     function plot_still()
         contour_scale = 1;
-        contourf(real(X_h + contour_scale*U_mat_h),real(Y_h + contour_scale*V_mat_h),sqrt(real(U_mat_h).^2 + real(V_mat_h).^2),100,'LineColor','none');
+        contourf(real(X_h + scale*U_mat_h),real(Y_h + scale*V_mat_h),sqrt(real(U_mat_h).^2 + real(V_mat_h).^2),100,'LineColor','none');
         colorbar
         axis([-.2 1.2 -.2 1.2]*const.a);
         line([0 const.a const.a 0 0],[0 0 const.a const.a 0],'Color','r','LineStyle','--');
