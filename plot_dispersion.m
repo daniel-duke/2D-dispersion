@@ -1,12 +1,21 @@
-function plot_dispersion(wn,fr)
-    plot(wn',real(fr'),'k.-');
-    ax = gca();
+function [fig_handle,ax_handle] = plot_dispersion(wn,fr,ax)    
+    if ~exist('ax','var')
+        fig = figure2();
+        ax = axes(fig);
+    end
+    
+    plot(ax,wn',real(fr'),'k.-');
     ax.YMinorGrid = 'on';
     ax.XMinorGrid = 'on';
-    hold on
-%     grid minor
-    xline(0);
-    xline(1);
-    xline(2);
-    xline(3);
+    hold(ax,'on')
+    
+    xline(ax,0);
+    xline(ax,1);
+    xline(ax,2);
+    xline(ax,3);
+    
+    if nargout > 0
+        fig_handle = ax.Parent;
+        ax_handle = ax;
+    end
 end

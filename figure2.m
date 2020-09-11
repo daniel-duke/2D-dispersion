@@ -1,4 +1,3 @@
-% [EDITED, 2018-06-05, typos fixed]
 function FigHandle = figure2(varargin)
 % Catch creation of figure with disabled visibility:
 indexVisible = find(strncmpi(varargin(1:2:end), 'Vis', 3));

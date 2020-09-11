@@ -24,7 +24,7 @@ function [wv,fr,ev] = dispersion(const,wavevectors)
             [eig_vecs,eig_vals] = eigs(Kr,Mr,const.N_eig,const.sigma_eig);
             [eig_vals,idxs] = sort(diag(eig_vals));
             eig_vecs = eig_vecs(:,idxs);
-            ev(:,k_idx,:) = (eig_vecs./(diag(eig_vecs'*Mr*eig_vecs)'))';
+            ev(:,k_idx,:) = (eig_vecs./(diag(eig_vecs'*Mr*eig_vecs)'))'; % normalize by mass matrix
             fr(:,k_idx) = sqrt(real(eig_vals));
             fr(:,k_idx) = fr(:,k_idx)/(2*pi);
         elseif const.isUseGPU

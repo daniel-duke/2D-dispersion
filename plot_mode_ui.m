@@ -4,10 +4,10 @@ function plot_mode_ui(wv,fr,ev,const)
     scale = .1;
     fig = uifigure('handlevisibility','on');
     ax = uiaxes('Parent', fig, 'Position', [10 10 400 400],'handlevisibility','on');
-    axes(ax);
-    figure(fig);
+%     axes(ax);
+%     figure(fig);
     
-    plot_mode(wv,fr,ev,eig_idx,k_idx,'stillui',scale,const);
+    plot_mode(wv,fr,ev,eig_idx,k_idx,'stillui',scale,const,ax);
     
     dd_wv = uidropdown(fig,...
         'Position',[430 150 100 22],...
@@ -37,27 +37,27 @@ function plot_mode_ui(wv,fr,ev,const)
     
     function update_plot_wv(dd_wv)
         k_idx = dd_wv.Value;
-        axes(ax);
-        figure(fig);
-        plot_mode(wv,fr,ev,eig_idx,k_idx,'stillui',scale,const);
+%         axes(ax);
+%         figure(fig);
+        plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax);
     end
     
     function update_plot_ev(dd_ev)
         eig_idx = dd_ev.Value;
-        axes(ax);
-        figure(fig);
-        plot_mode(wv,fr,ev,eig_idx,k_idx,'stillui',scale,const);
+%         axes(ax);
+%         figure(fig);
+        plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax);
     end
     
     function update_scale(sld)
         scale = sld.Value;
-        axes(ax);
-        figure(fig);
-        plot_mode(wv,fr,ev,eig_idx,k_idx,'stillui',scale,const);
+%         axes(ax);
+%         figure(fig);
+        plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax);
     end
     
     function play_animation()
-        plot_mode(wv,fr,ev,eig_idx,k_idx,'animation',scale,const);
+        plot_mode(wv,fr,ev,eig_idx,k_idx,'animation',scale,const,ax);
     end
     
     function C = array2cell(A)

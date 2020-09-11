@@ -1,8 +1,8 @@
 clear; close all; %delete(findall(0));
 const.a = 1; % [m]
-const.N_ele = 50;
+const.N_ele = 10;
 const.N_pix = 4;
-const.N_k = 30;
+const.N_k = 20;
 const.N_eig = 8;
 const.isUseGPU = false;
 const.isUseImprovement = true;
@@ -72,6 +72,6 @@ plot_dispersion(wn,fr);
 % k_idx = 2;
 % eig_idx = 5;
 % wavevector = wv(:,k_idx);
-% plot_mode_ui(wv,fr,ev,const);
+plot_mode_ui(wv,fr,ev,const);
 % plot_mode(wv,fr,ev,eig_idx,k_idx,'both',const)
 
