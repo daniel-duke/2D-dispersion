@@ -14,8 +14,8 @@ function [fig_handle,ax_handle] = plot_dispersion(wn,fr,ax)
     xline(ax,2);
     xline(ax,3);
     
-    xlabel('wavevector parameter')
-    ylabel('\omega')
+    xlabel(ax,'wavevector parameter')
+    ylabel(ax,'\omega')
     
     if nargout > 0
         fig_handle = ax.Parent;

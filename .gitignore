@@ -10,3 +10,5 @@ LOCAL/
 dispersion_script_explore.m
 
 OUTPUT/
+
+get_design_original_setting.m

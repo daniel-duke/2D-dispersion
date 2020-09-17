@@ -8,7 +8,7 @@ const.isUseGPU = false;
 const.isUseImprovement = true;
 const.isUseParallel = true;
 
-const.wavevectors = create_wavevector_array(const.N_k,const.a);
+const.wavevectors = create_IBZ_boundary_wavevectors(const.N_k,const.a);
 % const.wavevectors = [0, 1.309, pi/2, pi/const.a;
 %                      0, 0,     0,    0        ];
 
