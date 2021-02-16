@@ -1,4 +1,4 @@
-function [wv,fr,ev,cg] = dispersion(const,wavevectors)
+function [wv,fr,ev] = dispersion(const,wavevectors)
     
     fr = zeros(size(wavevectors,2),const.N_eig);
     ev = zeros(((const.N_ele*const.N_pix)^2)*2,size(wavevectors,2),const.N_eig);

@@ -11,13 +11,13 @@ function [K,M] = get_system_matrices(const)
     value_K = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
     for ele_idx_x = 1:N_ele_x
         for ele_idx_y = 1:N_ele_y
-            seg_idx_x = ceil(ele_idx_x./const.N_ele);
-            seg_idx_y = ceil(ele_idx_y./const.N_ele);
+            pix_idx_x = ceil(ele_idx_x./const.N_ele);
+            pix_idx_y = ceil(ele_idx_y./const.N_ele);
             
-            E = const.E_min + const.design(seg_idx_y,seg_idx_x,1)*(const.E_max - const.E_min);
-            nu = const.poisson_min + const.design(seg_idx_y,seg_idx_x,3)*(const.poisson_max - const.poisson_min);
+            E = const.E_min + const.design(pix_idx_y,pix_idx_x,1)*(const.E_max - const.E_min);
+            nu = const.poisson_min + const.design(pix_idx_y,pix_idx_x,3)*(const.poisson_max - const.poisson_min);
             t = const.t;
-            rho = const.rho_min + const.design(seg_idx_y,seg_idx_x,2)*(const.rho_max - const.rho_min);
+            rho = const.rho_min + const.design(pix_idx_y,pix_idx_x,2)*(const.rho_max - const.rho_min);
             
             k_ele = get_element_stiffness(E,nu,t,const);
             m_ele = get_element_mass(rho,t,const);
