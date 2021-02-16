@@ -1,7 +1,25 @@
 clear; close all; %delete(findall(0));
+
+isSaveOutput = true;
+struct_tag = '16';
+
+%% Save output setup ... 
+script_start_time = replace(char(datetime),':','-');
+output_folder = ['OUTPUT/output ' script_start_time];
+if isSaveOutput
+    mkdir(output_folder);
+    copyfile([mfilename('fullpath') '.m'],[output_folder '/' mfilename '.m']);
+    plot_folder = create_new_folder('plots',output_folder);
+    create_new_folder('pdf',plot_folder)
+    create_new_folder('fig',plot_folder)
+    create_new_folder('svg',plot_folder)
+    create_new_folder('eps',plot_folder)
+end
+
+%%
 const.a = 1; % [m]
-const.N_ele = 10;
-const.N_pix = 4;
+const.N_ele = 4;
+const.N_pix = 5;
 const.N_k = 20;
 const.N_eig = 8;
 const.isUseGPU = false;
@@ -9,38 +27,9 @@ const.isUseImprovement = true;
 const.isUseParallel = true;
 
 const.wavevectors = create_IBZ_boundary_wavevectors(const.N_k,const.a);
-% const.wavevectors = [0, 1.309, pi/2, pi/const.a;
-%                      0, 0,     0,    0        ];
-
-%% Dispersive cell - Tetragonal
-% const.design(:,:,1) = zeros(const.N_pix); % the first pane is E
-% idxs = (const.N_pix/4 + 1):(3*const.N_pix/4);
-% const.design(idxs,idxs,1) = 1;
-% const.design(:,:,2) = const.design(:,:,1); % the second pane is rho
-% const.design(:,:,3) = .6*ones(const.N_pix); % the third pane is poisson's ratio
-
-%% Dispersive cell - Orthotropic
-% const.design(:,:,1) = zeros(const.N_pix); % the first pane is E
-% idxs = (const.N_pix/4 + 1):(3*const.N_pix/4);
-% const.design(:,idxs,1) = 1;
-% const.design(:,:,2) = const.design(:,:,1); % the second pane is rho
-% const.design(:,:,3) = .6*ones(const.N_pix); % the third pane is poisson's ratio
-
-%% Homogeneous cell
-% const.design(:,:,1) = ones(const.N_pix); % the first pane is E
-% const.design(:,:,2) = const.design(:,:,1); % the second pane is rho
-% const.design(:,:,3) = .6*ones(const.N_pix); % the third pane is poisson's ratio
-
-%% Counting cell
-% const.design(:,:,1) = reshape(1:(const.N_pix*const.N_pix),const.N_pix,const.N_pix)./(const.N_pix*const.N_pix);
-% const.design(:,:,2) = const.design(:,:,1);
-% const.design(:,:,3) = .6*ones(const.N_pix);
 
 %% Random cell
-rng(1)
-const.design(:,:,1) = round(rand(const.N_pix));
-const.design(:,:,2) = const.design(:,:,1);
-const.design(:,:,3) = .6*ones(const.N_pix);
+const.design = get_design(struct_tag,const.N_pix);
 
 const.E_min = 2e9;
 const.E_max = 200e9;
@@ -52,7 +41,11 @@ const.t = 1;
 const.sigma_eig = 1;
 
 %% Plot the design
-plot_design(const.design);
+fig = plot_design(const.design);
+if isSaveOutput
+    fix_pdf_border(fig)
+    save_in_all_formats(fig,'design',plot_folder,false)
+end
 
 %% Solve the dispersion problem
 [wv,fr,ev] = dispersion(const,const.wavevectors);
@@ -62,11 +55,18 @@ wn = linspace(0,3,size(const.wavevectors,2) + 1);
 wn = repmat(wn,const.N_eig,1);
 
 %% Plot the discretized Irreducible Brillouin Zone
-plot_wavevectors(wv);
+fig = plot_wavevectors(wv);
+if isSaveOutput
+    fig = fix_pdf_border(fig);
+    save_in_all_formats(fig,'wavevectors',plot_folder,false)
+end
 
 %% Plot the dispersion relation
-figure2();
-plot_dispersion(wn,fr);
+fig = plot_dispersion(wn,fr);
+if isSaveOutput
+    fig = fix_pdf_border(fig);
+    save_in_all_formats(fig,'dispersion',plot_folder,false)
+end
 
 %% Plot the modes
 % k_idx = 2;

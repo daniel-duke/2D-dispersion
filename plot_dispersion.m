@@ -1,4 +1,4 @@
-function [fig_handle,ax_handle] = plot_dispersion(wn,fr,ax)    
+function [fig_handle,ax_handle] = plot_dispersion(wn,fr,ax)
     if ~exist('ax','var')
         fig = figure2();
         ax = axes(fig);
