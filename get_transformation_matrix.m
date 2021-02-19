@@ -1,15 +1,24 @@
-function T = get_transformation_matrix(wavevector,const)
+function [T,dTdwavevector] = get_transformation_matrix(wavevector,const)
     
     N_node = (const.N_ele*const.N_pix) + 1;
     
     r = [const.a; 0];
     xphase = exp(1i*dot(wavevector,r));
+    if nargout == 2
+        dxphasedwavevector = 1i*r*xphase;
+    end
     
     r = [0; -const.a];
     yphase = exp(1i*dot(wavevector,r));
+    if nargout == 2
+        dyphasedwavevector = 1i*r*yphase;
+    end
     
     r = [const.a; -const.a];
     cornerphase = exp(1i*dot(wavevector,r));
+    if nargout == 2
+        dcornerphasedwavevector = 1i*r*cornerphase;
+    end
     
     node_idx_x = [reshape(meshgrid(1:(N_node-1),1:(N_node - 1)),[],1)' N_node*ones(1,N_node - 1) 1:(N_node-1) N_node];
     node_idx_y = [reshape(meshgrid(1:(N_node-1),1:(N_node - 1))',[],1)' 1:(N_node-1) N_node*ones(1,N_node - 1) N_node];
@@ -31,5 +40,11 @@ function T = get_transformation_matrix(wavevector,const)
     
     T = sparse(row_idxs,col_idxs,value_T);
     
+    if nargout == 2
+       value_dTdwavevector = [repmat([zeros((N_node-1)^2,1); dxphasedwavevector(1)*ones(N_node - 1,1); dyphasedwavevector(1)*ones(N_node - 1,1); dcornerphasedwavevector(1)],2,1);...
+                              repmat([zeros((N_node-1)^2,1); dxphasedwavevector(2)*ones(N_node - 1,1); dyphasedwavevector(2)*ones(N_node - 1,1); dcornerphasedwavevector(2)],2,1)];
+       wv_component_idxs = [1*ones(size(row_idxs)); 2*ones(size(row_idxs))];
+       dTdwavevector = ndSparse.build([ [row_idxs; row_idxs] [col_idxs; col_idxs] wv_component_idxs ], value_dTdwavevector);
+    end
 end
 

@@ -16,10 +16,15 @@ function [wv,fr,ev,cg] = dispersion2(const,wavevectors)
     else
         parforArg = 0;
     end
-    %     for k_idx = 1:size(wavevectors,2) % USE THIS TO DEBUG
+%     for k_idx = 1:size(wavevectors,2) % USE THIS TO DEBUG
     parfor (k_idx = 1:size(wavevectors,1), parforArg)
         wavevector = wavevectors(k_idx,:);
-        T = get_transformation_matrix(wavevector,const);
+        if const.isComputeGroupVelocity
+            [T,dTdwavevector] = get_transformation_matrix(wavevector,const);
+        else
+            T = get_transformation_matrix(wavevector,const);
+        end
+        
         Kr = T'*K*T;
         Mr = T'*M*T;
         
