@@ -22,5 +22,4 @@ value_M = AllLMat(:);
 
 K = sparse(row_idxs,col_idxs,value_K);
 M = sparse(row_idxs,col_idxs,value_M);
-%     K = K+K'; M = M+M';
 end

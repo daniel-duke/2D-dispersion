@@ -1,6 +1,6 @@
 clear; close all; %delete(findall(0));
 
-isSaveOutput = true;
+isSaveOutput = false;
 struct_tag = '16';
 
 %% Save output setup ... 
@@ -23,8 +23,8 @@ const.N_pix = 5;
 const.N_k = 20;
 const.N_eig = 8;
 const.isUseGPU = false;
-const.isUseImprovement = true;
-const.isUseParallel = true;
+const.isUseImprovement = false;
+const.isUseParallel = false;
 
 const.wavevectors = create_IBZ_boundary_wavevectors(const.N_k,const.a);
 

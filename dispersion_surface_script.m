@@ -67,7 +67,7 @@ ax = axes(fig);
 hold(ax,'on');
 view(ax,3);
 for eig_idx_to_plot = 4
-    plot_dispersion_surface(wv,squeeze(fr(eig_idx_to_plot,:)),IBZ_shape,ax);
+    plot_dispersion_surface(wv,squeeze(fr(:,eig_idx_to_plot)),IBZ_shape,const.N_k,const.N_k,ax);
 end
 if isSaveOutput
     fix_pdf_border(fig)

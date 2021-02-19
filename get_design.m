@@ -1,6 +1,6 @@
 function design = get_design(design_name,N_pix)
     [struct_rng_seed,num_status] = str2num(num2str(design_name));
-    if num_status
+    if num_status % if design_name is a number, then I assume I want a random design given by that seed
         rng(struct_rng_seed,'twister')        
         design(:,:,1) = round(rand(N_pix));
         design(:,:,2) = design(:,:,1);
@@ -13,7 +13,7 @@ function design = get_design(design_name,N_pix)
                 idxs = (N_pix/4 + 1):(3*N_pix/4);
                 design(idxs,idxs,1) = 1;
                 design(:,:,2) = design(:,:,1); % the second pane is rho
-                design(:,:,3) = .6*ones(N_pix); % the third pane is poisson's ratio
+                design(:,:,3) = .3*ones(N_pix); % the third pane is poisson's ratio
             case 'dispersive-orthotropic'
                 % Dispersive cell - Orthotropic
                 design(:,:,1) = zeros(N_pix); % the first pane is E
