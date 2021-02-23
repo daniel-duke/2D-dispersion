@@ -1,45 +1,114 @@
-function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,IBZ_shape,N_k_x,N_k_y,ax)
+function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
+    % Syntax:
+    % plot_dispersion_surface(wv,fr,[],opts,ax)
+    % plot_dispersion_surface(wv,[],cg,opts,ax)
+    % plot_dispersion_surface(wv,[],cg,[],ax)
+    % plot_dispersion_surface(wv,fr,[],[],ax)
     
-    if ~exist('ax','var')
-        fig = figure2();
-        ax = axes(fig);
-    end
-    
-    if ~exist('N_k_x','var')
-        [~,N_k_size] = size(wv);
-        if strcmp(IBZ_shape,'triangle')
-            N_k = -1/2 + 1/2*sqrt(1 + 8*N_k_size); % From the quadratic formula ... %tri
-        elseif strcmp(IBZ_shape,'rectangle')
-            N_k = sqrt(N_k_size); % rect
+    if ~exist('opts','var') || isempty(opts) || opts.isGetDefaultOpts
+        opts.IBZ_shape = 'rectangle';
+        [opts.N_k_x, opts.N_k_y] = set_N_ks(wv,opts.IBZ_shape);
+        opts.Frequency.isPlot = ~isempty(fr);
+        opts.GroupVelocityX.isPlot = ~isempty(cg);
+        opts.GroupVelocityY.isPlot = ~isempty(cg);
+        opts.GroupVelocityX.isPlotNumerical = ~isempty(fr);
+        opts.GroupVelocityY.isPlotNumerical = ~isempty(fr);
+        if isfield(opts,'isGetDefaultOpts') && opts.isGetDefaultOpts
+            opts.isGetDefaultsOpts = false;
+            fig_handle = opts; % This is just to return the default opts structure for the given input. It's clearly not really a figure handle.
+            return
         end
-        N_k_x = N_k;
-        N_k_y = N_k;        
     end
+    
+    N_k_y = opts.N_k_y;
+    N_k_x = opts.N_k_x;
     
     Z = nan(N_k_y,N_k_x);
     X = nan(N_k_y,N_k_x);
     Y = nan(N_k_y,N_k_x);
     
-    if strcmp(IBZ_shape,'triangle')
+    if strcmp(opts.IBZ_shape,'triangle')
+        % This section is outdated. Not taking the time to update it now.
         Z(triu(true(N_k))) = squeeze(fr); % tri
         X(triu(true(N_k))) = squeeze(wv(1,:)); % tri
         Y(triu(true(N_k))) = squeeze(wv(2,:)); %tri
-    elseif strcmp(IBZ_shape,'rectangle')
-        Z = reshape(squeeze(fr),N_k_y,N_k_x); % rect
+        % end outdated section
+    elseif strcmp(opts.IBZ_shape,'rectangle')
         X = reshape(squeeze(wv(:,1)),N_k_y,N_k_x); % rect
         Y = reshape(squeeze(wv(:,2)),N_k_y,N_k_x); % rect
+        if opts.Frequency.isPlot || opts.GroupVelocityX.isPlotNumerical || opts.GroupVelocityY.isPlotNumerical
+            Z = reshape(fr,N_k_y,N_k_x); % rect
+        end
     end
-
     
-    surf(ax,X,Y,Z)
-    xlabel(ax,'\gamma_x')
-    ylabel(ax,'\gamma_y')
-    zlabel(ax,'\omega')
-    daspect(ax,[pi pi max(max(Z))])
+    if ~exist('ax','var')
+        fig = figure2();
+        %         ax = axes(fig);
+        tiledlayout(fig,'flow')
+    end
+    
+    if opts.Frequency.isPlot
+        ax = nexttile;
+        surf(ax,X,Y,Z)
+        xlabel(ax,'\gamma_x')
+        ylabel(ax,'\gamma_y')
+        zlabel(ax,'\omega')
+        daspect(ax,[pi pi max(max(Z))])
+    end
+    
+    if opts.GroupVelocityX.isPlotNumerical
+        ax = nexttile;
+        [Z_x_num,~] = gradient(2*pi*Z,X(1,2)-X(1,1));
+        surf(ax,X,Y,Z_x_num)
+        xlabel(ax,'\gamma_x')
+        ylabel(ax,'\gamma_y')
+        zlabel(ax,'cg_x numerical')
+        daspect(ax,[pi pi max(max(Z_x_num))])
+    end
+    
+    if opts.GroupVelocityY.isPlotNumerical
+        ax = nexttile;
+        [~,Z_y_num] = gradient(2*pi*Z,Y(2,1)-Y(1,1));
+        surf(ax,X,Y,Z_y_num)
+        xlabel(ax,'\gamma_x')
+        ylabel(ax,'\gamma_y')
+        zlabel(ax,'cg_y numerical')
+        daspect(ax,[pi pi max(max(Z_y_num))])
+    end
+    
+    if opts.GroupVelocityX.isPlot
+        ax = nexttile;
+        Z_x = reshape(cg(:,1),N_k_y,N_k_x);
+        surf(ax,X,Y,Z_x)
+        xlabel(ax,'\gamma_x')
+        ylabel(ax,'\gamma_y')
+        zlabel(ax,'cg_x')
+        daspect(ax,[pi pi max(max(Z_x))])
+    end
+    
+    if opts.GroupVelocityY.isPlot
+        ax = nexttile;
+        Z_y = reshape(cg(:,2),N_k_y,N_k_x);
+        surf(ax,X,Y,Z_y)
+        xlabel(ax,'\gamma_x')
+        ylabel(ax,'\gamma_y')
+        zlabel(ax,'cg_y')
+        daspect(ax,[pi pi max(max(Z_y))])
+    end
     
     if nargout > 0
         fig_handle = fig;
         ax_handle = ax;
     end
-    
+end
+
+function [N_k_x,N_k_y] = set_N_ks(wv,IBZ_shape)
+    [N_k_size,~] = size(wv);
+    if strcmp(IBZ_shape,'triangle')
+        N_k = -1/2 + 1/2*sqrt(1 + 8*N_k_size); % From the quadratic formula ... %tri
+    elseif strcmp(IBZ_shape,'rectangle')
+        N_k = sqrt(N_k_size); % rect
+    end
+    N_k_x = N_k;
+    N_k_y = N_k;
 end

@@ -1,7 +1,9 @@
 clear; close all; %delete(findall(0));
 
 isSaveOutput = false;
+isPlotDesign = false;
 struct_tag = '2';
+eig_idxs_to_plot = [1];
 
 %% Save output setup ...
 script_start_time = replace(char(datetime),':','-');
@@ -18,9 +20,9 @@ end
 
 %%
 const.a = 1; % [m]
-const.N_ele = 4;
+const.N_ele = 1;
 const.N_pix = 4;
-const.N_k = 60;
+const.N_k = 20;
 const.N_eig = 8;
 const.isUseGPU = false;
 const.isUseImprovement = false; % group velocity not supported by get_system_matrices_VEC()
@@ -30,7 +32,8 @@ const.isComputeDesignSensitivity = false;
 
 symmetry_type = 'none'; IBZ_shape = 'rectangle';
 num_tesselations = 1;
-const.wavevectors = create_IBZ_wavevectors(const.N_k,const.a,symmetry_type,num_tesselations);
+% const.wavevectors = create_IBZ_wavevectors(const.N_k,const.a,symmetry_type,num_tesselations);
+const.wavevectors = [pi/4 pi/4; pi/4 pi/4+1e-8; pi/4+1e-8 pi/4];
 
 const.design = get_design(struct_tag,const.N_pix);
 
@@ -44,10 +47,12 @@ const.t = 1;
 const.sigma_eig = 1;
 
 %% Plot the design
-fig = plot_design(const.design);
-if isSaveOutput
-    fix_pdf_border(fig)
-    save_in_all_formats(fig,'design',plot_folder,false)
+if isPlotDesign
+    fig = plot_design(const.design);
+    if isSaveOutput
+        fix_pdf_border(fig)
+        save_in_all_formats(fig,'design',plot_folder,false)
+    end
 end
 
 %% Solve the dispersion problem
@@ -64,18 +69,47 @@ if isSaveOutput
 end
 
 %% Plot the dispersion relation
-fig = figure2();
-ax = axes(fig);
-hold(ax,'on');
-view(ax,3);
-for eig_idx_to_plot = 4
-    plot_dispersion_surface(wv,squeeze(fr(:,eig_idx_to_plot)),IBZ_shape,const.N_k,const.N_k,ax);
+% fig = figure2();
+% ax = axes(fig);
+% hold(ax,'on');
+% view(ax,3);
+for eig_idx_to_plot = eig_idxs_to_plot
+    plot_dispersion_surface(wv,fr(:,eig_idx_to_plot),cg(:,:,eig_idx_to_plot));
 end
+% title(ax,'dispersion relation')
 if isSaveOutput
     fix_pdf_border(fig)
     save_in_all_formats(fig,'dispersion',plot_folder,false)
 end
 
+% %% Plot the group velocity (x-component)
+% fig = figure2();
+% ax = axes(fig);
+% hold(ax,'on');
+% view(ax,3);
+% for eig_idx_to_plot = eig_idxs_to_plot
+%     plot_dispersion_surface(wv,cg(:,eig_idx_to_plot,1),IBZ_shape,const.N_k,const.N_k,ax);
+% end
+% title(ax,'group velocity x-component')
+% if isSaveOutput
+%     fix_pdf_border(fig)
+%     save_in_all_formats(fig,'dispersion',plot_folder,false)
+% end
+% 
+% %% Plot the group velocity (y-component)
+% fig = figure2();
+% ax = axes(fig);
+% hold(ax,'on');
+% view(ax,3);
+% for eig_idx_to_plot = eig_idxs_to_plot
+%     plot_dispersion_surface(wv,cg(:,eig_idx_to_plot,2),IBZ_shape,const.N_k,const.N_k,ax);
+% end
+% title(ax,'group velocity y-component')
+% if isSaveOutput
+%     fix_pdf_border(fig)
+%     save_in_all_formats(fig,'dispersion',plot_folder,false)
+% end
+
 %% Plot the modes
-plot_mode_ui(wv,fr,ev,const);
+% plot_mode_ui(wv,fr,ev,const);
 
