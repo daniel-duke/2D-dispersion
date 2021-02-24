@@ -14,7 +14,7 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
         opts.GroupVelocityX.isPlotNumerical = ~isempty(fr);
         opts.GroupVelocityY.isPlotNumerical = ~isempty(fr);
         if isfield(opts,'isGetDefaultOpts') && opts.isGetDefaultOpts
-            opts.isGetDefaultsOpts = false;
+            opts.isGetDefaultOpts = false;
             fig_handle = opts; % This is just to return the default opts structure for the given input. It's clearly not really a figure handle.
             return
         end
@@ -41,11 +41,9 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
         end
     end
     
-    if ~exist('ax','var')
-        fig = figure2();
-        %         ax = axes(fig);
-        tiledlayout(fig,'flow')
-    end
+    fig = figure2();
+    %         ax = axes(fig);
+    tiledlayout(fig,'flow')
     
     if opts.Frequency.isPlot
         ax = nexttile;
@@ -77,6 +75,7 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
     end
     
     if opts.GroupVelocityX.isPlot
+        nexttile;
         ax = nexttile;
         Z_x = reshape(cg(:,1),N_k_y,N_k_x);
         surf(ax,X,Y,Z_x)
@@ -95,6 +94,28 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
         zlabel(ax,'cg_y')
         daspect(ax,[pi pi max(max(Z_y))])
     end
+    
+    % FOR DEBUGGING GROUP VELOCITY CALCULATIONS
+%     nexttile;
+%     ax = nexttile;
+%     surf(ax,X,Y,Z_x - Z_x_num)
+%     xlabel(ax,'\gamma_x')
+%     ylabel(ax,'\gamma_y')
+%     zlabel(ax,'cg_x - cg_x numerical')
+%     title('x difference')
+%     daspect(ax,[pi pi max(max(abs(Z_x-Z_x_num)))])
+%     view(2)
+%     colorbar
+%     
+%     ax = nexttile;
+%     surf(ax,X,Y,Z_y - Z_y_num)
+%     xlabel(ax,'\gamma_x')
+%     ylabel(ax,'\gamma_y')
+%     zlabel(ax,'cg_y - cg_y numerical')
+%     title('y difference')
+%     daspect(ax,[pi pi max(max(abs(Z_y-Z_y_num)))])
+%     view(2)
+%     colorbar
     
     if nargout > 0
         fig_handle = fig;

@@ -2,7 +2,7 @@ clear; close all; %delete(findall(0));
 
 isSaveOutput = false;
 isPlotDesign = false;
-struct_tag = '2';
+struct_tag = '1';
 eig_idxs_to_plot = [1];
 
 %% Save output setup ...
@@ -21,26 +21,30 @@ end
 %%
 const.a = 1; % [m]
 const.N_ele = 1;
-const.N_pix = 4;
+const.N_pix = 3;
 const.N_k = 20;
 const.N_eig = 8;
 const.isUseGPU = false;
 const.isUseImprovement = false; % group velocity not supported by get_system_matrices_VEC()
 const.isUseParallel = true;
-const.isComputeGroupVelocity = true;
+const.isComputeGroupVelocity = false;
 const.isComputeDesignSensitivity = false;
 
 symmetry_type = 'none'; IBZ_shape = 'rectangle';
 num_tesselations = 1;
-% const.wavevectors = create_IBZ_wavevectors(const.N_k,const.a,symmetry_type,num_tesselations);
-const.wavevectors = [pi/4 pi/4; pi/4 pi/4+1e-8; pi/4+1e-8 pi/4];
+const.wavevectors = create_IBZ_wavevectors(const.N_k,const.a,symmetry_type,num_tesselations);
+% const.wavevectors = [pi/4 pi/4; pi/4 pi/4+1e-8; pi/4+1e-8 pi/4];
 
 const.design = get_design(struct_tag,const.N_pix);
 
-const.E_min = 2e9;
-const.E_max = 200e9;
-const.rho_min = 1e3;
-const.rho_max = 8e3;
+% const.E_min = 2e9;
+% const.E_max = 200e9;
+% const.rho_min = 1e3;
+% const.rho_max = 8e3;
+const.E_min = 100;
+const.E_max = 1000;
+const.rho_min = 1;
+const.rho_max = 10;
 const.poisson_min = 0;
 const.poisson_max = .5;
 const.t = 1;
@@ -62,11 +66,11 @@ fr = real(fr);
 % wn = repmat(wn,const.N_eig,1);
 
 %% Plot the discretized Irreducible Brillouin Zone
-fig = plot_wavevectors(wv);
-if isSaveOutput
-    fix_pdf_border(fig)
-    save_in_all_formats(fig,'wavevectors',plot_folder,false)
-end
+% fig = plot_wavevectors(wv);
+% if isSaveOutput
+%     fix_pdf_border(fig)
+%     save_in_all_formats(fig,'wavevectors',plot_folder,false)
+% end
 
 %% Plot the dispersion relation
 % fig = figure2();

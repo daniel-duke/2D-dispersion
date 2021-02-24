@@ -4,7 +4,7 @@ function design = get_design(design_name,N_pix)
         rng(struct_rng_seed,'twister')        
         design(:,:,1) = round(rand(N_pix));
         design(:,:,2) = design(:,:,1);
-        design(:,:,3) = .6*ones(N_pix);
+        design(:,:,3) = .3*ones(N_pix);
     else
         switch design_name
             case 'dispersive-tetragonal'
@@ -20,18 +20,18 @@ function design = get_design(design_name,N_pix)
                 idxs = (N_pix/4 + 1):(3*N_pix/4);
                 design(:,idxs,1) = 1;
                 design(:,:,2) = design(:,:,1); % the second pane is rho
-                design(:,:,3) = .6*ones(N_pix); % the third pane is poisson's ratio
+                design(:,:,3) = .3*ones(N_pix); % the third pane is poisson's ratio
             case 'homogeneous'
                 % Homogeneous cell
                 design(:,:,1) = ones(N_pix); % the first pane is E
                 design(:,:,2) = design(:,:,1); % the second pane is rho
-                design(:,:,3) = .6*ones(N_pix); % the third pane is poisson's ratio
+                design(:,:,3) = .3*ones(N_pix); % the third pane is poisson's ratio
             case 'quasi-1D'
                 % Quasi-1D cell
                 design(:,:,1) = ones(N_pix);
                 design(:,1:2:end,1) = 0;
                 design(:,:,2) = design(:,:,1);
-                design(:,:,3) = .6*ones(N_pix);
+                design(:,:,3) = .3*ones(N_pix);
             case 'rotationally-symmetric'
                 design(:,:,1) = zeros(N_pix);
                 idxs = (N_pix/4 + 1):(2*N_pix/4);
@@ -39,12 +39,12 @@ function design = get_design(design_name,N_pix)
                 idxs = (2*N_pix/4 + 1):(3*N_pix/4);
                 design(idxs,idxs,1) = 1;
                 design(:,:,2) = design(:,:,1); % the second pane is rho
-                design(:,:,3) = .6*ones(N_pix); % the third pane is poisson's ratio
+                design(:,:,3) = .3*ones(N_pix); % the third pane is poisson's ratio
             case 'dirac?'
                 design(:,:,1) = zeros(5);
                 design([2 3 4 6 8 10 11 12 13 14 15 16 18 20 22 23 24]) = 1;
                 design(:,:,2) = design(:,:,1);
-                design(:,:,3) = .6*ones(N_pix);                
+                design(:,:,3) = .3*ones(N_pix);                
             otherwise
                 error(['design not recognized: ' design_name])
         end
