@@ -23,7 +23,7 @@ const.N_pix = 5;
 const.N_k = 20;
 const.N_eig = 8;
 const.isUseGPU = false;
-const.isUseImprovement = false;
+const.isUseImprovement = true;
 const.isUseParallel = false;
 
 const.wavevectors = create_IBZ_boundary_wavevectors(const.N_k,const.a);

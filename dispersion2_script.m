@@ -2,7 +2,7 @@ clear; close all; %delete(findall(0));
 
 isSaveOutput = false;
 isPlotDesign = false;
-struct_tag = '1';
+struct_tag = '2';
 eig_idxs_to_plot = [1];
 
 %% Save output setup ...
@@ -20,14 +20,14 @@ end
 
 %%
 const.a = 1; % [m]
-const.N_ele = 1;
-const.N_pix = 3;
+const.N_ele = 4;
+const.N_pix = 4;
 const.N_k = 20;
 const.N_eig = 8;
 const.isUseGPU = false;
 const.isUseImprovement = false; % group velocity not supported by get_system_matrices_VEC()
 const.isUseParallel = true;
-const.isComputeGroupVelocity = false;
+const.isComputeGroupVelocity = true;
 const.isComputeDesignSensitivity = false;
 
 symmetry_type = 'none'; IBZ_shape = 'rectangle';

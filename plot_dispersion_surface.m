@@ -56,7 +56,7 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
     
     if opts.GroupVelocityX.isPlotNumerical
         ax = nexttile;
-        [Z_x_num,~] = gradient(2*pi*Z,X(1,2)-X(1,1));
+        [Z_x_num,~] = gradient(Z,X(1,2)-X(1,1));
         surf(ax,X,Y,Z_x_num)
         xlabel(ax,'\gamma_x')
         ylabel(ax,'\gamma_y')
@@ -66,7 +66,7 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
     
     if opts.GroupVelocityY.isPlotNumerical
         ax = nexttile;
-        [~,Z_y_num] = gradient(2*pi*Z,Y(2,1)-Y(1,1));
+        [~,Z_y_num] = gradient(Z,Y(2,1)-Y(1,1));
         surf(ax,X,Y,Z_y_num)
         xlabel(ax,'\gamma_x')
         ylabel(ax,'\gamma_y')
@@ -96,27 +96,30 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
     end
     
     % FOR DEBUGGING GROUP VELOCITY CALCULATIONS
-%     nexttile;
-%     ax = nexttile;
-%     surf(ax,X,Y,Z_x - Z_x_num)
-%     xlabel(ax,'\gamma_x')
-%     ylabel(ax,'\gamma_y')
-%     zlabel(ax,'cg_x - cg_x numerical')
-%     title('x difference')
-%     daspect(ax,[pi pi max(max(abs(Z_x-Z_x_num)))])
-%     view(2)
-%     colorbar
-%     
-%     ax = nexttile;
-%     surf(ax,X,Y,Z_y - Z_y_num)
-%     xlabel(ax,'\gamma_x')
-%     ylabel(ax,'\gamma_y')
-%     zlabel(ax,'cg_y - cg_y numerical')
-%     title('y difference')
-%     daspect(ax,[pi pi max(max(abs(Z_y-Z_y_num)))])
-%     view(2)
-%     colorbar
+    if opts.GroupVelocityX.isPlot && opts.GroupVelocityX.isPlotNumerical
+    nexttile;
+    ax = nexttile;
+    surf(ax,X,Y,Z_x - Z_x_num)
+    xlabel(ax,'\gamma_x')
+    ylabel(ax,'\gamma_y')
+    zlabel(ax,'cg_x - cg_x numerical')
+    title('x difference')
+    daspect(ax,[pi pi max(max(abs(Z_x-Z_x_num)))])
+    view(2)
+    colorbar
+    end
     
+    if opts.GroupVelocityY.isPlot && opts.GroupVelocitY.isPlotNumerical
+    ax = nexttile;
+    surf(ax,X,Y,Z_y - Z_y_num)
+    xlabel(ax,'\gamma_x')
+    ylabel(ax,'\gamma_y')
+    zlabel(ax,'cg_y - cg_y numerical')
+    title('y difference')
+    daspect(ax,[pi pi max(max(abs(Z_y-Z_y_num)))])
+    view(2)
+    colorbar
+    end
     if nargout > 0
         fig_handle = fig;
         ax_handle = ax;
