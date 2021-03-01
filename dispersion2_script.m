@@ -20,15 +20,16 @@ end
 
 %%
 const.a = 1; % [m]
-const.N_ele = 4;
-const.N_pix = 4;
-const.N_k = 20;
+const.N_ele = 2;
+const.N_pix = 3;
+const.N_k = 1 0;
 const.N_eig = 8;
 const.isUseGPU = false;
 const.isUseImprovement = false; % group velocity not supported by get_system_matrices_VEC()
 const.isUseParallel = true;
 const.isComputeGroupVelocity = true;
-const.isComputeDesignSensitivity = false;
+const.isComputeFrequencyDesignSensitivity = true;
+const.isComputeGroupVelocityDesignSensitivity = true;
 
 symmetry_type = 'none'; IBZ_shape = 'rectangle';
 num_tesselations = 1;

@@ -44,9 +44,11 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
     fig = figure2();
     %         ax = axes(fig);
     tiledlayout(fig,'flow')
+    ax_counter = 0;
     
     if opts.Frequency.isPlot
-        ax = nexttile;
+        ax_counter = ax_counter + 1;
+        ax(ax_counter) = nexttile;
         surf(ax,X,Y,Z)
         xlabel(ax,'\gamma_x')
         ylabel(ax,'\gamma_y')
@@ -55,7 +57,8 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
     end
     
     if opts.GroupVelocityX.isPlotNumerical
-        ax = nexttile;
+        ax_counter = ax_counter + 1;
+        ax(ax_counter) = nexttile;
         [Z_x_num,~] = gradient(Z,X(1,2)-X(1,1));
         surf(ax,X,Y,Z_x_num)
         xlabel(ax,'\gamma_x')
@@ -65,7 +68,8 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
     end
     
     if opts.GroupVelocityY.isPlotNumerical
-        ax = nexttile;
+        ax_counter = ax_counter + 1;
+        ax(ax_counter) = nexttile;
         [~,Z_y_num] = gradient(Z,Y(2,1)-Y(1,1));
         surf(ax,X,Y,Z_y_num)
         xlabel(ax,'\gamma_x')
@@ -76,7 +80,8 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
     
     if opts.GroupVelocityX.isPlot
         nexttile;
-        ax = nexttile;
+        ax_counter = ax_counter + 1;
+        ax(ax_counter) = nexttile;
         Z_x = reshape(cg(:,1),N_k_y,N_k_x);
         surf(ax,X,Y,Z_x)
         xlabel(ax,'\gamma_x')
@@ -86,7 +91,8 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
     end
     
     if opts.GroupVelocityY.isPlot
-        ax = nexttile;
+        ax_counter = ax_counter + 1;
+        ax(ax_counter) = nexttile;
         Z_y = reshape(cg(:,2),N_k_y,N_k_x);
         surf(ax,X,Y,Z_y)
         xlabel(ax,'\gamma_x')
@@ -97,29 +103,32 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
     
     % FOR DEBUGGING GROUP VELOCITY CALCULATIONS
     if opts.GroupVelocityX.isPlot && opts.GroupVelocityX.isPlotNumerical
-    nexttile;
-    ax = nexttile;
-    surf(ax,X,Y,Z_x - Z_x_num)
-    xlabel(ax,'\gamma_x')
-    ylabel(ax,'\gamma_y')
-    zlabel(ax,'cg_x - cg_x numerical')
-    title('x difference')
-    daspect(ax,[pi pi max(max(abs(Z_x-Z_x_num)))])
-    view(2)
-    colorbar
+        nexttile;
+        ax_counter = ax_counter + 1;
+        ax(ax_counter) = nexttile;
+        surf(ax,X,Y,Z_x - Z_x_num)
+        xlabel(ax,'\gamma_x')
+        ylabel(ax,'\gamma_y')
+        zlabel(ax,'cg_x - cg_x numerical')
+        title('x difference')
+        daspect(ax,[pi pi max(max(abs(Z_x-Z_x_num)))])
+        view(2)
+        colorbar
     end
     
-    if opts.GroupVelocityY.isPlot && opts.GroupVelocitY.isPlotNumerical
-    ax = nexttile;
-    surf(ax,X,Y,Z_y - Z_y_num)
-    xlabel(ax,'\gamma_x')
-    ylabel(ax,'\gamma_y')
-    zlabel(ax,'cg_y - cg_y numerical')
-    title('y difference')
-    daspect(ax,[pi pi max(max(abs(Z_y-Z_y_num)))])
-    view(2)
-    colorbar
+    if opts.GroupVelocityY.isPlot && opts.GroupVelocityY.isPlotNumerical
+        ax_counter = ax_counter + 1;
+        ax(ax_counter) = nexttile;
+        surf(ax,X,Y,Z_y - Z_y_num)
+        xlabel(ax,'\gamma_x')
+        ylabel(ax,'\gamma_y')
+        zlabel(ax,'cg_y - cg_y numerical')
+        title('y difference')
+        daspect(ax,[pi pi max(max(abs(Z_y-Z_y_num)))])
+        view(2)
+        colorbar
     end
+    
     if nargout > 0
         fig_handle = fig;
         ax_handle = ax;
