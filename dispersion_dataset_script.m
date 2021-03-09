@@ -20,7 +20,7 @@ const.E_max = 200e9;
 const.rho_min = 1e3;
 const.rho_max = 8e3;
 const.poisson_min = 0;
-const.poisson_max = 1;
+const.poisson_max = .5;
 const.t = 1;
 const.sigma_eig = 1;
 
