@@ -2,6 +2,17 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
     
     fr = zeros(size(wavevectors,1),const.N_eig);
     ev = zeros(((const.N_ele*const.N_pix)^2)*2,size(wavevectors,2),const.N_eig);
+    
+    design_size = size(const.design);
+    design_size(3) = design_size(3) - 1; % Poisson's ratio is not a design variable here
+    if const.isComputeFrequencyDesignSensitivity || const.isComputeGroupVelocityDesignSensitivity
+        dfrddesign = zeros([size(wavevectors,2) const.N_eig design_size]);
+    end
+    
+    if const.isComputeGroupVelocityDesignSensitivity
+        dcgddesign = zeros([size(wavevectors,2) 2 const.N_eig design_size]);
+    end
+    
     if const.isUseImprovement
         [K,M] = get_system_matrices_VEC(const);
     else
@@ -82,8 +93,7 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
             design_size = size(const.design);
             design_size(3) = design_size(3) - 1; % Poisson's ratio is not a design variable here
             dKrddesign = ndSparse.build([size(Kr) design_size]);
-            dMrddesign = ndSparse.build([size(Mr) design_size]);
-            dfrddesign = zeros([size(wavevectors,2) const.N_eig design_size]);
+            dMrddesign = ndSparse.build([size(Mr) design_size]);            
             for i = 1:design_size(1)
                 for j = 1:design_size(2)
                     for k = 1:design_size(3)
@@ -122,7 +132,6 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
         end
         
         if const.isComputeGroupVelocityDesignSensitivity
-            dcgddesign = zeros([size(wavevectors,2) 2 const.N_eig design_size]);
             d2Krddesigndwavevector = ndSparse.build([size(dKrdwavevector) design_size]);
             d2Mrddesigndwavevector = ndSparse.build([size(dMrdwavevector) design_size]);
             for wv_comp_idx = 1:2

@@ -53,6 +53,7 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
         xlabel(ax,'\gamma_x')
         ylabel(ax,'\gamma_y')
         zlabel(ax,'\omega')
+        tighten_axes(X,Y)
         daspect(ax,[pi pi max(max(Z))])
     end
     
@@ -64,6 +65,7 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
         xlabel(ax,'\gamma_x')
         ylabel(ax,'\gamma_y')
         zlabel(ax,'cg_x numerical')
+        tighten_axes(X,Y)
         daspect(ax,[pi pi max(max(Z_x_num))])
     end
     
@@ -75,6 +77,7 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
         xlabel(ax,'\gamma_x')
         ylabel(ax,'\gamma_y')
         zlabel(ax,'cg_y numerical')
+        tighten_axes(X,Y)
         daspect(ax,[pi pi max(max(Z_y_num))])
     end
     
@@ -87,6 +90,7 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
         xlabel(ax,'\gamma_x')
         ylabel(ax,'\gamma_y')
         zlabel(ax,'cg_x')
+        tighten_axes(X,Y)
         daspect(ax,[pi pi max(max(Z_x))])
     end
     
@@ -98,6 +102,7 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
         xlabel(ax,'\gamma_x')
         ylabel(ax,'\gamma_y')
         zlabel(ax,'cg_y')
+        tighten_axes(X,Y)
         daspect(ax,[pi pi max(max(Z_y))])
     end
     
@@ -111,6 +116,7 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
         ylabel(ax,'\gamma_y')
         zlabel(ax,'cg_x - cg_x numerical')
         title('x difference')
+        tighten_axes(X,Y)
         daspect(ax,[pi pi max(max(abs(Z_x-Z_x_num)))])
         view(2)
         colorbar
@@ -124,6 +130,7 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,cg,opts,ax)
         ylabel(ax,'\gamma_y')
         zlabel(ax,'cg_y - cg_y numerical')
         title('y difference')
+        tighten_axes(X,Y)
         daspect(ax,[pi pi max(max(abs(Z_y-Z_y_num)))])
         view(2)
         colorbar
@@ -144,4 +151,10 @@ function [N_k_x,N_k_y] = set_N_ks(wv,IBZ_shape)
     end
     N_k_x = N_k;
     N_k_y = N_k;
+end
+
+function tighten_axes(X,Y)
+    ax = gca();
+    set(ax,'XLim',[min(min(X)) max(max(X))])
+    set(ax,'YLim',[min(min(Y)) max(max(Y))])
 end

@@ -1,8 +1,8 @@
 clear; close all;
 
 isSaveOutput = true;
-isSaveEigenvectors = false;
-N_struct = 1024;
+isSaveEigenvectors = true;
+N_struct = 16;
 imag_tol = 1e-3;
 rng_seed_offset = 0;
 
@@ -20,7 +20,7 @@ const.E_max = 200e9;
 const.rho_min = 1e3;
 const.rho_max = 8e3;
 const.poisson_min = 0;
-const.poisson_max = .5;
+const.poisson_max = 1;
 const.t = 1;
 const.sigma_eig = 1;
 
@@ -85,7 +85,7 @@ pfwb.Destroy;
 if isSaveOutput
     CONSTITUTIVE_DATA = containers.Map({'modulus','density','poisson'},...
         {ELASTIC_MODULUS_DATA, DENSITY_DATA, POISSON_DATA});
-    output_file_path = [output_folder '/DATA N_struct' num2str(N_struct) ' N_k' num2str(N_k) ' RNG_offset' num2str(rng_seed_offset) ' ' script_start_time '.mat'];
+    output_file_path = [output_folder '/DATA N_struct' num2str(N_struct) ' N_k' num2str(const.N_k) ' RNG_offset' num2str(rng_seed_offset) ' ' script_start_time '.mat'];
     if isSaveEigenvectors
         save(output_file_path,'WAVEVECTOR_DATA','EIGENVALUE_DATA','EIGENVECTOR_DATA','CONSTITUTIVE_DATA','-v7.3');
     else
