@@ -1,7 +1,7 @@
 clear; close all; %delete(findall(0));
 
 isSaveOutput = false;
-struct_tag = '16';
+struct_tag = 'homogeneous';
 
 %% Save output setup ... 
 script_start_time = replace(char(datetime),':','-');

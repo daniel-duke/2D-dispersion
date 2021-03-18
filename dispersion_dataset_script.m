@@ -1,8 +1,9 @@
 clear; close all;
 
 isSaveOutput = true;
-isSaveEigenvectors = true;
-N_struct = 16;
+isSaveEigenvectors = false;
+isIncludeHomogeneous = true;
+N_struct = 128;
 imag_tol = 1e-3;
 rng_seed_offset = 0;
 
@@ -51,7 +52,12 @@ pfwb = parfor_wait(N_struct,'Waitbar', true);
 parfor struct_idx = 1:N_struct
 % for struct_idx = 1:N_struct
     pfc = const;
-    pfc.design = get_design(struct_idx + rng_seed_offset,const.N_pix);
+    if struct_idx == 1 && isIncludeHomogeneous
+        pfc.design = get_design('homogeneous',pfc.N_pix);
+    else
+        pfc.design = get_design(struct_idx + rng_seed_offset,const.N_pix);
+    end
+    
     
     designs(struct_idx,:,:,:) = pfc.design;
     
@@ -94,7 +100,7 @@ if isSaveOutput
 end
 
 %% Plot a subset of the data
-struct_idx_to_plot = 2;
+struct_idx_to_plot = 1;
 
 fig = figure2();
 ax = axes(fig);
@@ -103,9 +109,9 @@ plot_design(cat(3,squeeze(ELASTIC_MODULUS_DATA(:,:,struct_idx_to_plot)), squeeze
 fig = figure2();
 ax = axes(fig);
 hold on
-for eig_idx_to_plot = 4%1:const.N_eig
+for eig_idx_to_plot = 1:const.N_eig
     wv_plot = squeeze(WAVEVECTOR_DATA(:,:,struct_idx_to_plot));
     fr_plot = squeeze(EIGENVALUE_DATA(:,eig_idx_to_plot,struct_idx_to_plot));
-    plot_dispersion_surface(wv_plot,fr_plot,IBZ_shape,ax);
+    plot_dispersion_surface(wv_plot,fr_plot,[],[],ax);
 end
 view(3)

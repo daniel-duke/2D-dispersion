@@ -1,7 +1,7 @@
 clear; close all; %delete(findall(0));
 
 isSaveOutput = false;
-struct_tag = '2';
+struct_tag = 'homogeneous';
 
 %% Save output setup ...
 script_start_time = replace(char(datetime),':','-');
@@ -18,9 +18,9 @@ end
 
 %%
 const.a = 1; % [m]
-const.N_ele = 4;
+const.N_ele = 16;
 const.N_pix = 4;
-const.N_k = 60;
+const.N_k = 61;
 const.N_eig = 8;
 const.isUseGPU = false;
 const.isUseImprovement = true;
@@ -66,14 +66,27 @@ fig = figure2();
 ax = axes(fig);
 hold(ax,'on');
 view(ax,3);
-for eig_idx_to_plot = 4
-    plot_dispersion_surface(wv,squeeze(fr(:,eig_idx_to_plot)),IBZ_shape,const.N_k,const.N_k,ax);
+for eig_idx_to_plot = 1:const.N_eig
+    plot_dispersion_surface(wv,fr(:,eig_idx_to_plot),[],[],ax);
 end
+zlabel(ax,'\omega')
+title(ax,'Dispersion Relation')
+fix_pdf_border(fig)
 if isSaveOutput
-    fix_pdf_border(fig)
     save_in_all_formats(fig,'dispersion',plot_folder,false)
 end
 
+%% Plot the dispersion surface intersections
+fig = figure2();
+ax = axes(fig);
+hold(ax,'on')
+view(ax,3)
+plot_dispersion_surface_intersections(wv,fr,[],[],ax)
+fig = fix_pdf_border(fig);
+title(ax,'Mode Intersection Points/Lines')
+ax.ZLim = [0 5000];
+zlabel(ax,'\omega')
+
 %% Plot the modes
-plot_mode_ui(wv,fr,ev,const);
+% plot_mode_ui(wv,fr,ev,const);
 

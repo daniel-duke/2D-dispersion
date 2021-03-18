@@ -22,7 +22,7 @@ end
 const.a = 1; % [m]
 const.N_ele = 2;
 const.N_pix = 3;
-const.N_k = 1 0;
+const.N_k = 11;
 const.N_eig = 8;
 const.isUseGPU = false;
 const.isUseImprovement = false; % group velocity not supported by get_system_matrices_VEC()
