@@ -2,8 +2,7 @@ clear; close all; %delete(findall(0));
 
 isSaveOutput = false;
 isPlotDesign = false;
-struct_tag = '2';
-eig_idxs_to_plot = [1];
+struct_tag = '3';
 
 %% Save output setup ...
 script_start_time = replace(char(datetime),':','-');
@@ -21,12 +20,12 @@ end
 %%
 const.a = 1; % [m]
 const.N_ele = 2;
-const.N_pix = 3;
-const.N_k = 11;
+const.N_pix = 2;
+const.N_k = 3;
 const.N_eig = 8;
 const.isUseGPU = false;
 const.isUseImprovement = false; % group velocity not supported by get_system_matrices_VEC()
-const.isUseParallel = true;
+const.isUseParallel = false;
 const.isComputeGroupVelocity = true;
 const.isComputeFrequencyDesignSensitivity = true;
 const.isComputeGroupVelocityDesignSensitivity = true;
@@ -36,6 +35,7 @@ num_tesselations = 1;
 const.wavevectors = create_IBZ_wavevectors(const.N_k,const.a,symmetry_type,num_tesselations);
 % const.wavevectors = [pi/4 pi/4; pi/4 pi/4+1e-8; pi/4+1e-8 pi/4];
 
+const.design_scale = 'linear';
 const.design = get_design(struct_tag,const.N_pix);
 
 % const.E_min = 2e9;
@@ -61,8 +61,18 @@ if isPlotDesign
 end
 
 %% Solve the dispersion problem
+% [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,const.wavevectors);
 [wv,fr,ev,cg] = dispersion2(const,const.wavevectors);
-fr = real(fr);
+% save('compare_file1','wv','fr','ev','cg','dfrddesign','dcgddesign')
+% data = load('compare_file1');
+% assert(all(data.wv == wv,'all'))
+% assert(all(data.fr == fr,'all'))
+% assert(all(data.ev == ev,'all'))
+% assert(all(data.cg == cg,'all'))
+% assert(all(data.dfrddesign == dfrddesign,'all'))
+% assert(all(data.dcgddesign == dcgddesign,'all'))
+% disp('cleared assertions')
+
 % wn = linspace(0,3,size(const.wavevectors,2) + 1);
 % wn = repmat(wn,const.N_eig,1);
 
@@ -74,12 +84,13 @@ fr = real(fr);
 % end
 
 %% Plot the dispersion relation
-% fig = figure2();
-% ax = axes(fig);
-% hold(ax,'on');
-% view(ax,3);
+fig = figure2();
+ax = axes(fig);
+hold(ax,'on');
+view(ax,3);
+eig_idxs_to_plot = 1:const.N_eig;
 for eig_idx_to_plot = eig_idxs_to_plot
-    plot_dispersion_surface(wv,fr(:,eig_idx_to_plot),cg(:,:,eig_idx_to_plot));
+    plot_dispersion_surface(wv,fr(:,eig_idx_to_plot),[],[],ax);
 end
 % title(ax,'dispersion relation')
 if isSaveOutput

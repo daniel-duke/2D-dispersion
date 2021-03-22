@@ -30,6 +30,7 @@ symmetry_type = 'none'; IBZ_shape = 'rectangle';
 num_tesselations = 1;
 const.wavevectors = create_IBZ_wavevectors(const.N_k,const.a,symmetry_type,num_tesselations);
 
+const.design_scale = 'linear';
 const.design = get_design(struct_tag,const.N_pix);
 
 const.E_min = 2e9;

@@ -3,8 +3,15 @@ function dm_eleddesign = get_element_mass_sensitivity(rho,t,const)
     % node and goes counterclockwise, as is standard in FEM)
     
     dmdrho = t*(const.a/(const.N_ele*const.N_pix))^2; % derivative of the total mass of this element with respect to the density of the element
-    drhoddesign = const.rho_max - const.rho_min;
-    dm_eleddesign = (1/36)*dmdrho*...
+    if strcmp(const.design_scale,'linear')
+        drhoddesign = const.rho_max - const.rho_min;
+    elseif strcmp(const.design_scale,'log')
+        drhoddesign = rho; % derivative of exp is itself
+    else
+        error('const.design_scale not recognized as log or linear')
+    end
+    
+    dm_eleddesign = (1/36)*dmdrho*drhoddesign*...
         [...
         [4 0 2 0 1 0 2 0];
         [0 4 0 2 0 1 0 2];

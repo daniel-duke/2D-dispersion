@@ -29,6 +29,7 @@ const.isUseParallel = false;
 const.wavevectors = create_IBZ_boundary_wavevectors(const.N_k,const.a);
 
 %% Random cell
+const.design_scale = 'linear';
 const.design = get_design(struct_tag,const.N_pix);
 
 const.E_min = 2e9;

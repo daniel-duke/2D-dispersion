@@ -31,6 +31,7 @@ const.wavevectors = create_IBZ_wavevectors(const.N_k,const.a,symmetry_type,num_t
 
 % const.wavevectors = linspaceNDim([0;0],[pi/const.a;0],const.N_k);
 
+const.design_scale = 'linear';
 const.design = nan(const.N_pix,const.N_pix,3); % This is just a temporary value so that 'const' has the field 'design' used in the parfor loop
 
 
