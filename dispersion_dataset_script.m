@@ -55,8 +55,10 @@ parfor struct_idx = 1:N_struct
     pfc = const;
     if struct_idx == 1 && isIncludeHomogeneous
         pfc.design = get_design('homogeneous',pfc.N_pix);
+        pfc.design = convert_design(pfc.design,'linear',pfc.design_scale,pfc.E_min,pfc.E_max,pfc.rho_min,pfc.rho_max);
     else
-        pfc.design = get_design(struct_idx + rng_seed_offset,const.N_pix);
+        pfc.design = get_design(struct_idx + rng_seed_offset,pfc.N_pix);
+        pfc.design = convert_design(pfc.design,'linear',pfc.design_scale,pfc.E_min,pfc.E_max,pfc.rho_min,pfc.rho_max);
     end
     
     

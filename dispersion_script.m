@@ -31,6 +31,7 @@ const.wavevectors = create_IBZ_boundary_wavevectors(const.N_k,const.a);
 %% Random cell
 const.design_scale = 'linear';
 const.design = get_design(struct_tag,const.N_pix);
+const.design = convert_design(const.design,'linear',const.design_scale,const.E_min,const.E_max,const.rho_min,const.rho_max);
 
 const.E_min = 2e9;
 const.E_max = 200e9;
