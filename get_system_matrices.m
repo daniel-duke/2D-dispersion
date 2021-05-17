@@ -64,8 +64,8 @@ function [K,M,dKddesign,dMddesign] = get_system_matrices(const)
     if nargout == 4
 %        dKddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 1*ones(size(row_idxs,1),1)],value_dKddesign);
 %        dMddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 2*ones(size(row_idxs,1),1)],value_dMddesign);
-       dKddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs],value_dKddesign);
-       dMddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs],value_dMddesign);
+       dKddesign = ndSparse.build([row_idxs col_idxs ypix_idxs xpix_idxs],value_dKddesign); % Note that xpix_idxs and ypix_idxs are in the correct order - rows and columns must be thought of geometrically as y and x, not x and y
+       dMddesign = ndSparse.build([row_idxs col_idxs ypix_idxs xpix_idxs],value_dMddesign); % Note that xpix_idxs and ypix_idxs are in the correct order - rows and columns must be thought of geometrically as y and x, not x and y
 %        dKddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 1*ones(size(row_idxs,1),1)],value_dKddesign,[max(row_idxs) max(col_idxs) const.N_pix const.N_pix 2]);
 %        dMddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 2*ones(size(row_idxs,1),1)],value_dMddesign);
     end

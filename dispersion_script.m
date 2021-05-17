@@ -1,7 +1,10 @@
 clear; close all; %delete(findall(0));
 
 isSaveOutput = false;
-struct_tag = 'homogeneous';
+struct_tag = 'dispersive-tetragonal-negative';
+% zhi_design_idx = 1;
+% data = load("C:\Users\alex\OneDrive - California Institute of Technology\Documents\Graduate\Research\Duke\sampled_designs_20x20\sampled_20x20_designs_0_1000_minbg_100.mat");
+% all_designs = data.designs;
 
 %% Save output setup ... 
 script_start_time = replace(char(datetime),':','-');
@@ -18,20 +21,15 @@ end
 
 %%
 const.a = 1; % [m]
-const.N_ele = 4;
-const.N_pix = 5;
-const.N_k = 20;
-const.N_eig = 8;
+const.N_ele = 2;
+const.N_pix = 20;
+const.N_k = 30;
+const.N_eig = 20;
 const.isUseGPU = false;
 const.isUseImprovement = true;
 const.isUseParallel = false;
 
 const.wavevectors = create_IBZ_boundary_wavevectors(const.N_k,const.a);
-
-%% Random cell
-const.design_scale = 'linear';
-const.design = get_design(struct_tag,const.N_pix);
-const.design = convert_design(const.design,'linear',const.design_scale,const.E_min,const.E_max,const.rho_min,const.rho_max);
 
 const.E_min = 2e9;
 const.E_max = 200e9;
@@ -42,6 +40,12 @@ const.poisson_max = .5;
 const.t = 1;
 const.sigma_eig = 1;
 
+%% Random cell
+const.design_scale = 'linear';
+const.design = get_design(struct_tag,const.N_pix);
+% const.design = all_designs(:,:,:,zhi_design_idx);
+const.design = convert_design(const.design,'linear',const.design_scale,const.E_min,const.E_max,const.rho_min,const.rho_max);
+
 %% Plot the design
 fig = plot_design(const.design);
 if isSaveOutput
@@ -51,10 +55,10 @@ end
 
 %% Solve the dispersion problem
 [wv,fr,ev] = dispersion(const,const.wavevectors);
-fr(:,end + 1) = fr(:,1);
+fr(end+1,:) = fr(1,:);
 ev(:,end + 1,:) = ev(:,1,:);
-wn = linspace(0,3,size(const.wavevectors,2) + 1);
-wn = repmat(wn,const.N_eig,1);
+wn = linspace(0,3,size(const.wavevectors,1) + 1)';
+wn = repmat(wn,1,const.N_eig);
 
 %% Plot the discretized Irreducible Brillouin Zone
 fig = plot_wavevectors(wv);
@@ -74,6 +78,6 @@ end
 % k_idx = 2;
 % eig_idx = 5;
 % wavevector = wv(:,k_idx);
-plot_mode_ui(wv,fr,ev,const);
+% plot_mode_ui(wv,fr,ev,const);
 % plot_mode(wv,fr,ev,eig_idx,k_idx,'both',const)
 

@@ -10,10 +10,19 @@ function design = get_design(design_name,N_pix)
             case 'dispersive-tetragonal'
                 % Dispersive cell - Tetragonal
                 design(:,:,1) = zeros(N_pix); % the first pane is E
-                idxs = (N_pix/4 + 1):(3*N_pix/4);
+                idxs = round(N_pix/4 + 1):round(3*N_pix/4);
                 design(idxs,idxs,1) = 1;
                 design(:,:,2) = design(:,:,1); % the second pane is rho
                 design(:,:,3) = .6*ones(N_pix); % the third pane is poisson's ratio
+            case 'dispersive-tetragonal-negative'
+                % Dispersive cell - Tetragonal
+                design(:,:,1) = zeros(N_pix); % the first pane is E
+                idxs = round(N_pix/4 + 1):round(3*N_pix/4);
+                design(idxs,idxs,1) = 1;
+                design(:,:,2) = design(:,:,1); % the second pane is rho
+                design(:,:,3) = .6*ones(N_pix); % the third pane is poisson's ratio
+                design(:,:,1) = ~design(:,:,1); % negative!
+                design(:,:,2) = ~design(:,:,2); % negative!
             case 'dispersive-orthotropic'
                 % Dispersive cell - Orthotropic
                 design(:,:,1) = zeros(N_pix); % the first pane is E

@@ -26,7 +26,7 @@ function [wv,fr,ev] = dispersion(const,wavevectors)
             eig_vecs = eig_vecs(:,idxs);
             
 %             ev(:,k_idx,:) = (eig_vecs./(diag(eig_vecs'*Mr*eig_vecs)'))'; % normalize by mass matrix
-            ev(:,k_idx,:) = (eig_vecs./vecnorm(eig_vecs,2,1)); % normalize by p-norm
+            ev(:,k_idx,:) = (eig_vecs./vecnorm(eig_vecs,2,1)).*exp(-1i*angle(eig_vecs(1,:))); % normalize by p-norm, align complex angle
 %             ev(:,k_idx,:) = (eig_vecs./max(eig_vecs))'; % normalize by max
 %             ev(:,k_idx,:) = eig_vecs'; % don't normalize
             

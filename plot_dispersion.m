@@ -4,7 +4,7 @@ function [fig_handle,ax_handle] = plot_dispersion(wn,fr,ax)
         ax = axes(fig);
     end
     
-    plot(ax,wn',real(fr'),'k.-');
+    plot(ax,wn,fr,'k.-');
     ax.YMinorGrid = 'on';
     ax.XMinorGrid = 'on';
     hold(ax,'on')

@@ -7,13 +7,13 @@ function [duddesign,domegaddesign] = get_duddesign(Kr,Mr,omega,u,dKrddesign,dMrd
     b = full([
         real(-(dKrddesign-omega^2*dMrddesign)*u);
         imag(-(dKrddesign-omega^2*dMrddesign)*u);
-        real(1/2*u'*dMrddesign*u);
+        real(-1/2*u'*dMrddesign*u);
         0
         ]);
     x = A\b;
     if rank(A)<size(A,1) %|| rcond(A)<1e-8
-        warning('stop')
+        warning('duddesign system is rank deficient')
     end
     duddesign = x(1:size(u,1)) + 1i*x(size(u,1)+1:end-2);
-    domegaddesign = x(end-1:end);
+    domegaddesign = x(end-1) + 1i*x(end);
 end

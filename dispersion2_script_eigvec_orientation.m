@@ -138,3 +138,16 @@ end
 %% Plot the modes
 % plot_mode_ui(wv,fr,ev,const);
 
+fig = figure(2);
+set(fig,'Position',[100 251 560 420])
+eig_idx = 1;
+v = ev(1,:,eig_idx);
+plot(real(v))
+title('real(first component of first eigvec)')
+figure(2)
+
+fig = figure(3);
+set(fig,'Position',[1230 246 560 420])
+plot(imag(v))
+title('imag(first component of first eigvec)')
+figure(2)
