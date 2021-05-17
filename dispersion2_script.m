@@ -27,7 +27,7 @@ const.isUseGPU = false;
 const.isUseImprovement = false; % group velocity not supported by get_system_matrices_VEC()
 const.isUseParallel = false;
 const.isComputeGroupVelocity = false;
-const.isComputeFrequencyDesignSensitivity = false;
+const.isComputeFrequencyDesignSensitivity = true;
 const.isComputeGroupVelocityDesignSensitivity = false;
 
 % symmetry_type = 'none'; IBZ_shape = 'rectangle';

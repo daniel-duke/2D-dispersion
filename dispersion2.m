@@ -35,8 +35,8 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
     else
         parforArg = 0;
     end
-    %     for k_idx = 1:size(wavevectors,1) % USE THIS TO DEBUG
-    parfor (k_idx = 1:size(wavevectors,1), parforArg)
+    for k_idx = 1:size(wavevectors,1) % USE THIS TO DEBUG
+%     parfor (k_idx = 1:size(wavevectors,1), parforArg)
         wavevector = wavevectors(k_idx,:);
         if const.isComputeGroupVelocity || const.isComputeGroupVelocityDesignSensitivity
             [T,dTdwavevector] = get_transformation_matrix(wavevector,const);
@@ -101,7 +101,8 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
                     for k = 1:design_size(3)
                         if k == 1 % The design parameter is an elastic modulus parameter
                             %                             dKrddesign(:,:,i,j,k) = T'*dKddesign(:,:,i,j,k)*T;
-                            dKrddesign(:,:,i,j) = T'*dKddesign(:,:,i,j)*T;
+%                             dKrddesign(:,:,i,j) = T'*dKddesign(:,:,i,j)*T;
+                            dKrddesign(:,:,i,j) = T'*dKddesign{i,j}*T;
                             for eig_idx = 1:const.N_eig
                                 omega = fr(k_idx,eig_idx);
                                 u = eig_vecs(:,eig_idx);
@@ -115,7 +116,8 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
                             end
                         elseif k == 2 % The design parameter is a density parameter
                             %                             dMrddesign(:,:,i,j,k) = T'*dMddesign(:,:,i,j,k)*T;
-                            dMrddesign(:,:,i,j) = T'*dMddesign(:,:,i,j)*T;
+%                             dMrddesign(:,:,i,j) = T'*dMddesign(:,:,i,j)*T;
+                            dMrddesign(:,:,i,j) = T'*dMddesign{i,j}*T;
                             for eig_idx = 1:const.N_eig
                                 omega = fr(k_idx,eig_idx);
                                 u = eig_vecs(:,eig_idx);
@@ -159,13 +161,15 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
                                 %                                 d2Mrddesigndwavevector(:,:,wv_comp_idx,i,j,k) = dTdwavevector(:,:,wv_comp_idx)'*dMddesign(:,:,i,j,k)*T + T'*dMddesign(:,:,i,j,k)*dTdwavevector(:,:,wv_comp_idx);
                                 %                                 dAddesign = d2Krddesigndwavevector(:,:,wv_comp_idx,i,j,k) - 2*omega*dfrddesign(k_idx,eig_idx,i,j,k) - omega^2*d2Mrddesigndwavevector(:,:,wv_comp_idx,i,j,k);
                                 if k == 1 % The design parameter is an elastic modulus parameter
-                                    dKdtheta = dKddesign(:,:,i,j);
+%                                     dKdtheta = dKddesign(:,:,i,j);
+                                    dKdtheta = dKddesign{i,j};
                                     %                                     d2Krddesigndwavevector(:,:,wv_comp_idx,i,j,k) = dTdwavevector(:,:,wv_comp_idx)'*dKddesign(:,:,i,j)*T + T'*dKddesign(:,:,i,j)*dTdwavevector(:,:,wv_comp_idx);
                                     d2Krdthetadgamma = dTdgamma'*dKdtheta*T + T'*dKdtheta*dTdgamma;
                                     %                                     dAddesign(:,:,wv_comp_idx,i,j,k) = d2Krddesigndwavevector(:,:,wv_comp_idx,i,j,k) - 2*omega*dfrddesign(k_idx,eig_idx,i,j,k)*dMrdwavevector(:,:,wv_comp_idx) - omega^2*d2Mrddesigndwavevector(:,:,wv_comp_idx,i,j,k);
                                     dAdtheta = d2Krdthetadgamma - 2*omega*domegadtheta*dMrdwavevector(:,:,wv_comp_idx);
                                 elseif k == 2 % The design parameter is a density parameter
-                                    dMdtheta = dMddesign(:,:,i,j);
+%                                     dMdtheta = dMddesign(:,:,i,j);
+                                    dMdtheta = dMddesign{i,j};
                                     %                                     d2Mrddesigndwavevector(:,:,wv_comp_idx,i,j,k) = dTdwavevector(:,:,wv_comp_idx)'*dMddesign(:,:,i,j)*T + T'*dMddesign(:,:,i,j)*dTdwavevector(:,:,wv_comp_idx);
                                     d2Mrdthetadgamma = dTdgamma'*dMdtheta*T + T'*dMdtheta*dTdgamma;
                                     %                                     dAddesign(:,:,wv_comp_idx,i,j,k) = d2Krddesigndwavevector(:,:,wv_comp_idx,i,j,k) - 2*omega*dfrddesign(k_idx,eig_idx,i,j,k) - omega^2*d2Mrddesigndwavevector(:,:,wv_comp_idx,i,j,k);

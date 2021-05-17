@@ -11,29 +11,17 @@ function [K,M,dKddesign,dMddesign] = get_system_matrices(const)
     value_K = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
     value_M = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
     if nargout == 4
-       xpix_idxs = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
-       ypix_idxs = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
-       value_dKddesign = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
-       value_dMddesign = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
+        xpix_idxs = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
+        ypix_idxs = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
+        value_dKddesign = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
+        value_dMddesign = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
     end
     for ele_idx_x = 1:N_ele_x
         for ele_idx_y = 1:N_ele_y
             pix_idx_x = ceil(ele_idx_x./const.N_ele);
             pix_idx_y = ceil(ele_idx_y./const.N_ele);
             
-            if strcmp(const.design_scale,'linear')
-                E = const.E_min + const.design(pix_idx_y,pix_idx_x,1)*(const.E_max - const.E_min);
-                nu = const.poisson_min + const.design(pix_idx_y,pix_idx_x,3)*(const.poisson_max - const.poisson_min);
-                t = const.t;
-                rho = const.rho_min + const.design(pix_idx_y,pix_idx_x,2)*(const.rho_max - const.rho_min);
-            elseif strcmp(const.design_scale,'log')
-                E = exp(const.design(pix_idx_y,pix_idx_x,1));
-                nu = const.poisson_min + const.design(pix_idx_y,pix_idx_x,3)*(const.poisson_max - const.poisson_min);
-                t = const.t;
-                rho = exp(const.design(pix_idx_y,pix_idx_x,2));
-            else
-                error('const.design_scale not recognized as log or linear')
-            end
+            [E,nu,t,rho] = get_pixel_properties(pix_idx_x,pix_idx_y,const);
             
             k_ele = get_element_stiffness(E,nu,t,const);
             m_ele = get_element_mass(rho,t,const);
@@ -60,13 +48,27 @@ function [K,M,dKddesign,dMddesign] = get_system_matrices(const)
     end
     K = sparse(row_idxs,col_idxs,value_K);
     M = sparse(row_idxs,col_idxs,value_M);
-    
-    if nargout == 4
-%        dKddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 1*ones(size(row_idxs,1),1)],value_dKddesign);
-%        dMddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 2*ones(size(row_idxs,1),1)],value_dMddesign);
-       dKddesign = ndSparse.build([row_idxs col_idxs ypix_idxs xpix_idxs],value_dKddesign); % Note that xpix_idxs and ypix_idxs are in the correct order - rows and columns must be thought of geometrically as y and x, not x and y
-       dMddesign = ndSparse.build([row_idxs col_idxs ypix_idxs xpix_idxs],value_dMddesign); % Note that xpix_idxs and ypix_idxs are in the correct order - rows and columns must be thought of geometrically as y and x, not x and y
-%        dKddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 1*ones(size(row_idxs,1),1)],value_dKddesign,[max(row_idxs) max(col_idxs) const.N_pix const.N_pix 2]);
-%        dMddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 2*ones(size(row_idxs,1),1)],value_dMddesign);
+
+%     tic
+%     if nargout == 4
+%         %        dKddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 1*ones(size(row_idxs,1),1)],value_dKddesign);
+%         %        dMddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 2*ones(size(row_idxs,1),1)],value_dMddesign);
+%         dKddesign_nds = ndSparse.build([row_idxs col_idxs ypix_idxs xpix_idxs],value_dKddesign); % Note that xpix_idxs and ypix_idxs are in the correct order - rows and columns must be thought of geometrically as y and x, not x and y
+%         dMddesign_nds = ndSparse.build([row_idxs col_idxs ypix_idxs xpix_idxs],value_dMddesign); % Note that xpix_idxs and ypix_idxs are in the correct order - rows and columns must be thought of geometrically as y and x, not x and y
+%         %        dKddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 1*ones(size(row_idxs,1),1)],value_dKddesign,[max(row_idxs) max(col_idxs) const.N_pix const.N_pix 2]);
+%         %        dMddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 2*ones(size(row_idxs,1),1)],value_dMddesign);
+%     end
+%     toc
+  if nargout == 4
+% tic
+for pix_idx_x = 1:const.N_pix
+    for pix_idx_y = 1:const.N_pix
+        idx_idxs = find(xpix_idxs == pix_idx_x & ypix_idxs == pix_idx_y);
+        dKddesign{pix_idx_y,pix_idx_x} = sparse(row_idxs(idx_idxs),col_idxs(idx_idxs),value_dKddesign(idx_idxs),N_dof,N_dof);
+        dMddesign{pix_idx_y,pix_idx_x} = sparse(row_idxs(idx_idxs),col_idxs(idx_idxs),value_dMddesign(idx_idxs),N_dof,N_dof);
     end
+end
+% toc
+  end
+    
 end
