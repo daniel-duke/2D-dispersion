@@ -48,27 +48,14 @@ function [K,M,dKddesign,dMddesign] = get_system_matrices(const)
     end
     K = sparse(row_idxs,col_idxs,value_K);
     M = sparse(row_idxs,col_idxs,value_M);
-
-%     tic
-%     if nargout == 4
-%         %        dKddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 1*ones(size(row_idxs,1),1)],value_dKddesign);
-%         %        dMddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 2*ones(size(row_idxs,1),1)],value_dMddesign);
-%         dKddesign_nds = ndSparse.build([row_idxs col_idxs ypix_idxs xpix_idxs],value_dKddesign); % Note that xpix_idxs and ypix_idxs are in the correct order - rows and columns must be thought of geometrically as y and x, not x and y
-%         dMddesign_nds = ndSparse.build([row_idxs col_idxs ypix_idxs xpix_idxs],value_dMddesign); % Note that xpix_idxs and ypix_idxs are in the correct order - rows and columns must be thought of geometrically as y and x, not x and y
-%         %        dKddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 1*ones(size(row_idxs,1),1)],value_dKddesign,[max(row_idxs) max(col_idxs) const.N_pix const.N_pix 2]);
-%         %        dMddesign = ndSparse.build([row_idxs col_idxs xpix_idxs ypix_idxs 2*ones(size(row_idxs,1),1)],value_dMddesign);
-%     end
-%     toc
-  if nargout == 4
-% tic
-for pix_idx_x = 1:const.N_pix
-    for pix_idx_y = 1:const.N_pix
-        idx_idxs = find(xpix_idxs == pix_idx_x & ypix_idxs == pix_idx_y);
-        dKddesign{pix_idx_y,pix_idx_x} = sparse(row_idxs(idx_idxs),col_idxs(idx_idxs),value_dKddesign(idx_idxs),N_dof,N_dof);
-        dMddesign{pix_idx_y,pix_idx_x} = sparse(row_idxs(idx_idxs),col_idxs(idx_idxs),value_dMddesign(idx_idxs),N_dof,N_dof);
-    end
-end
-% toc
-  end
     
+    if nargout == 4
+        for pix_idx_x = 1:const.N_pix
+            for pix_idx_y = 1:const.N_pix
+                idx_idxs = find(xpix_idxs == pix_idx_x & ypix_idxs == pix_idx_y);
+                dKddesign{pix_idx_y,pix_idx_x} = sparse(row_idxs(idx_idxs),col_idxs(idx_idxs),value_dKddesign(idx_idxs),N_dof,N_dof);
+                dMddesign{pix_idx_y,pix_idx_x} = sparse(row_idxs(idx_idxs),col_idxs(idx_idxs),value_dMddesign(idx_idxs),N_dof,N_dof);
+            end
+        end
+    end
 end
