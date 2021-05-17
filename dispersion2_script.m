@@ -26,7 +26,7 @@ const.N_eig = 8;
 const.isUseGPU = false;
 const.isUseImprovement = false; % group velocity not supported by get_system_matrices_VEC()
 const.isUseParallel = false;
-const.isComputeGroupVelocity = false;
+const.isComputeGroupVelocity = true;
 const.isComputeFrequencyDesignSensitivity = true;
 const.isComputeGroupVelocityDesignSensitivity = false;
 

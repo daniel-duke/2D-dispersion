@@ -51,8 +51,10 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
             dKrdwavevector = ndSparse.build([size(Kr) 2]);
             dMrdwavevector = ndSparse.build([size(Mr) 2]);
             for wv_comp_idx = 1:2
-                dKrdwavevector(:,:,wv_comp_idx) = dTdwavevector(:,:,wv_comp_idx)'*K*T + T'*K*dTdwavevector(:,:,wv_comp_idx);
-                dMrdwavevector(:,:,wv_comp_idx) = dTdwavevector(:,:,wv_comp_idx)'*M*T + T'*M*dTdwavevector(:,:,wv_comp_idx);
+%                 dKrdwavevector(:,:,wv_comp_idx) = dTdwavevector(:,:,wv_comp_idx)'*K*T + T'*K*dTdwavevector(:,:,wv_comp_idx);
+%                 dMrdwavevector(:,:,wv_comp_idx) = dTdwavevector(:,:,wv_comp_idx)'*M*T + T'*M*dTdwavevector(:,:,wv_comp_idx);
+                dKrdwavevector(:,:,wv_comp_idx) = dTdwavevector{wv_comp_idx}'*K*T + T'*K*dTdwavevector{wv_comp_idx};
+                dMrdwavevector(:,:,wv_comp_idx) = dTdwavevector{wv_comp_idx}'*M*T + T'*M*dTdwavevector{wv_comp_idx};
             end
         end
         
@@ -146,7 +148,8 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
                                 u = eig_vecs(:,eig_idx);
                                 A = dKrdwavevector(:,:,wv_comp_idx) - omega^2 * dMrdwavevector(:,:,wv_comp_idx);
                                 domegadtheta = dfrddesign(k_idx,eig_idx,i,j,k);
-                                dTdgamma = dTdwavevector(:,:,wv_comp_idx);
+%                                 dTdgamma = dTdwavevector(:,:,wv_comp_idx);
+                                dTdgamma = dTdwavevector{wv_comp_idx};
                                 if k == 1
                                     dKrdtheta = dKrddesign(:,:,i,j);
                                     dMrdtheta = zeros(size(dMrddesign(:,:,i,j)));

@@ -44,7 +44,16 @@ function [T,dTdwavevector] = get_transformation_matrix(wavevector,const)
        value_dTdwavevector = [repmat([zeros((N_node-1)^2,1); dxphasedwavevector(1)*ones(N_node - 1,1); dyphasedwavevector(1)*ones(N_node - 1,1); dcornerphasedwavevector(1)],2,1);...
                               repmat([zeros((N_node-1)^2,1); dxphasedwavevector(2)*ones(N_node - 1,1); dyphasedwavevector(2)*ones(N_node - 1,1); dcornerphasedwavevector(2)],2,1)];
        wv_component_idxs = [1*ones(size(row_idxs)); 2*ones(size(row_idxs))];
-       dTdwavevector = ndSparse.build([ [row_idxs; row_idxs] [col_idxs; col_idxs] wv_component_idxs ], value_dTdwavevector);
+       dTdwavevector_nds = ndSparse.build([ [row_idxs; row_idxs] [col_idxs; col_idxs] wv_component_idxs ], value_dTdwavevector);
+    end
+    if nargout == 2
+        dTdwavevector = cell(2,1);
+        row_idxs2 = [row_idxs; row_idxs];
+        col_idxs2 = [col_idxs; col_idxs];
+        for wv_comp_idx = 1:2
+            idx_idxs = find(wv_component_idxs == wv_comp_idx);
+            dTdwavevector{wv_comp_idx} = sparse(row_idxs2(idx_idxs),col_idxs2(idx_idxs),value_dTdwavevector(idx_idxs));
+        end
     end
 end
 
