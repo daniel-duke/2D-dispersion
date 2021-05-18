@@ -28,7 +28,7 @@ const.isUseImprovement = false; % group velocity not supported by get_system_mat
 const.isUseParallel = false;
 const.isComputeGroupVelocity = true;
 const.isComputeFrequencyDesignSensitivity = true;
-const.isComputeGroupVelocityDesignSensitivity = false;
+const.isComputeGroupVelocityDesignSensitivity = true;
 
 % symmetry_type = 'none'; IBZ_shape = 'rectangle';
 % num_tesselations = 1;
