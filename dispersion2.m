@@ -101,19 +101,23 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
         if const.isComputeFrequencyDesignSensitivity || const.isComputeGroupVelocityDesignSensitivity
             design_size = size(const.design);
             design_size(3) = design_size(3) - 1; % Poisson's ratio is not a design variable here
-            dKrddesign = ndSparse.build([size(Kr) design_size]);
-            dMrddesign = ndSparse.build([size(Mr) design_size]);
+%             dKrddesign = ndSparse.build([size(Kr) design_size]);
+%             dMrddesign = ndSparse.build([size(Mr) design_size]);
+            dKrddesign = cell(design_size(1:2));
+            dMrddesign = cell(design_size(1:2));
             for i = 1:design_size(1)
                 for j = 1:design_size(2)
                     for k = 1:design_size(3)
                         if k == 1 % The design parameter is an elastic modulus parameter
                             %                             dKrddesign(:,:,i,j,k) = T'*dKddesign(:,:,i,j,k)*T;
-                            dKrddesign(:,:,i,j) = T'*dKddesign{i,j}*T;
+%                             dKrddesign(:,:,i,j) = T'*dKddesign{i,j}*T;
+                            dKrddesign{i,j} = T'*dKddesign{i,j}*T;
                             for eig_idx = 1:const.N_eig
                                 omega = fr(k_idx,eig_idx);
                                 u = eig_vecs(:,eig_idx);
                                 %                                 dfrddesign(k_idx,eig_idx,i,j,k) = 1/(2*omega) * u'*(dKrddesign(:,:,i,j,k) - omega^2*dMrddesign(:,:,i,j,k))*u;
-                                dfrddesign(k_idx,eig_idx,i,j,k) = 1/(2*omega) * u'*(dKrddesign(:,:,i,j))*u;
+%                                 dfrddesign(k_idx,eig_idx,i,j,k) = 1/(2*omega) * u'*(dKrddesign(:,:,i,j))*u;
+                                dfrddesign(k_idx,eig_idx,i,j,k) = 1/(2*omega) * u'*(dKrddesign{i,j})*u;
                                 imag_tol = 1e-6;
                                 if abs(imag(dfrddesign(k_idx,eig_idx,i,j,k))/real(dfrddesign(k_idx,eig_idx,i,j,k))) > imag_tol
                                     warning('dfrddesign has large imaginary components')
@@ -122,12 +126,14 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
                             end
                         elseif k == 2 % The design parameter is a density parameter
                             %                             dMrddesign(:,:,i,j,k) = T'*dMddesign(:,:,i,j,k)*T;
-                            dMrddesign(:,:,i,j) = T'*dMddesign{i,j}*T;
+%                             dMrddesign(:,:,i,j) = T'*dMddesign{i,j}*T;
+                            dMrddesign{i,j} = T'*dMddesign{i,j}*T;
                             for eig_idx = 1:const.N_eig
                                 omega = fr(k_idx,eig_idx);
                                 u = eig_vecs(:,eig_idx);
                                 %                                 dfrddesign(k_idx,eig_idx,i,j,k) = 1/(2*omega) * u'*(dKrddesign(:,:,i,j,k) - omega^2*dMrddesign(:,:,i,j,k))*u;
-                                dfrddesign(k_idx,eig_idx,i,j,k) = 1/(2*omega) * u'*(-omega^2*dMrddesign(:,:,i,j))*u;
+%                                 dfrddesign(k_idx,eig_idx,i,j,k) = 1/(2*omega) * u'*(-omega^2*dMrddesign(:,:,i,j))*u;
+                                dfrddesign(k_idx,eig_idx,i,j,k) = 1/(2*omega) * u'*(-omega^2*dMrddesign{i,j})*u;
                                 imag_tol = 1e-6;
                                 if abs(imag(dfrddesign(k_idx,eig_idx,i,j,k))/real(dfrddesign(k_idx,eig_idx,i,j,k))) > imag_tol
                                     warning('dfrddesign has large imaginary components')
@@ -157,11 +163,15 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
 %                                 dTdgamma = dTdwavevector(:,:,wv_comp_idx);
                                 dTdgamma = dTdwavevector{wv_comp_idx};
                                 if k == 1
-                                    dKrdtheta = dKrddesign(:,:,i,j);
-                                    dMrdtheta = zeros(size(dMrddesign(:,:,i,j)));
+%                                     dKrdtheta = dKrddesign(:,:,i,j);
+                                    dKrdtheta = dKrddesign{i,j};
+%                                     dMrdtheta = zeros(size(dMrddesign(:,:,i,j)));
+                                    dMrdtheta = zeros(size(dMrddesign{i,j}));
                                 elseif k == 2
-                                    dKrdtheta = zeros(size(dKrddesign(:,:,i,j)));
-                                    dMrdtheta = dMrddesign(:,:,i,j);
+%                                     dKrdtheta = zeros(size(dKrddesign(:,:,i,j)));
+                                    dKrdtheta = zeros(size(dKrddesign{i,j}));
+%                                     dMrdtheta = dMrddesign(:,:,i,j);
+                                    dMrdtheta = dMrddesign{i,j};
                                 end
                                 
                                 %                                 d2Krddesigndwavevector(:,:,wv_comp_idx,i,j,k) = dTdwavevector(:,:,wv_comp_idx)'*dKddesign(:,:,i,j,k)*T + T'*dKddesign(:,:,i,j,k)*dTdwavevector(:,:,wv_comp_idx);
