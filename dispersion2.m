@@ -122,7 +122,7 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
                                 if abs(imag(dfrddesign(k_idx,eig_idx,i,j,k))/real(dfrddesign(k_idx,eig_idx,i,j,k))) > imag_tol
                                     warning('dfrddesign has large imaginary components')
                                 end
-                                dfrddesign(k_idx,eig_idx,i,j,k) = real(dfrddesign(k_idx,eig_idx,i,j,k));
+%                                 dfrddesign(k_idx,eig_idx,i,j,k) = real(dfrddesign(k_idx,eig_idx,i,j,k));
                             end
                         elseif k == 2 % The design parameter is a density parameter
                             %                             dMrddesign(:,:,i,j,k) = T'*dMddesign(:,:,i,j,k)*T;
@@ -138,12 +138,13 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
                                 if abs(imag(dfrddesign(k_idx,eig_idx,i,j,k))/real(dfrddesign(k_idx,eig_idx,i,j,k))) > imag_tol
                                     warning('dfrddesign has large imaginary components')
                                 end
-                                dfrddesign(k_idx,eig_idx,i,j,k) = real(dfrddesign(k_idx,eig_idx,i,j,k));
+%                                 dfrddesign(k_idx,eig_idx,i,j,k) = real(dfrddesign(k_idx,eig_idx,i,j,k));
                             end
                         end
                     end
                 end
             end
+            dfrddesign(k_idx,:,:,:,:) = real(dfrddesign(k_idx,:,:,:,:));
         end
         
         if const.isComputeGroupVelocityDesignSensitivity
