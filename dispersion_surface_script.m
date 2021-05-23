@@ -1,7 +1,7 @@
 clear; close all; %delete(findall(0));
 
 isSaveOutput = false;
-struct_tag = 'homogeneous';
+struct_tag = '1';
 
 %% Save output setup ...
 script_start_time = replace(char(datetime),':','-');
@@ -18,10 +18,10 @@ end
 
 %%
 const.a = 1; % [m]
-const.N_ele = 16;
-const.N_pix = 4;
-const.N_k = 61;
-const.N_eig = 8;
+const.N_ele = 4;
+const.N_pix = 8;
+const.N_k = 31;
+const.N_eig = 20;
 const.isUseGPU = false;
 const.isUseImprovement = true;
 const.isUseParallel = true;
@@ -29,10 +29,6 @@ const.isUseParallel = true;
 symmetry_type = 'none'; IBZ_shape = 'rectangle';
 num_tesselations = 1;
 const.wavevectors = create_IBZ_wavevectors(const.N_k,const.a,symmetry_type,num_tesselations);
-
-const.design_scale = 'linear';
-const.design = get_design(struct_tag,const.N_pix);
-const.design = convert_design(const.design,'linear',const.design_scale,const.E_min,const.E_max,const.rho_min,const.rho_max);
 
 const.E_min = 2e9;
 const.E_max = 200e9;
@@ -42,6 +38,11 @@ const.poisson_min = 0;
 const.poisson_max = .5;
 const.t = 1;
 const.sigma_eig = 1;
+
+const.design_scale = 'linear';
+const.design = get_design(struct_tag,const.N_pix);
+const.design = convert_design(const.design,'linear',const.design_scale,const.E_min,const.E_max,const.rho_min,const.rho_max);
+
 
 %% Plot the design
 fig = plot_design(const.design);
@@ -79,15 +80,15 @@ if isSaveOutput
 end
 
 %% Plot the dispersion surface intersections
-fig = figure2();
-ax = axes(fig);
-hold(ax,'on')
-view(ax,3)
-plot_dispersion_surface_intersections(wv,fr,[],[],ax)
-fig = fix_pdf_border(fig);
-title(ax,'Mode Intersection Points/Lines')
-ax.ZLim = [0 5000];
-zlabel(ax,'\omega')
+% fig = figure2();
+% ax = axes(fig);
+% hold(ax,'on')
+% view(ax,3)
+% plot_dispersion_surface_intersections(wv,fr,[],[],ax)
+% fig = fix_pdf_border(fig);
+% title(ax,'Mode Intersection Points/Lines')
+% ax.ZLim = [0 5000];
+% zlabel(ax,'\omega')
 
 %% Plot the modes
 % plot_mode_ui(wv,fr,ev,const);

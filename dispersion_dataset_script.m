@@ -3,15 +3,15 @@ clear; close all;
 isSaveOutput = true;
 isSaveEigenvectors = false;
 isIncludeHomogeneous = true;
-N_struct = 128;
+N_struct = 100;
 imag_tol = 1e-3;
 rng_seed_offset = 0;
 
 const.a = 1; % [m]
-const.N_ele = 4;
-const.N_pix = 4;
-const.N_k = 51;
-const.N_eig = 8;
+const.N_ele = 2;
+const.N_pix = 8;
+const.N_k = 201;
+const.N_eig = 20;
 const.isUseGPU = false;
 const.isUseImprovement = true;
 const.isUseParallel = false; % parallelize structure loop, not dispersion loop
@@ -37,7 +37,7 @@ const.design = nan(const.N_pix,const.N_pix,3); % This is just a temporary value 
 
 %% Set up save locations
 if ~isSaveOutput
-    disp('WARNING: isSaveOutput is set to false. Output will not be saved.')
+    warning('isSaveOutput is set to false. Output will not be saved.')
 end
 script_start_time = replace(char(datetime),':','-');
 if isSaveOutput
@@ -46,7 +46,9 @@ if isSaveOutput
     copyfile([mfilename('fullpath') '.m'],[output_folder '/' mfilename '.m']);
 end
 
-plot_wavevectors(const.wavevectors)
+% plot_wavevectors(const.wavevectors)
+
+mpiprofile on
 
 %% Generate dataset
 pfwb = parfor_wait(N_struct,'Waitbar', true);
@@ -84,6 +86,8 @@ parfor struct_idx = 1:N_struct
 end
 pfwb.Destroy;
 
+mpiprofile viewer
+
 % figure2();
 % hold on
 % for eig_idx = 1:const.N_eig
@@ -101,6 +105,8 @@ if isSaveOutput
         save(output_file_path,'WAVEVECTOR_DATA','EIGENVALUE_DATA','CONSTITUTIVE_DATA','-v7.3');
     end
 end
+
+delete(gcp('nocreate'))
 
 %% Plot a subset of the data
 struct_idx_to_plot = 1;

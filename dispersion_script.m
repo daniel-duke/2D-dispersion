@@ -1,7 +1,7 @@
 clear; close all; %delete(findall(0));
 
 isSaveOutput = false;
-struct_tag = 'dispersive-tetragonal-negative';
+struct_tag = '1';
 % zhi_design_idx = 1;
 % data = load("C:\Users\alex\OneDrive - California Institute of Technology\Documents\Graduate\Research\Duke\sampled_designs_20x20\sampled_20x20_designs_0_1000_minbg_100.mat");
 % all_designs = data.designs;
@@ -21,13 +21,13 @@ end
 
 %%
 const.a = 1; % [m]
-const.N_ele = 2;
-const.N_pix = 20;
-const.N_k = 30;
+const.N_ele = 4;
+const.N_pix = 8;
+const.N_k = 31;
 const.N_eig = 20;
 const.isUseGPU = false;
 const.isUseImprovement = true;
-const.isUseParallel = false;
+const.isUseParallel = true;
 
 const.wavevectors = create_IBZ_boundary_wavevectors(const.N_k,const.a);
 
