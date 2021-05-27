@@ -2,15 +2,16 @@ clear; close all;
 
 isSaveOutput = true;
 isSaveEigenvectors = false;
-isIncludeHomogeneous = true;
-N_struct = 100;
+isIncludeHomogeneous = false;
+isProfile = false;
+N_struct = 20;
 imag_tol = 1e-3;
 rng_seed_offset = 0;
 
 const.a = 1; % [m]
 const.N_ele = 2;
-const.N_pix = 8;
-const.N_k = 201;
+const.N_pix = 6;
+const.N_k = 1001;
 const.N_eig = 20;
 const.isUseGPU = false;
 const.isUseImprovement = true;
@@ -48,7 +49,9 @@ end
 
 % plot_wavevectors(const.wavevectors)
 
-mpiprofile on
+if isProfile
+    mpiprofile on
+end
 
 %% Generate dataset
 pfwb = parfor_wait(N_struct,'Waitbar', true);
@@ -86,7 +89,9 @@ parfor struct_idx = 1:N_struct
 end
 pfwb.Destroy;
 
-mpiprofile viewer
+if isProfile
+    mpiprofile viewer
+end
 
 % figure2();
 % hold on
@@ -109,18 +114,18 @@ end
 delete(gcp('nocreate'))
 
 %% Plot a subset of the data
-struct_idx_to_plot = 1;
-
-fig = figure2();
-ax = axes(fig);
-plot_design(cat(3,squeeze(ELASTIC_MODULUS_DATA(:,:,struct_idx_to_plot)), squeeze(DENSITY_DATA(:,:,struct_idx_to_plot)), squeeze(POISSON_DATA(:,:,struct_idx_to_plot))))
-
-fig = figure2();
-ax = axes(fig);
-hold on
-for eig_idx_to_plot = 1:const.N_eig
-    wv_plot = squeeze(WAVEVECTOR_DATA(:,:,struct_idx_to_plot));
-    fr_plot = squeeze(EIGENVALUE_DATA(:,eig_idx_to_plot,struct_idx_to_plot));
-    plot_dispersion_surface(wv_plot,fr_plot,[],[],ax);
-end
-view(3)
+% struct_idx_to_plot = 1;
+% 
+% fig = figure2();
+% ax = axes(fig);
+% plot_design(cat(3,squeeze(ELASTIC_MODULUS_DATA(:,:,struct_idx_to_plot)), squeeze(DENSITY_DATA(:,:,struct_idx_to_plot)), squeeze(POISSON_DATA(:,:,struct_idx_to_plot))))
+% 
+% fig = figure2();
+% ax = axes(fig);
+% hold on
+% for eig_idx_to_plot = 1:const.N_eig
+%     wv_plot = squeeze(WAVEVECTOR_DATA(:,:,struct_idx_to_plot));
+%     fr_plot = squeeze(EIGENVALUE_DATA(:,eig_idx_to_plot,struct_idx_to_plot));
+%     plot_dispersion_surface(wv_plot,fr_plot,[],[],ax);
+% end
+% view(3)
