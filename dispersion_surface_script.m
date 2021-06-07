@@ -20,15 +20,16 @@ end
 const.a = 1; % [m]
 const.N_ele = 4;
 const.N_pix = 8;
-const.N_k = 31;
+const.N_wv = [31 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % used for full IBZ calculations
 const.N_eig = 20;
 const.isUseGPU = false;
 const.isUseImprovement = true;
 const.isUseParallel = true;
+const.isSaveEigenvectors = false;
 
 symmetry_type = 'none'; IBZ_shape = 'rectangle';
 num_tesselations = 1;
-const.wavevectors = create_IBZ_wavevectors(const.N_k,const.a,symmetry_type,num_tesselations);
+const.wavevectors = get_IBZ_wavevectors(const.N_wv,const.a,symmetry_type,num_tesselations);
 
 const.E_min = 2e9;
 const.E_max = 200e9;
@@ -70,7 +71,7 @@ ax = axes(fig);
 hold(ax,'on');
 view(ax,3);
 for eig_idx_to_plot = 1:const.N_eig
-    plot_dispersion_surface(wv,fr(:,eig_idx_to_plot),[],[],ax);
+    plot_dispersion_surface(wv,fr(:,eig_idx_to_plot),const.N_wv(1),const.N_wv(2),ax);
 end
 zlabel(ax,'\omega')
 title(ax,'Dispersion Relation')

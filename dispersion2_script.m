@@ -21,7 +21,8 @@ end
 const.a = 1; % [m]
 const.N_ele = 2;
 const.N_pix = 2;
-const.N_k = 50;
+const.N_wv = [51 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % used for full IBZ calculations
+const.N_k = 50; % used for IBZ contour calculations
 const.N_eig = 8;
 const.isUseGPU = false;
 const.isUseImprovement = false; % group velocity not supported by get_system_matrices_VEC()
@@ -32,8 +33,8 @@ const.isComputeGroupVelocityDesignSensitivity = true;
 
 % symmetry_type = 'none'; IBZ_shape = 'rectangle';
 % num_tesselations = 1;
-% const.wavevectors = create_IBZ_wavevectors(const.N_k,const.a,symmetry_type,num_tesselations);
-const.wavevectors = create_IBZ_boundary_wavevectors(const.N_k,const.a);
+% const.wavevectors = get_IBZ_wavevectors(const.N_wv,const.a,symmetry_type,num_tesselations);
+const.wavevectors = get_IBZ_boundary_wavevectors(const.N_k,const.a);
 
 const.E_min = 2e9;
 const.E_max = 200e9;

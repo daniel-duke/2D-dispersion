@@ -1,7 +1,11 @@
 function [wv,fr,ev] = dispersion(const,wavevectors)
     
     fr = zeros(size(wavevectors,2),const.N_eig);
-    ev = zeros(((const.N_ele*const.N_pix)^2)*2,size(wavevectors,2),const.N_eig);
+    if const.isSaveEigenvectors
+        ev = zeros(((const.N_ele*const.N_pix)^2)*2,size(wavevectors,2),const.N_eig);
+    else
+        ev = [];
+    end
     if const.isUseImprovement
         [K,M] = get_system_matrices_VEC(const);
     else
@@ -26,8 +30,10 @@ function [wv,fr,ev] = dispersion(const,wavevectors)
             eig_vecs = eig_vecs(:,idxs);
             
 %             ev(:,k_idx,:) = (eig_vecs./(diag(eig_vecs'*Mr*eig_vecs)'))'; % normalize by mass matrix
-            ev(:,k_idx,:) = (eig_vecs./vecnorm(eig_vecs,2,1)).*exp(-1i*angle(eig_vecs(1,:))); % normalize by p-norm, align complex angle
-%             ev(:,k_idx,:) = (eig_vecs./max(eig_vecs))'; % normalize by max
+            if const.isSaveEigenvectors
+                ev(:,k_idx,:) = (eig_vecs./vecnorm(eig_vecs,2,1)).*exp(-1i*angle(eig_vecs(1,:))); % normalize by p-norm, align complex angle
+            end
+            %             ev(:,k_idx,:) = (eig_vecs./max(eig_vecs))'; % normalize by max
 %             ev(:,k_idx,:) = eig_vecs'; % don't normalize
             
             fr(k_idx,:) = sqrt(real(eig_vals));

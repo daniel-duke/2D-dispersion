@@ -1,4 +1,4 @@
-function wavevectors = create_IBZ_boundary_wavevectors(N_k,a)
+function wavevectors = get_IBZ_boundary_wavevectors(N_k,a)
     if length(N_k) > 2
         N_k = N_k(1);
         warning('received N_k as a vector')

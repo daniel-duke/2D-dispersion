@@ -1,10 +1,10 @@
 clear; close all;
 
-isSaveOutput = false;
+isSaveOutput = true;
 isSaveEigenvectors = false;
 isIncludeHomogeneous = false;
 isProfile = false;
-N_struct = 100;
+N_struct = 5000;
 imag_tol = 1e-3;
 rng_seed_offset = 0;
 
@@ -16,7 +16,7 @@ const.N_k = []; % used for IBZ contour calculations
 const.N_eig = 20;
 const.isUseGPU = false;
 const.isUseImprovement = true;
-const.isUseParallel = false; % parallelize structure loop, not dispersion loop
+const.isUseParallel = true; % parallelize dispersion loop, not structure loop
 const.isSaveEigenvectors = isSaveEigenvectors;
 
 const.E_min = 2e9;
@@ -57,7 +57,7 @@ end
 
 %% Generate dataset
 pfwb = parfor_wait(N_struct,'Waitbar', true);
-parfor struct_idx = 1:N_struct
+for struct_idx = 1:N_struct
 % for struct_idx = 1:N_struct
     pfc = const;
     if struct_idx == 1 && isIncludeHomogeneous

@@ -5,8 +5,11 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
     [wavevectors,~,unique_wavevector_idxs] = unique(wavevectors,'stable','rows'); % Don't repeat computations where unnecessary
     
     fr = zeros(size(wavevectors,1),const.N_eig);
-    ev = zeros(((const.N_ele*const.N_pix)^2)*2,size(wavevectors,1),const.N_eig);
-    
+    if const.isSaveEigenvectors
+        ev = zeros(((const.N_ele*const.N_pix)^2)*2,size(wavevectors,1),const.N_eig);
+    else
+        ev = [];
+    end
     if const.isComputeGroupVelocity
         cg = zeros(size(wavevectors,1),2,const.N_eig);
     end
@@ -72,7 +75,9 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
         
         eig_vecs = (eig_vecs./sqrt(diag(eig_vecs'*Mr*eig_vecs)')); % Normalize by mass matrix
         eig_vecs = eig_vecs.*exp(-1i*angle(eig_vecs(1,:))); % Align complex angle
-        ev(:,k_idx,:) = eig_vecs;
+        if const.isSaveEigenvectors
+            ev(:,k_idx,:) = eig_vecs;
+        end
         
         if any(real(eig_vals)<-1e-1)
             warning('large negative eigenvalue')

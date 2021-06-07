@@ -1,4 +1,4 @@
-function wavevectors = create_IBZ_wavevectors(N_wv,a,symmetry_type,num_tesselations)
+function wavevectors = get_IBZ_wavevectors(N_wv,a,symmetry_type,num_tesselations)
     if ~exist('symmetry_type','var')
         symmetry_type = 'none';
     end
