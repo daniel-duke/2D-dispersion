@@ -1,10 +1,13 @@
-clear; close all; %delete(findall(0));
+clear; close all; 
+%delete(findall(0));
 
 isSaveOutput = false;
-struct_tag = '1';
 % zhi_design_idx = 1;
-% data = load("C:\Users\alex\OneDrive - California Institute of Technology\Documents\Graduate\Research\Duke\sampled_designs_20x20\sampled_20x20_designs_0_1000_minbg_100.mat");
-% all_designs = data.designs;
+data = load("C:\Users\Mary\Google Drive\Research\Duke\Codes\2D data\sampled_designs_20x20\sampled_20x20_designs_0_1000_minbg_100.mat");
+all_designs = data.designs;
+% struct_tag = '1';
+ struct_tag = 'rotationally-symmetric';
+
 
 %% Save output setup ... 
 script_start_time = replace(char(datetime),':','-');
@@ -20,16 +23,20 @@ if isSaveOutput
 end
 
 %%
-const.a = 1; % [m]
-const.N_ele = 4;
-const.N_pix = 8;
-const.N_k = 31;
-const.N_eig = 20;
+const.a = 1; % unit-cell side length [m]
+const.Nod_dof = 2; % no. of degrees of freedom per node, e.g., ux, uy, uz 
+                   % 2 if PSV waves, 1 if SH waves, 3 if both (to be implemented later)
+const.N_ele = 4; % no. of elements per pixel
+const.N_pix = 8; % no. of pixels per side length
+const.N_k = 31; % no. of wave vector sampling points along one side of IBZ
+const.N_eig = 20; % no. of computed eigenvalues
 const.isUseGPU = false;
-const.isUseImprovement = true;
+const.isUseImprovement = 0; % use vectorized improvement
 const.isUseParallel = true;
 
 const.wavevectors = create_IBZ_boundary_wavevectors(const.N_k,const.a);
+
+
 
 const.E_min = 2e9;
 const.E_max = 200e9;
@@ -42,6 +49,7 @@ const.sigma_eig = 1;
 
 %% Random cell
 const.design_scale = 'linear';
+zhi_design_idx = 1; 
 const.design = get_design(struct_tag,const.N_pix);
 % const.design = all_designs(:,:,:,zhi_design_idx);
 const.design = convert_design(const.design,'linear',const.design_scale,const.E_min,const.E_max,const.rho_min,const.rho_max);
