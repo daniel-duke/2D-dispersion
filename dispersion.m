@@ -1,7 +1,7 @@
 function [wv,fr,ev] = dispersion(const,wavevectors)
     
     fr = zeros(size(wavevectors,2),const.N_eig);
-    ev = zeros(((const.N_ele*const.N_pix)^2)*2,size(wavevectors,2),const.N_eig);
+    ev = zeros(((const.N_ele*const.N_pix)^2)*const.Nod_dof,size(wavevectors,2),const.N_eig);
     if const.isUseImprovement
         [K,M] = get_system_matrices_VEC(const);
     else
