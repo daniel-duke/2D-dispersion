@@ -31,7 +31,7 @@ const.N_pix = 4; % no. of pixels per side length
 const.N_k = 11; % no. of wave vector sampling points along one side of IBZ
 const.N_eig = 10; % no. of computed eigenvalues
 const.isUseGPU = false;
-const.isUseImprovement = 0; % use vectorized improvement
+const.isUseImprovement = 1; % use vectorized improvement
 const.isUseParallel = true;
 
 const.wavevectors = create_IBZ_boundary_wavevectors(const.N_k,const.a);
