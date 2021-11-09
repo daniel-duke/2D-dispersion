@@ -9,7 +9,8 @@ function [fig_handle,subax_handle] = plot_design(design)
         subplot(1,3,prop_idx,subax(prop_idx))
         subplot(subax(prop_idx))
         imagesc(squeeze(design(:,:,prop_idx)));
-        colormap('gray');
+        cmap = colormap('gray');
+        colormap( flipud(cmap));
         caxis([0 1]);
         daspect([1 1 1]);
         title(titles{prop_idx});
@@ -17,6 +18,7 @@ function [fig_handle,subax_handle] = plot_design(design)
     
     c = colorbar('southoutside');
     c.Position = [.2 .2 .6 .02];
+    
     if nargout > 0
         fig_handle = fig;
         if nargout > 1

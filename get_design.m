@@ -1,10 +1,13 @@
 function design = get_design(design_name,N_pix)
+% Purpose: 
+% How can the Poisson ratio be 0.6? It is not. This is not the final
+% Poisson ratio assigned. 
     [struct_rng_seed,num_status] = str2num(num2str(design_name));
     if num_status % if design_name is a number, then I assume I want a random design given by that seed
         rng(struct_rng_seed,'twister')        
-        design(:,:,1) = round(rand(N_pix));
-        design(:,:,2) = design(:,:,1);
-        design(:,:,3) = .6*ones(N_pix);
+        design(:,:,1) = round(rand(N_pix)); % design pixel content
+        design(:,:,2) = design(:,:,1); % ? 
+        design(:,:,3) = .6*ones(N_pix); % ??
     else
         switch design_name
             case 'dispersive-tetragonal'
