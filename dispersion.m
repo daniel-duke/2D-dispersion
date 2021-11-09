@@ -1,7 +1,7 @@
 function [wv,fr,ev] = dispersion(const,wavevectors)
     
     fr = zeros(size(wavevectors,2),const.N_eig);
-    ev = zeros(((const.N_ele*const.N_pix)^2)*2,size(wavevectors,2),const.N_eig);
+    ev = zeros(((const.N_ele*const.N_pix)^2)*const.Nod_dof,size(wavevectors,2),const.N_eig);
     if const.isUseImprovement
         [K,M] = get_system_matrices_VEC(const);
     else
@@ -12,12 +12,21 @@ function [wv,fr,ev] = dispersion(const,wavevectors)
     else
         parforArg = 0;
     end
-%     for k_idx = 1:size(wavevectors,1) % USE THIS TO DEBUG
-    parfor (k_idx = 1:size(wavevectors,1), parforArg)
+    
+
+    
+    for k_idx = 1:size(wavevectors,1) % USE THIS TO DEBUG
+%    parfor (k_idx = 1:size(wavevectors,1), parforArg)
+
+
+    
         wavevector = wavevectors(k_idx,:);
+        
         T = get_transformation_matrix(wavevector,const);
+        
         Kr = T'*K*T;
         Mr = T'*M*T;
+        
         
         if ~const.isUseGPU
             % DONT USE THE GPU WITH EIGS           
