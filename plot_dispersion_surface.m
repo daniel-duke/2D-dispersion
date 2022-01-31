@@ -1,7 +1,7 @@
 function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,N_k_x,N_k_y,ax)
     
     if ~exist('ax','var')
-        fig = figure2();
+        fig = figure();
         ax = axes(fig);
     else
         fig = ax.Parent;
@@ -17,6 +17,7 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,N_k_x,N_k_y,ax)
     Z = reshape(fr,N_k_y,N_k_x); % rect
     
     surf(ax,X,Y,Z)
+%     contourf(ax,X,Y,Z)
     xlabel(ax,'\gamma_x')
     ylabel(ax,'\gamma_y')
 %     zlabel(ax,'\omega')

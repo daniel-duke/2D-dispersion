@@ -6,7 +6,7 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
     
     fr = zeros(size(wavevectors,1),const.N_eig);
     if const.isSaveEigenvectors
-        ev = zeros(((const.N_ele*const.N_pix)^2)*2,size(wavevectors,1),const.N_eig);
+        ev = zeros(((const.N_ele*const.N_pix(1))^2)*2,size(wavevectors,1),const.N_eig);
     else
         ev = [];
     end
@@ -229,6 +229,8 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
         dcgddesign = dcgddesign(unique_wavevector_idxs,:,:,:,:,:);
     end
     fr = fr(unique_wavevector_idxs,:);
-    ev = ev(:,unique_wavevector_idxs,:);
+    if const.isSaveEigenvectors
+        ev = ev(:,unique_wavevector_idxs,:);
+    end
     wv = orig_wavevectors;
 end

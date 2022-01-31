@@ -1,20 +1,20 @@
 function [K,M,dKddesign,dMddesign] = get_system_matrices(const)
     
-    N_ele_x = const.N_pix*const.N_ele; % Total number of elements along x direction
-    N_ele_y = const.N_pix*const.N_ele; % Total number of elements along y direction
+    N_ele_x = const.N_pix(1)*const.N_ele; % Total number of elements along x direction
+    N_ele_y = const.N_pix(1)*const.N_ele; % Total number of elements along y direction
     N_nodes_x = N_ele_x + 1; N_nodes_y = N_ele_y + 1; % add one since a system with 3 elements along an edge would actually have 4 nodes along that edge.
     N_dof = (N_nodes_x*N_nodes_y)*2; % 2 DOF per node
     
     N_dof_per_element = 8;
-    row_idxs = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
-    col_idxs = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
-    value_K = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
-    value_M = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
+    row_idxs = zeros(N_dof_per_element*(const.N_ele*const.N_pix(1))^2,1);
+    col_idxs = zeros(N_dof_per_element*(const.N_ele*const.N_pix(1))^2,1);
+    value_K = zeros(N_dof_per_element*(const.N_ele*const.N_pix(1))^2,1);
+    value_M = zeros(N_dof_per_element*(const.N_ele*const.N_pix(1))^2,1);
     if nargout == 4
-        xpix_idxs = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
-        ypix_idxs = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
-        value_dKddesign = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
-        value_dMddesign = zeros(N_dof_per_element*(const.N_ele*const.N_pix)^2,1);
+        xpix_idxs = zeros(N_dof_per_element*(const.N_ele*const.N_pix(1))^2,1);
+        ypix_idxs = zeros(N_dof_per_element*(const.N_ele*const.N_pix(1))^2,1);
+        value_dKddesign = zeros(N_dof_per_element*(const.N_ele*const.N_pix(1))^2,1);
+        value_dMddesign = zeros(N_dof_per_element*(const.N_ele*const.N_pix(1))^2,1);
     end
     for ele_idx_x = 1:N_ele_x
         for ele_idx_y = 1:N_ele_y

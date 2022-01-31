@@ -1,7 +1,7 @@
 clear; close all; %delete(findall(0));
 
 isSaveOutput = false;
-struct_tag = '1';
+struct_tag = '2';
 
 %% Save output setup ...
 script_start_time = replace(char(datetime),':','-');
@@ -20,8 +20,8 @@ end
 const.a = 1; % [m]
 const.N_ele = 4;
 const.N_pix = 8;
-const.N_wv = [31 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % used for full IBZ calculations
-const.N_eig = 20;
+const.N_wv = [51 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % used for full IBZ calculations
+const.N_eig = 1;
 const.isUseGPU = false;
 const.isUseImprovement = true;
 const.isUseParallel = true;
@@ -53,7 +53,9 @@ if isSaveOutput
 end
 
 %% Solve the dispersion problem
+tic
 [wv,fr,ev] = dispersion(const,const.wavevectors);
+toc
 fr = real(fr);
 % wn = linspace(0,3,size(const.wavevectors,2) + 1);
 % wn = repmat(wn,const.N_eig,1);
@@ -69,16 +71,24 @@ end
 fig = figure2();
 ax = axes(fig);
 hold(ax,'on');
-view(ax,3);
 for eig_idx_to_plot = 1:const.N_eig
     plot_dispersion_surface(wv,fr(:,eig_idx_to_plot),const.N_wv(1),const.N_wv(2),ax);
 end
 zlabel(ax,'\omega')
 title(ax,'Dispersion Relation')
+view(ax,2);
 fix_pdf_border(fig)
 if isSaveOutput
     save_in_all_formats(fig,'dispersion',plot_folder,false)
 end
+
+fig = figure;
+ax = axes(fig);
+for eig_idx_to_plot = 1:const.N_eig
+    plot_dispersion_contour(wv,fr(:,eig_idx_to_plot),const.N_wv(1),const.N_wv(2),ax);
+end
+view(ax,2)
+colorbar
 
 %% Plot the dispersion surface intersections
 % fig = figure2();

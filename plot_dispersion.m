@@ -1,21 +1,20 @@
-function [fig_handle,ax_handle] = plot_dispersion(wn,fr,ax)
+function [fig_handle,ax_handle,plot_handle] = plot_dispersion(wn,fr,N_contour_segments,ax)
     if ~exist('ax','var')
-        fig = figure2();
+        fig = figure();
         ax = axes(fig);
     end
     
-    plot(ax,wn,fr,'k.-');
+    plot_handle = plot(ax,wn,fr,'k.-');
     ax.YMinorGrid = 'on';
     ax.XMinorGrid = 'on';
     hold(ax,'on')
     
-    xline(ax,0);
-    xline(ax,1);
-    xline(ax,2);
-    xline(ax,3);
+    for i = 1:N_contour_segments-1
+        xline(ax,i);
+    end
     
     xlabel(ax,'wavevector parameter')
-    ylabel(ax,'\omega')
+    ylabel(ax,'frequency [Hz]')
     
     if nargout > 0
         fig_handle = ax.Parent;

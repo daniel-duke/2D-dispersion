@@ -1,19 +1,19 @@
 clear; close all;
 
-isSaveOutput = false;
+isSaveOutput = true;
 isSaveEigenvectors = false;
 isIncludeHomogeneous = false;
 isProfile = false;
-N_struct = 100;
+N_struct = 1000;
 imag_tol = 1e-3;
 rng_seed_offset = 0;
 
 const.a = 1; % [m]
 const.N_ele = 2;
-const.N_pix = 4;
-const.N_wv = [51 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % used for full IBZ calculations
+const.N_pix = 2;
+const.N_wv = [11 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % used for full IBZ calculations
 const.N_k = []; % used for IBZ contour calculations
-const.N_eig = 20;
+const.N_eig = 10;
 const.isUseGPU = false;
 const.isUseImprovement = true;
 const.isUseParallel = false; % parallelize structure loop, not dispersion loop

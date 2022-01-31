@@ -53,7 +53,13 @@ function design = get_design(design_name,N_pix)
                 design(:,:,1) = zeros(5);
                 design([2 3 4 6 8 10 11 12 13 14 15 16 18 20 22 23 24]) = 1;
                 design(:,:,2) = design(:,:,1);
-                design(:,:,3) = .6*ones(N_pix);                
+                design(:,:,3) = .6*ones(N_pix);
+            case 'correlated'
+                temp = load("C:\Users\alex\OneDrive - California Institute of Technology\Documents\Graduate\Research\GPR-dispersion-paper\gpr-paper\fig\code_for_figures\elastic_modulus_2D.mat");
+                design(:,:,1) = temp.prop;
+                temp = load("C:\Users\alex\OneDrive - California Institute of Technology\Documents\Graduate\Research\GPR-dispersion-paper\gpr-paper\fig\code_for_figures\density_2D.mat");
+                design(:,:,2) = temp.prop;
+                design(:,:,3) = .6*ones(size(design(:,:,1)));
             otherwise
                 error(['design not recognized: ' design_name])
         end

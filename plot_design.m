@@ -1,5 +1,5 @@
 function [fig_handle,subax_handle] = plot_design(design)
-    fig = figure2();
+    fig = figure();
     
     N_prop = 3;
     titles = {'Modulus','Density','Poisson'};

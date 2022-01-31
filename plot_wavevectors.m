@@ -1,6 +1,6 @@
 function [fig_handle,ax_handle] = plot_wavevectors(wv,ax)
     if ~exist('ax','var')
-        fig = figure2();
+        fig = figure();
         ax = axes(fig);
     end
 
