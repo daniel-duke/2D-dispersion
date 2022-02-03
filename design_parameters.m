@@ -11,7 +11,7 @@ classdef design_parameters
             if nargin == 1
                 obj.property_coupling = 'coupled';
                 obj.design_number = design_number;
-                obj.design_style = 'matern52';
+                obj.design_style = 'kernel';
                 obj.design_options = struct('sigma_f',1,'sigma_l',.5,'symmetry','none','N_value',3);
                 obj.N_pix = [5 5];
             end

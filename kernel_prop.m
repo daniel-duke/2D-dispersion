@@ -1,4 +1,4 @@
-function prop = kernel_prop(kernel,N_pix,design_options)
+function prop = kernel_prop(kernel,N_pix,kernel_params)
     xx = linspace(0,1,N_pix(1)); yy = linspace(0,1,N_pix(2));
     [X,Y] = meshgrid(xx,yy);
     points = [reshape(X,[],1),reshape(Y,[],1)];
@@ -7,10 +7,9 @@ function prop = kernel_prop(kernel,N_pix,design_options)
     switch kernel
         case 'matern52'
 
-            C = matern52(points,points,design_options.sigma_f,design_options.sigma_l);
+            C = matern52(points,points,kernel_params);
         case 'periodic'
-            period = [1 1];
-            C = periodic_kernel(points,points,design_options.sigma_f,design_options.sigma_l,period);
+            C = periodic_kernel(points,points,kernel_params);
         otherwise
             error(['kernel name "' kernel '" not recognized'])
     end

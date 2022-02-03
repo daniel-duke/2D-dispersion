@@ -80,20 +80,7 @@ function prop = get_prop(design_parameters,prop_idx)
             error(['design not recognized: ' design_style])
     end
     if isfield(design_options,'symmetry')
-        switch design_options.symmetry
-            case 'c1m1'
-                orig_min = min(prop,[],'all');
-                orig_range = range(prop,'all');
-                prop = 1/2*prop + 1/2*prop';
-                new_range = range(prop,'all');
-                prop = orig_range/new_range*prop;
-                new_min = min(prop,[],'all');
-                prop = prop - new_min + orig_min;
-            case 'none'
-                % do nothing
-            otherwise
-                error('symmetry_type not recognized')
-        end
+        apply_symmetry(prop,design_options.symmetry)
     end
     if isfield(design_options,'N_value') && design_options.N_value ~= inf
         prop = round((design_options.N_value - 1)*prop)/(design_options.N_value - 1);

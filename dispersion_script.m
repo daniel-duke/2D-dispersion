@@ -5,15 +5,6 @@ isSaveOutput = false;
 %% Save output setup ... 
 script_start_time = replace(char(datetime),':','-');
 output_folder = ['OUTPUT/output ' script_start_time];
-% if isSaveOutput
-%     mkdir(output_folder);
-%     copyfile([mfilename('fullpath') '.m'],[output_folder '/' mfilename '.m']);
-%     plot_folder = create_new_folder('plots',output_folder);
-%     create_new_folder('pdf',plot_folder)
-%     create_new_folder('fig',plot_folder)
-%     create_new_folder('svg',plot_folder)
-%     create_new_folder('eps',plot_folder)
-% end
 
 %%
 const.a = .01; % [m]

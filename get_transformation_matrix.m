@@ -1,20 +1,23 @@
-function [T,dTdwavevector] = get_transformation_matrix(wavevector,const)
+function [T,dTdwavevector] = get_transformation_matrix(wavevector,dispersion_computation)
     
-    N_node = (const.N_ele*const.N_pix(1)) + 1;
+    dcp = dispersion_computation.dispersion_computation_parameters;
+    dvi = dispersion_computation.design_variable_interpreter;
+
+    N_node = (dcp.N_ele*dcp.N_pix(1)) + 1;
     
-    r = [const.a; 0];
+    r = [dvi.lattice_length; 0];
     xphase = exp(1i*dot(wavevector,r));
     if nargout == 2
         dxphasedwavevector = 1i*r*xphase;
     end
     
-    r = [0; -const.a];
+    r = [0; -dvi.lattice_length];
     yphase = exp(1i*dot(wavevector,r));
     if nargout == 2
         dyphasedwavevector = 1i*r*yphase;
     end
     
-    r = [const.a; -const.a];
+    r = [dvi.lattice_length; -dvi.lattice_length];
     cornerphase = exp(1i*dot(wavevector,r));
     if nargout == 2
         dcornerphasedwavevector = 1i*r*cornerphase;

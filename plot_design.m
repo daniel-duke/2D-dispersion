@@ -4,11 +4,12 @@ function [fig_handle,subax_handle] = plot_design(design)
     N_prop = 3;
     titles = {'Modulus','Density','Poisson'};
     
+    prop_name = {'E','rho','nu'};
     for prop_idx = 1:N_prop
         subax(prop_idx) = axes(fig);
         subplot(1,3,prop_idx,subax(prop_idx))
         subplot(subax(prop_idx))
-        imagesc(squeeze(design(:,:,prop_idx)));
+        imagesc(design.(prop_name{prop_idx}));
         colormap('gray');
         caxis([0 1]);
         daspect([1 1 1]);
