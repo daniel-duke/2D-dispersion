@@ -1,79 +1,67 @@
 clear; close all; %delete(findall(0));
+script_start_time = replace(char(datetime),':','-');
 
 isSaveOutput = false;
 
-%% Save output setup ... 
-script_start_time = replace(char(datetime),':','-');
-output_folder = ['OUTPUT/output ' script_start_time];
+% Dispersion computation
+dispersion_computation = DispersionComputation;
 
-%%
-const.a = .01; % [m]
-const.N_ele = 1;
-const.N_pix = 16;
-const.N_wv = [16 31];
-const.N_eig = 3;
-const.isUseGPU = false;
-const.isUseImprovement = true;
-const.isUseParallel = true;
-const.isSaveEigenvectors = false;
+% Dispersion computation parameters
+dcp = DispersionComputationParameters;
+dcp.N_wv = [16 31];
+dcp.N_eig = 3;
+dcp.N_ele = 1;
+dcp.N_pix = [16 16]; % Must be square for now. Future improvement could allow non-square unit cells and/or non-square elements.
+dcp.sigma_eig = 1;
+dcp.isUseParallel = true;
+dcp.isUseImprovement = true;
+dcp.isUseGPU = false;
+dispersion_computation.dispersion_computation_parameters = dcp;
 
-const.E_min = 200e6;
-const.E_max = 200e9;
-const.rho_min = 8e2;
-const.rho_max = 8e3;
-const.poisson_min = 0;
-const.poisson_max = .5;
-const.t = .01;
-const.sigma_eig = 1;
+% Design generator
+dg = DesignGenerator;
+dg.kernel_name = 'periodic';
+kp = PeriodicKernelParameters;
+kp.sigma_f = 1;
+kp.length_scale = .5;
+kp.period = 1;
+dg.kernel_params = kp;
+dg.plane_symmetry_group = 'none';
+dg.N_pix = dcp.N_pix;
+dg.N_value = 2; % Number of distinct material properties allowed
+dg.isBoringPoisson = true; % Set poisson = 0.3?
 
-design_params = design_parameters;
-design_params.design_number = 15;
-design_params.design_style = 'kernel';
-design_params.design_options = struct('kernel','periodic','sigma_f',1,'sigma_l',0.5,'symmetry_type','none','N_value',2);
-design_params.N_pix = [const.N_pix const.N_pix];
-design_params = design_params.prepare();
+% Design variable interpretation
+dvi = DesignVariableInterpreter;
+dvi.design_variable_scaling = 'log';
+dvi.lattice_length = .01; % [m]
+dvi.thickness = .01; % [m]
+dvi.E_min = 200e6; % [Pa]
+dvi.E_max = 200e9; % [Pa]
+dvi.rho_min = 8e2; % [kg/m^3]
+dvi.rho_max = 8e3; % [kg/m^3]
+dvi.nu_min = 0; % [-]
+dvi.nu_max = 0.5; % [-]
+dispersion_computation.design_variable_interpreter = dvi;
 
-[const.wavevectors,contour_info] = get_IBZ_contour_wavevectors(const.N_wv(1),const.a,design_params.design_options{1}.symmetry_type);
+% Design variable
+design_number = 15;
+dv = dg.generate(design_number); % This always generates designs in the 'linear' design_variable_scaling. A probability distribution in linear space won't look like a uniform distribution in log space.
+dv = convert_design_variable(dv,'linear',dvi.design_variable_scaling,dvi);
+dispersion_computation.design_variable = dv;
 
-%% Random cell
-const.design_scale = 'linear';
-% const.design = get_design(struct_tag,const.N_pix);
-% const.design = all_designs(:,:,:,zhi_design_idx);
-const.design = get_design2(design_params);
-% const.design = convert_design(const.design,'linear',const.design_scale,const.E_min,const.E_max,const.rho_min,const.rho_max);
+ibz_contour = get_IBZ_contour(dcp.N_wv(1),dvi.lattice_length,dg.plane_symmetry_group);
+dispersion_computation.wavevector = ibz_contour.wavevector;
 
 %% Plot the design
-fig = plot_design(const.design);
-if isSaveOutput
-    fix_pdf_border(fig)
-    save_in_all_formats(fig,'design',plot_folder,false)
-end
+fig = plot_design(dv,dvi);
 
 %% Solve the dispersion problem
-[wv,fr,ev] = dispersion(const,const.wavevectors);
-% fr(end+1,:) = fr(1,:);
-% ev(:,end + 1,:) = ev(:,1,:);
-wn = linspace(0,contour_info.N_segment+1,size(const.wavevectors,1))';
-wn = repmat(wn,1,const.N_eig);
+dispersion_computation = dispersion_computation.run();
 
 %% Plot the discretized Irreducible Brillouin Zone
-fig = plot_wavevectors(wv);
-if isSaveOutput
-    fig = fix_pdf_border(fig);
-    save_in_all_formats(fig,'wavevectors',plot_folder,false)
-end
+fig = plot_wavevectors(dispersion_computation.wavevector);
 
 %% Plot the dispersion relation
-fig = plot_dispersion(wn,fr,contour_info.N_segment);
-if isSaveOutput
-    fig = fix_pdf_border(fig);
-    save_in_all_formats(fig,'dispersion',plot_folder,false)
-end
-
-%% Plot the modes
-% k_idx = 2;
-% eig_idx = 5;
-% wavevector = wv(:,k_idx);
-% plot_mode_ui(wv,fr,ev,const);
-% plot_mode(wv,fr,ev,eig_idx,k_idx,'both',const)
+fig = plot_dispersion(ibz_contour.wavevector_parameter,dispersion_computation.frequency,ibz_contour.N_segment);
 

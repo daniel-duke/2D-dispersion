@@ -6,7 +6,6 @@ function prop = kernel_prop(kernel,N_pix,kernel_params)
 
     switch kernel
         case 'matern52'
-
             C = matern52(points,points,kernel_params);
         case 'periodic'
             C = periodic_kernel(points,points,kernel_params);
