@@ -1,4 +1,8 @@
-function [fig_handle,subax_handle] = plot_design(design)
+function [fig_handle,subax_handle] = plot_design(design_variable,design_variable_interpreter)
+    dv = design_variable;
+    dvi = design_variable_interpreter;
+    dv = convert_design_variable(dv,dvi.design_variable_scaling,'linear',dvi);
+    
     fig = figure();
     
     N_prop = 3;
@@ -9,7 +13,7 @@ function [fig_handle,subax_handle] = plot_design(design)
         subax(prop_idx) = axes(fig);
         subplot(1,3,prop_idx,subax(prop_idx))
         subplot(subax(prop_idx))
-        imagesc(design.(prop_name{prop_idx}));
+        imagesc(dv.(prop_name{prop_idx}));
         colormap('gray');
         caxis([0 1]);
         daspect([1 1 1]);

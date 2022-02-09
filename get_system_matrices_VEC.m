@@ -6,23 +6,27 @@ function [K,M] = get_system_matrices_VEC(dispersion_computation)
     N_ele_x = dcp.N_pix(2)*dcp.N_ele; % Total number of elements along x direction
     N_ele_y = dcp.N_pix(1)*dcp.N_ele; % Total number of elements along y direction
 
+    dv = convert_design_variable(dv,dvi.design_variable_scaling,'explicit',dvi);
+
     prop_names = {'E','rho','nu'};
     for prop_idx = 1:3
         prop_name = prop_names{prop_idx};
         dv.(prop_name) = repelem(dv.(prop_name),dcp.N_ele,dcp.N_ele,1);
     end
 
-    nu = (dvi.nu_min + dv.nu.*(dvi.nu_max - dvi.nu_min))';
+    E = dv.E;
+    rho = dv.rho;
+    nu = dv.nu;
     t = dvi.thickness;
-    if strcmp(dvi.design_variable_to_property_mapping,'linear')
-        E = (dvi.E_min + dv.E.*(dvi.E_max - dvi.E_min))';
-        rho = (dvi.rho_min + dv.rho.*(dvi.rho_max - dvi.rho_min))';
-    elseif strcmp(dvi.design_variable_to_property_mapping,'exponential')
-        E = exp(dv.E)';
-        rho = exp(dv.rho)';
-    else
-        error('const.design_scale not recognized as log or linear')
-    end
+%     if strcmp(dvi.design_variable_to_property_mapping,'linear')
+%         E = (dvi.E_min + dv.E.*(dvi.E_max - dvi.E_min))';
+%         rho = (dvi.rho_min + dv.rho.*(dvi.rho_max - dvi.rho_min))';
+%     elseif strcmp(dvi.design_variable_to_property_mapping,'exponential')
+%         E = exp(dv.E)';
+%         rho = exp(dv.rho)';
+%     else
+%         error('const.design_scale not recognized as log or linear')
+%     end
 
     element_length = (dvi.lattice_length/(dcp.N_ele(1)*dcp.N_pix(1)));
     

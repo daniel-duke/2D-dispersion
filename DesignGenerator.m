@@ -12,13 +12,13 @@ classdef DesignGenerator
             obj.plane_symmetry_group = 'none';
             obj.isBoringPoisson = true;
         end
-        function design = generate(obj,design_number)
+        function dv = generate(obj,design_number) % This always generates designs in the 'linear' design_variable_scaling. A probability distribution in linear space won't look like a uniform distribution in log space.
             obj = obj.prepare();
             % Expand if only one design number is specified
             if numel(design_number) == 1
                 design_number = repmat(design_number,3,1);
             end
-            design = DesignVariable;
+            dv = DesignVariable;
             prop_names = {'E','rho','nu'};
             for i = 1:3
                 rng(design_number(i),'twister');
@@ -27,10 +27,10 @@ classdef DesignGenerator
                 if  obj.N_value ~= inf
                     prop = round((obj.N_value - 1)*prop)/(obj.N_value - 1);
                 end
-                design.(prop_names{i}) = prop;
+                dv.(prop_names{i}) = prop;
             end
             if obj.isBoringPoisson
-                design.nu = 0.6*ones(obj.N_pix);
+                dv.nu = 0.6*ones(obj.N_pix);
             end
         end
         function obj = prepare(obj)
