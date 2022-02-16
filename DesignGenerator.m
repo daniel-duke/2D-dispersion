@@ -3,7 +3,7 @@ classdef DesignGenerator
         kernel_name
         kernel_params
         plane_symmetry_group
-        N_pix
+        N_pixel
         N_value
         isBoringPoisson
     end
@@ -22,7 +22,7 @@ classdef DesignGenerator
             prop_names = {'E','rho','nu'};
             for i = 1:3
                 rng(design_number(i),'twister');
-                prop = kernel_prop(obj.kernel_name{i},obj.N_pix,obj.kernel_params{i});
+                prop = kernel_prop(obj.kernel_name{i},obj.N_pixel,obj.kernel_params{i});
                 prop = apply_plane_symmetry_group(prop,obj.plane_symmetry_group);
                 if  obj.N_value ~= inf
                     prop = round((obj.N_value - 1)*prop)/(obj.N_value - 1);
@@ -30,7 +30,7 @@ classdef DesignGenerator
                 dv.(prop_names{i}) = prop;
             end
             if obj.isBoringPoisson
-                dv.nu = 0.6*ones(obj.N_pix);
+                dv.nu = 0.6*ones(obj.N_pixel);
             end
         end
         function obj = prepare(obj)

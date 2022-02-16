@@ -1,12 +1,12 @@
 function dispersion_computation = dispersion(dispersion_computation)
     
     dcp = dispersion_computation.dispersion_computation_parameters;
-    assert(all(dcp.N_pix == size(dispersion_computation.design_variable.E)))
+    assert(all(dcp.N_pixel == size(dispersion_computation.design_variable.E)))
     
     wavevectors = dispersion_computation.wavevector;
     
-    fr = zeros(size(wavevectors,2),dcp.N_eig);
-    if dcp.isSaveEigenvectors
+    fr = zeros(size(wavevectors,2),dcp.N_band);
+    if dcp.isSaveEigenvector
         ev = zeros(((dcp.N_ele*dcp.N_pix)^2)*2,size(wavevectors,2),dcp.N_eig);
     else
         ev = [];
@@ -30,18 +30,18 @@ function dispersion_computation = dispersion(dispersion_computation)
         
         if ~dcp.isUseGPU
             % DONT USE THE GPU WITH EIGS           
-            [eig_vecs,eig_vals] = eigs(Kr,Mr,dcp.N_eig,dcp.sigma_eig);
+            [eig_vecs,eig_vals] = eigs(Kr,Mr,dcp.N_band,dcp.sigma_eig);
             [eig_vals,idxs] = sort(diag(eig_vals));
             eig_vecs = eig_vecs(:,idxs);
             
 %             ev(:,k_idx,:) = (eig_vecs./(diag(eig_vecs'*Mr*eig_vecs)'))'; % normalize by mass matrix
-            if dcp.isSaveEigenvectors
+            if dcp.isSaveEigenvector
                 ev(:,k_idx,:) = (eig_vecs./vecnorm(eig_vecs,2,1)).*exp(-1i*angle(eig_vecs(1,:))); % normalize by p-norm, align complex angle
             end
             %             ev(:,k_idx,:) = (eig_vecs./max(eig_vecs))'; % normalize by max
 %             ev(:,k_idx,:) = eig_vecs'; % don't normalize
             
-            fr(k_idx,:) = sqrt(real(eig_vals));
+            fr(k_idx,:) = real(sqrt(real(eig_vals))); % I know this looks funny, but I think it's probably the best way to do this (do the real before and after taking the sqrt)
             fr(k_idx,:) = fr(k_idx,:)/(2*pi);
         elseif dcp.isUseGPU
             % USE THE GPU WITH EIG
@@ -50,7 +50,7 @@ function dispersion_computation = dispersion(dispersion_computation)
             [eig_vecs,eig_vals] = eig(MinvK_gpu);
             [eig_vals,idxs] = sort(diag(eig_vals));
             eig_vecs = eig_vecs(:,idxs);
-            fr(k_idx,:) = sqrt(real(eig_vals(1:const.N_eig)));
+            fr(k_idx,:) = real(sqrt(real(eig_vals(1:const.N_eig)))); % I know this looks funny, but I think it's probably the best way to do this (do the real before and after taking the sqrt)
             fr(k_idx,:) = fr(k_idx,:)/(2*pi);
         end
     end

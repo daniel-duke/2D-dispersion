@@ -1,21 +1,14 @@
 classdef DispersionComputationParameters
     properties
-        N_wv;
-        N_eig;
-        N_ele;
-        N_pix;
-        sigma_eig;
-        isUseParallel;
-        isUseImprovement;
-        isSaveEigenvectors;
-        isUseGPU;
-    end
-    methods
-        function obj = DispersionComputationParameters()
-            obj.isUseParallel = true;
-            obj.isUseImprovement = true;
-            obj.isSaveEigenvectors = false;
-            obj.isUseGPU = false;
-        end
+        wavevector_array_size;
+        N_wavevector;
+        N_band;
+        N_element;
+        N_pixel;
+        sigma_eig = 1;
+        isUseParallel(1,1) logical = true;
+        isUseImprovement(1,1) logical  = true;
+        isSaveEigenvector(1,1) logical  = false;
+        isUseGPU(1,1) logical = false;
     end
 end

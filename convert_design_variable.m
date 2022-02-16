@@ -1,7 +1,6 @@
 function converted_design_variable = convert_design_variable(design_variable,initial_format,target_format,design_variable_interpreter)
     % initial_format and target_format can be 'linear','log','explicit'
-    warning('ensure design variable conversion is happening correctly')
-
+    
     if strcmp(initial_format,target_format)
         converted_design_variable = design_variable;
         return
@@ -21,6 +20,7 @@ function converted_design_variable = convert_design_variable(design_variable,ini
     %         converted_design = cat(3,log(explicit_design(:,:,1:2)),(explicit_design(:,:,3 - poisson_min))/(poisson_max - poisson_min));
     %     end
     
+    converted_design_variable = DesignVariable;
     prop_names = {'E','rho','nu'};
     for prop_idx = 1:3
         prop_name = prop_names{prop_idx};

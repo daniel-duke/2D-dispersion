@@ -1,4 +1,5 @@
 function plot_mode_ui(wv,fr,ev,const)
+    % Needs to be updated for OOP
     k_idx = 1;
     eig_idx = 1;
     scale = .1;

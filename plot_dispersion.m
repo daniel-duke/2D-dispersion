@@ -1,4 +1,5 @@
 function [fig_handle,ax_handle,plot_handle] = plot_dispersion(wn,fr,N_contour_segments,ax)
+    % Needs to be updated for OOP
     if ~exist('ax','var')
         fig = figure();
         ax = axes(fig);

@@ -3,21 +3,21 @@ function [T,dTdwavevector] = get_transformation_matrix(wavevector,dispersion_com
     dcp = dispersion_computation.dispersion_computation_parameters;
     dvi = dispersion_computation.design_variable_interpreter;
 
-    N_node = (dcp.N_ele*dcp.N_pix(1)) + 1;
+    N_node = (dcp.N_element*dcp.N_pixel(1)) + 1;
     
-    r = [dvi.lattice_length; 0];
+    r = [dvi.unit_cell_length; 0];
     xphase = exp(1i*dot(wavevector,r));
     if nargout == 2
         dxphasedwavevector = 1i*r*xphase;
     end
     
-    r = [0; -dvi.lattice_length];
+    r = [0; -dvi.unit_cell_length];
     yphase = exp(1i*dot(wavevector,r));
     if nargout == 2
         dyphasedwavevector = 1i*r*yphase;
     end
     
-    r = [dvi.lattice_length; -dvi.lattice_length];
+    r = [dvi.unit_cell_length; -dvi.unit_cell_length];
     cornerphase = exp(1i*dot(wavevector,r));
     if nargout == 2
         dcornerphasedwavevector = 1i*r*cornerphase;

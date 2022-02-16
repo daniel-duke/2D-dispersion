@@ -1,5 +1,5 @@
-function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,N_k_x,N_k_y,ax)
-    
+function [fig_handle,ax_handle] = plot_dispersion_surface(wavevector,frequency,wavevector_array_size,ax)
+    % Needs to be updated for OOP
     if ~exist('ax','var')
         fig = figure();
         ax = axes(fig);
@@ -7,14 +7,9 @@ function [fig_handle,ax_handle] = plot_dispersion_surface(wv,fr,N_k_x,N_k_y,ax)
         fig = ax.Parent;
     end
     
-    if isempty(N_k_x)||isempty(N_k_y)||~exist('N_k_x','var')||~exist('N_k_y','var')
-        N_k_y = sqrt(size(wv,1));
-        N_k_x = sqrt(size(wv,1));
-    end
-    
-    X = reshape(squeeze(wv(:,1)),N_k_y,N_k_x); % rect
-    Y = reshape(squeeze(wv(:,2)),N_k_y,N_k_x); % rect
-    Z = reshape(fr,N_k_y,N_k_x); % rect
+    X = reshape(squeeze(wavevector(:,1)),flip(wavevector_array_size)); % rect
+    Y = reshape(squeeze(wavevector(:,2)),flip(wavevector_array_size)); % rect
+    Z = reshape(frequency,flip(wavevector_array_size)); % rect
     
     surf(ax,X,Y,Z)
 %     contourf(ax,X,Y,Z)

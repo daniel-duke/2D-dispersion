@@ -12,7 +12,7 @@ classdef DispersionComputation
             if nargout == 0
                 error('nargout == 0')
             end
-            dispersion_computation = dispersion3(dispersion_computation);
+            dispersion_computation = dispersion(dispersion_computation);
         end
     end
     methods(Static)

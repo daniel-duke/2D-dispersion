@@ -1,4 +1,5 @@
 function [fig_handle,ax_handle] = plot_wavevectors(wv,ax)
+    % Needs to be updated for OOP
     if ~exist('ax','var')
         fig = figure();
         ax = axes(fig);

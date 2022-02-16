@@ -1,4 +1,5 @@
 clear; close all;
+% Needs to be updated for OOP
 
 N_struct = 25;
 rng_seed_offset = 0;
