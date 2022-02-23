@@ -2,6 +2,7 @@ clear; close all; %delete(findall(0));
 script_start_time = replace(char(datetime),':','-');
 
 isSaveOutput = false;
+isUseIbzContour = false;
 
 % Dispersion computation
 dispersion_computation = DispersionComputation;
@@ -15,6 +16,7 @@ dcp.N_pixel = [16 16]; % Must be square for now. Future improvement could allow 
 dcp.sigma_eig = 1;
 dcp.isUseParallel = true;
 dcp.isUseImprovement = true;
+dcp.isSaveEigenvector = true;
 dcp.isUseGPU = false;
 dispersion_computation.dispersion_computation_parameters = dcp;
 
@@ -50,10 +52,13 @@ dv = dg.generate(design_number); % This always generates designs in the 'linear'
 dv = convert_design_variable(dv,'linear',dvi.design_variable_scaling,dvi);
 dispersion_computation.design_variable = dv;
 
-% ibz_contour = get_irreducible_brillouin_zone_contour(dcp.wavevector_array_size(1),dvi.lattice_length,dg.plane_symmetry_group);
-% dispersion_computation.wavevector = ibz_contour.wavevector;
-ibz = get_irreducible_brillouin_zone(dcp.wavevector_array_size,dvi.unit_cell_length,dg.plane_symmetry_group);
-dispersion_computation.wavevector = ibz.wavevector;
+if isUseIbzContour
+    ibz_contour = get_irreducible_brillouin_zone_contour(dcp.wavevector_array_size(1),dvi.lattice_length,dg.plane_symmetry_group);
+    dispersion_computation.wavevector = ibz_contour.wavevector;
+else 
+    ibz = get_irreducible_brillouin_zone(dcp.wavevector_array_size,dvi.unit_cell_length,dg.plane_symmetry_group);
+    dispersion_computation.wavevector = ibz.wavevector;
+end
 
 %% Plot the design
 fig = plot_design(dv,dvi);
@@ -65,15 +70,16 @@ dispersion_computation = dispersion_computation.run();
 fig = plot_wavevectors(dispersion_computation.wavevector);
 
 %% Plot the dispersion relation
-% fig = plot_dispersion(ibz_contour.wavevector_parameter,dispersion_computation.frequency,ibz_contour.N_segment);
-fig = figure;
-tlo = tiledlayout('flow');
-for band_idx = 1:dispersion_computation.dispersion_computation_parameters.N_band
-    ax = nexttile;
-    wv = dispersion_computation.wavevector;
-    fr = dispersion_computation.frequency(:,band_idx);
-    was = dispersion_computation.dispersion_computation_parameters.wavevector_array_size;
-    plot_dispersion_band(wv,fr,was,ax);
+if isUseIbzContour
+     fig = plot_dispersion(ibz_contour.wavevector_parameter,dispersion_computation.frequency,ibz_contour.N_segment);
+else
+    fig = figure;
+    tlo = tiledlayout('flow');
+    for band_idx = 1:dispersion_computation.dispersion_computation_parameters.N_band
+        ax = nexttile;
+        wv = dispersion_computation.wavevector;
+        fr = dispersion_computation.frequency(:,band_idx);
+        was = dispersion_computation.dispersion_computation_parameters.wavevector_array_size;
+        plot_dispersion_band(wv,fr,was,ax);
+    end
 end
-
-
