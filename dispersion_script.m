@@ -1,7 +1,8 @@
 clear; close all; %delete(findall(0));
 script_start_time = replace(char(datetime),':','-');
 
-isSaveOutput = false;
+% Script parameters
+
 
 % Dispersion computation
 dispersion_computation = DispersionComputation;

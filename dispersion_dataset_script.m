@@ -6,7 +6,7 @@ mfilename_var = [mfilename '.m'];
 isSaveOutput = true;
 isSaveEigenvectors = false;
 isProfile = false;
-N_dispersion_relation = 20;
+N_dispersion_relation = 50;
 dispersion_relation_index_offset = 0;
 
 % Dispersion computation
@@ -17,7 +17,7 @@ dcp = DispersionComputationParameters;
 dcp.wavevector_array_size = [26 51];
 dcp.N_band = 3;
 dcp.N_element = 1;
-dcp.N_pixel = [20 20]; % Must be square for now. Future improvement could allow non-square unit cells and/or non-square elements.
+dcp.N_pixel = [10 10]; % Must be square for now. Future improvement could allow non-square unit cells and/or non-square elements.
 dcp.sigma_eig = 1;
 dcp.isUseParallel = true;
 dcp.isUseImprovement = true;
@@ -63,7 +63,7 @@ for dispersion_relation_index = 1:N_dispersion_relation
     dv = convert_design_variable(dv,'linear',dvi.design_variable_scaling,dvi);
     dispersion_computation.design_variable = dv;
     dispersion_computation = dispersion_computation.run();
-    dispersion_dataset.import_dispersion_computation(dispersion_computation,dispersion_relation_index);
+    dispersion_dataset = dispersion_dataset.import_dispersion_computation(dispersion_computation,dispersion_relation_index);
     waitbar(dispersion_relation_index/N_dispersion_relation,wb,['Computing dispersion dataset' newline num2str(dispersion_relation_index) '/' num2str(N_dispersion_relation)])
 end
 close(wb);
