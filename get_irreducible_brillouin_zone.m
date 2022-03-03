@@ -28,6 +28,8 @@ function ibz = get_irreducible_brillouin_zone(wavevector_array_size,unit_cell_le
     ibz = IrreducibleBrillouinZone;
     ibz.wavevector_array_size = wavevector_array_size;
     ibz.wavevector = wavevector;
+    [~,idxs] = sort(ibz.wavevector(:,2));
+    ibz.wavevector = ibz.wavevector(idxs,:);
     ibz.N_wavevector = size(wavevector,1);
     ibz.unit_cell_length = unit_cell_length;
 end
