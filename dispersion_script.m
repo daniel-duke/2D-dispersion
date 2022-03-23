@@ -60,7 +60,7 @@ else
 end
 
 %% Plot the design
-fig = plot_design(dv,dvi);
+% fig = plot_design(dv,dvi);
 
 %% Solve the dispersion problem
 dispersion_computation = dispersion_computation.run();
@@ -81,4 +81,8 @@ else
         was = dispersion_computation.dispersion_computation_parameters.wavevector_array_size;
         plot_dispersion_band(wv,fr,was,ax);
     end
+end
+
+if dcp.isSaveEigenvector
+    plot_mode_ui(dispersion_computation);
 end
