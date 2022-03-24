@@ -2,16 +2,17 @@ clear; close all; %delete(findall(0));
 script_start_time = replace(char(datetime),':','-');
 
 isUseIbzContour = false;
+isPlotModes = true;
 
 % Dispersion computation
 dispersion_computation = DispersionComputation;
 
 % Dispersion computation parameters
 dcp = DispersionComputationParameters;
-dcp.wavevector_array_size = [31 16];
+dcp.wavevector_array_size = [21 11];
 dcp.N_band = 3;
 dcp.N_element = 1;
-dcp.N_pixel = [16 16]; % Must be square for now. Future improvement could allow non-square unit cells and/or non-square elements.
+dcp.N_pixel = [8 8]; % Must be square for now. Future improvement could allow non-square unit cells and/or non-square elements.
 dcp.sigma_eig = 1;
 dcp.isUseParallel = true;
 dcp.isUseImprovement = true;
@@ -84,5 +85,7 @@ else
 end
 
 if dcp.isSaveEigenvector
-    plot_mode_ui(dispersion_computation);
+    if isPlotModes
+        plot_mode_ui(dispersion_computation);
+    end
 end
