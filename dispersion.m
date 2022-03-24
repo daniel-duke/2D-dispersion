@@ -7,7 +7,7 @@ function dispersion_computation = dispersion(dispersion_computation)
     
     fr = zeros(size(wavevectors,2),dcp.N_band);
     if dcp.isSaveEigenvector
-        ev = zeros(((dcp.N_ele*dcp.N_pix)^2)*2,size(wavevectors,2),dcp.N_eig);
+        ev = zeros(((dcp.N_element*dcp.N_pixel(1))^2)*2,size(wavevectors,2),dcp.N_band);
     else
         ev = [];
     end

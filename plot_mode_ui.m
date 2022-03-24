@@ -1,64 +1,58 @@
-function plot_mode_ui(wv,fr,ev,const)
-    % Needs to be updated for OOP
+function plot_mode_ui(dispersion_computation)
+    wavevector = dispersion_computation.wavevector;
+    frequency = dispersion_computation.frequency;
+    eigenvector = dispersion_computation.eigenvector;
     k_idx = 1;
-    eig_idx = 1;
+    band_idx = 1;
     scale = .1;
     fig = uifigure('handlevisibility','on');
     ax = uiaxes('Parent', fig, 'Position', [10 10 400 400],'handlevisibility','on');
-%     axes(ax);
-%     figure(fig);
+    plot_mode(wavevector,frequency,eigenvector,band_idx,k_idx,'still',scale,dispersion_computation,ax);
     
-    plot_mode(wv,fr,ev,eig_idx,k_idx,'stillui',scale,const,ax);
-    
-    dd_wv = uidropdown(fig,...
+    %% GUI definitions
+    dropdown_wv = uidropdown(fig,...
         'Position',[430 150 100 22],...
-        'Items', array2cell(wv),...
-        'ItemsData',1:size(wv,2),...
-        'ValueChangedFcn', @(dd_wv, event) update_plot_wv(dd_wv));
-    dd_eig =  uidropdown(fig,...
-        'Position',[430 110 100 22],...
-        'Items', array2cell(1:size(fr,1)),...
-        'ItemsData',1:size(fr,1),...
-        'ValueChangedFcn', @(dd_eig, event) update_plot_ev(dd_eig));
+        'Items', array2cell(wavevector'),...
+        'ItemsData',1:size(wavevector,1),...
+        'ValueChangedFcn', @(dropdown_wv, event) update_plot_wv(dropdown_wv));
     
-    sld = uislider(fig,...
+    dropdown_band =  uidropdown(fig,...
+        'Position',[430 110 100 22],...
+        'Items', array2cell(1:size(frequency,2)),...
+        'ItemsData',1:size(frequency,2),...
+        'ValueChangedFcn', @(dropdown_band, event) update_plot_band(dropdown_band));
+    
+    slider = uislider(fig,...
         'Position',[450 200 150 3],...
         'Orientation','vertical',...
         'Limits',[-.1 .1],...
         'Value',.1,...
         'MajorTicks',linspace(-.1,.1,11),...
-        'ValueChangedFcn',@(sld, event) update_scale(sld));
+        'ValueChangedFcn',@(slider, event) update_scale(slider));
     
-    clkbut = uibutton(fig,...
+    click_button = uibutton(fig,...
         'Position',[430 50 100 22],...
         'Text','Play animation',...
-        'ButtonPushedFcn',@(clkbut, event) play_animation());
+        'ButtonPushedFcn',@(click_button, event) play_animation());
         
-        
-    
-    function update_plot_wv(dd_wv)
-        k_idx = dd_wv.Value;
-%         axes(ax);
-%         figure(fig);
-        plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax);
+    %% Methods for handling user interactions
+    function update_plot_wv(dropdown_wv)
+        k_idx = dropdown_wv.Value;
+        plot_mode(wavevector,frequency,eigenvector,band_idx,k_idx,'still',scale,dispersion_computation,ax);
     end
     
-    function update_plot_ev(dd_ev)
-        eig_idx = dd_ev.Value;
-%         axes(ax);
-%         figure(fig);
-        plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax);
+    function update_plot_band(dropdown_band)
+        band_idx = dropdown_band.Value;
+        plot_mode(wavevector,frequency,eigenvector,band_idx,k_idx,'still',scale,dispersion_computation,ax);
     end
     
-    function update_scale(sld)
-        scale = sld.Value;
-%         axes(ax);
-%         figure(fig);
-        plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax);
+    function update_scale(slider)
+        scale = slider.Value;
+        plot_mode(wavevector,frequency,eigenvector,band_idx,k_idx,'still',scale,dispersion_computation,ax);
     end
     
     function play_animation()
-        plot_mode(wv,fr,ev,eig_idx,k_idx,'animation',scale,const,ax);
+        plot_mode(wavevector,frequency,eigenvector,band_idx,k_idx,'animation',scale,dispersion_computation,ax);
     end
     
     function C = array2cell(A)

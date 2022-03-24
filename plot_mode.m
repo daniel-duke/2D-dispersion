@@ -1,5 +1,8 @@
-function [fig_handle,ax_handle] = plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,scale,const,ax)
-    % Needs to be updated for OOP
+function [fig_handle,ax_handle] = plot_mode(wv,fr,ev,band_idx,k_idx,plot_type,scale,dispersion_computation,ax)
+    unit_cell_length = dispersion_computation.design_variable_interpreter.unit_cell_length;
+    n_elements = dispersion_computation.dispersion_computation_parameters.N_element;
+    n_pixels = dispersion_computation.dispersion_computation_parameters.N_pixel(1);
+
     if ~exist('ax','var')
         fig = figure2();
         ax = axes(fig);
@@ -7,21 +10,21 @@ function [fig_handle,ax_handle] = plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,sca
         cla(ax);
     end
     
-    original_nodal_locations = linspace(0,const.a,const.N_ele*const.N_pix + 1); %const.a*(0:(const.N_ele*const.N_pix))./(const.N_ele*const.N_pix);
-    high_resolution_locations = linspace(0,const.a,100);
+    original_nodal_locations = linspace(0,unit_cell_length,n_elements*n_pixels + 1); %temp*(0:(n_elements*n_pixels))./(n_elements*n_pixels);
+    high_resolution_locations = linspace(0,unit_cell_length,100);
     [X,Y] = meshgrid(original_nodal_locations,flip(original_nodal_locations));
     [X_h,Y_h] = meshgrid(high_resolution_locations,flip(high_resolution_locations));
-    u_reduced = squeeze(ev(eig_idx,k_idx,:));
-    %     u_reduced = u_reduced/max(u_reduced)*(1/10)*const.a;
-    T = get_transformation_matrix(wv(:,k_idx),const);
+    u_reduced = squeeze(ev(:,k_idx, band_idx));
+    %     u_reduced = u_reduced/max(u_reduced)*(1/10)*unit_cell_length;
+    T = get_transformation_matrix(wv(k_idx,:),dispersion_computation);
     u = conj(T)*u_reduced;
-    u = u/max(abs(u))*(1/10)*const.a;
+    u = u/max(abs(u))*(1/10)*unit_cell_length;
     U_vec = u(1:2:end);
-    U_mat = reshape(U_vec,const.N_ele*const.N_pix + 1,const.N_ele*const.N_pix + 1)';
+    U_mat = reshape(U_vec,n_elements*n_pixels + 1,n_elements*n_pixels + 1)';
     
     U_mat_h = interp2(X,Y,U_mat,X_h,Y_h);
     V_vec = u(2:2:end);
-    V_mat = reshape(V_vec,const.N_ele*const.N_pix + 1,const.N_ele*const.N_pix + 1)';
+    V_mat = reshape(V_vec,n_elements*n_pixels + 1,n_elements*n_pixels + 1)';
     
     V_mat_h = interp2(X,Y,V_mat,X_h,Y_h);
     
@@ -54,7 +57,7 @@ function [fig_handle,ax_handle] = plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,sca
     
     function plot_animation()
         plot(ax,X,Y,'k.');
-        axis(ax,[-.2 1.2 -.2 1.2]*const.a);
+        axis(ax,[-.2 1.2 -.2 1.2]*unit_cell_length);
         daspect(ax,[1 1 1])
         hold(ax,'on')
         N_cycles = 3.25;
@@ -71,8 +74,8 @@ function [fig_handle,ax_handle] = plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,sca
         contour_scale = 1;
         contourf(ax,real(X_h + scale*U_mat_h),real(Y_h + scale*V_mat_h),sqrt(real(U_mat_h).^2 + real(V_mat_h).^2),100,'LineColor','none');
         colorbar(ax)
-        axis(ax,[-.2 1.2 -.2 1.2]*const.a);
-        line(ax,[0 const.a const.a 0 0],[0 0 const.a const.a 0],'Color','r','LineStyle','--');
+        axis(ax,[-.2 1.2 -.2 1.2]*unit_cell_length);
+        line(ax,[0 unit_cell_length unit_cell_length 0 0],[0 0 unit_cell_length unit_cell_length 0],'Color','r','LineStyle','--');
         daspect(ax,[1 1 1])
         xlabel(ax,'x + u')
         ylabel(ax,'y + v')
