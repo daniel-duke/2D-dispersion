@@ -7,4 +7,6 @@ authors:
 title: "2D-dispersion"
 version: 0.0
 identifiers:
+  - type: doi
+    value: 10.2139/ssrn.4546650
 date-released: 2021-03-30
