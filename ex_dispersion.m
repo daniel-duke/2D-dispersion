@@ -25,19 +25,19 @@ isProfile = true;
 % Set some parameters
 N_design = size(designs,4);
 
-const.N_ele = 1; % number of elements along the side of each pixel (i.e. N_ele = 2 --> 4 elements per pixel, N_ele = 3 --> 9 elements per pixel)
-const.N_pix = size(designs,1); % Currently still requires unit cell to have same number of pixels along each side I think
+const.N_ele = 1; % Number of elements along the side of each pixel (i.e. N_ele = 2 --> 4 elements per pixel, N_ele = 3 --> 9 elements per pixel)
+const.N_pix = size(designs,1); % Number of pixels along each side of the unit cell. Currently still requires unit cell to have same number of pixels along each side I think
 const.N_wv = [25 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % Used for full IBZ calculations. Defines number of wavevectors in each direction of the IBZ discretization.
 const.N_k = []; % Used for IBZ contour calculations. Defines number of wavevectors along each segment of the IBZ contour.
 
-const.N_eig = 6; % number of dispersion bands to comptue
-const.sigma_eig = 1; % leave as 1, eigensolver looks for eigenvalues around this value. Unless material properties get crazy (super high density, super low modulus), this should work fine.
-const.design_scale = 'linear'; % leave this as 'linear'
-const.isUseGPU = false; % leave this as false
-const.isUseImprovement = true; % leave this as true
-const.isUseSecondImprovement = false; % leave this as false
-const.isUseParallel = true; % leave this as true (parallelize dispersion loop, not structure loop)
-const.isSaveEigenvectors = isSaveEigenvectors; % whether or not to save the eigenvectors
+const.N_eig = 6; % Number of dispersion bands to comptue
+const.sigma_eig = 1; % Leave as 1, eigensolver looks for eigenvalues around this value. Unless material properties get crazy (super high density, super low modulus), this should work fine.
+const.design_scale = 'linear'; % Leave this as 'linear'
+const.isUseGPU = false; % Leave this as false
+const.isUseImprovement = true; % Leave this as true
+const.isUseSecondImprovement = false; % Leave this as false
+const.isUseParallel = true; % Leave this as true (parallelize dispersion loop, not structure loop)
+const.isSaveEigenvectors = isSaveEigenvectors; % Whether or not to save the eigenvectors
 
 % Define material properties & unit cell size
 const.a = 1; % [m], side length of the unit cell
