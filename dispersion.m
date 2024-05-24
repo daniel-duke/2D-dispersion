@@ -1,12 +1,19 @@
 function [wv,fr,ev] = dispersion(const,wavevectors)
     
+    N_dof = ((const.N_ele*const.N_pix)^2)*2; % Total number of degrees of freedom in the model *after* boundary conditions have been applied
+    % if const.N_eig>N_dof
+    %     error('Number of requested eigenvalues is larger than the number of degrees of freedom in the finite element model.')
+    % end
+    
     fr = zeros(size(wavevectors,2),const.N_eig);
     if const.isSaveEigenvectors
-        ev = zeros(((const.N_ele*const.N_pix)^2)*2,size(wavevectors,2),const.N_eig);
+        ev = zeros(N_dof,size(wavevectors,2),const.N_eig);
     else
         ev = [];
     end
-    if const.isUseImprovement
+    if const.isUseSecondImprovement
+        [K,M] = get_system_matrices_VEC_simplified(const);
+    elseif const.isUseImprovement
         [K,M] = get_system_matrices_VEC(const);
     else
         [K,M] = get_system_matrices(const);
@@ -16,12 +23,16 @@ function [wv,fr,ev] = dispersion(const,wavevectors)
     else
         parforArg = 0;
     end
-%     for k_idx = 1:size(wavevectors,1) % USE THIS TO DEBUG
-    parfor (k_idx = 1:size(wavevectors,1), parforArg)
+    % for k_idx = 1:size(wavevectors,1); warning('parfor loop is commented out - performance will suffer!') % USE THIS TO DEBUG
+    parfor (k_idx = 1:size(wavevectors,1), parforArg) % USE THIS FOR PERFORMANCE
         wavevector = wavevectors(k_idx,:);
         T = get_transformation_matrix(wavevector,const);
         Kr = T'*K*T;
         Mr = T'*M*T;
+
+        % Ensure system matrices are hermitian?
+        % assert(ishermitian(Kr))
+        % assert(ishermitian(Mr))
         
         if ~const.isUseGPU
             % DONT USE THE GPU WITH EIGS           

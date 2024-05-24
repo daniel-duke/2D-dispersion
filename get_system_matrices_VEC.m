@@ -20,9 +20,9 @@ function [K,M] = get_system_matrices_VEC(const)
     end
     
     nodenrs = reshape(1:(1+N_ele_x)*(1+N_ele_y),1+N_ele_y,1+N_ele_x); % node numbering in a grid
-    edofVec = reshape(2*nodenrs(1:end-1,1:end-1)-1,N_ele_x*N_ele_y,1); % element degree of freedom (in a vector) (global labeling)
-    edofMat = repmat(edofVec,1,8)+repmat([2*(N_ele_y+1)+[0 1 2 3] 2 3 0 1],N_ele_x*N_ele_y,1); %
-    row_idxs = reshape(kron(edofMat,ones(8,1))',64*N_ele_x*N_ele_y,1);
+    edofVec = reshape(2*nodenrs(1:end-1,1:end-1)-1,N_ele_x*N_ele_y,1); % Gives the degree of freedom (global) of the horizontal displacement of the upper left node for each element % element degree of freedom (in a vector) (global labeling)
+    edofMat = repmat(edofVec,1,8)+repmat([2*(N_ele_y+1)+[0 1 2 3] 2 3 0 1],N_ele_x*N_ele_y,1); % For each element, each row of the matrix gives the global dof label corresponding to the local dof indicated by the column
+    row_idxs = reshape(kron(edofMat,ones(8,1))',64*N_ele_x*N_ele_y,1); % Transpose and repeat elements, then reshape so that the entries of the element stiffness matrix get slotted in to the correct global dof rows and columns of the global stiffness and mass matrices 
     col_idxs = reshape(kron(edofMat,ones(1,8))',64*N_ele_x*N_ele_y,1);
     AllLEle = get_element_stiffness_VEC(E(:),nu(:),t)';
     AllLMat = get_element_mass_VEC(rho(:),t,const)';

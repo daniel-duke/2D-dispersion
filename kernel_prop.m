@@ -15,7 +15,7 @@ function prop = kernel_prop(kernel,N_pix,design_options)
             error(['kernel name "' kernel '" not recognized'])
     end
     mu = 0.5*ones(1,size(points,1));
-    prop = mvnrnd(mu,C);
+    prop = mvnrnd(mu, C);
     prop = reshape(prop,N_pix);
     prop(prop<0) = 0;
     prop(prop>1) = 1;
