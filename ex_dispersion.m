@@ -27,8 +27,8 @@ N_design = size(designs,4);
 
 const.N_ele = 1; % number of elements along the side of each pixel (i.e. N_ele = 2 --> 4 elements per pixel, N_ele = 3 --> 9 elements per pixel)
 const.N_pix = size(designs,1); % Currently still requires unit cell to have same number of pixels along each side I think
-const.N_wv = [25 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % used for full IBZ calculations
-const.N_k = []; % used for IBZ contour calculations
+const.N_wv = [25 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % Used for full IBZ calculations. Defines number of wavevectors in each direction of the IBZ discretization.
+const.N_k = []; % Used for IBZ contour calculations. Defines number of wavevectors along each segment of the IBZ contour.
 
 const.N_eig = 6; % number of dispersion bands to comptue
 const.sigma_eig = 1; % leave as 1, eigensolver looks for eigenvalues around this value. Unless material properties get crazy (super high density, super low modulus), this should work fine.
