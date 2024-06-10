@@ -1,8 +1,12 @@
 clear; close all;
 
-N_struct = 25;
-rng_seed_offset = 0;
+mfn = mfilename;
+
+N_struct = 8;
+rng_seed_offset = 2;
 cmap = 'parula';
+isShowTicks = false;
+isUsePresetFigurePosition = true;
 
 const.a = 1; % [m]
 const.N_pix = 32;
@@ -10,7 +14,7 @@ const.N_pix = 32;
 design_params = design_parameters;
 design_params.design_number = []; % leave empty
 design_params.design_style = 'kernel';
-design_params.design_options = struct('kernel','periodic','sigma_f',1,'sigma_l',0.5,'symmetry_type','c1m1','N_value',2);
+design_params.design_options = struct('kernel','periodic','sigma_f',1,'sigma_l',1,'symmetry_type','none','N_value',3);
 design_params.N_pix = [const.N_pix const.N_pix];
 design_params = design_params.prepare();
 
@@ -29,8 +33,16 @@ const.design_scale = 'linear';
 const.design = nan(const.N_pix,const.N_pix,3); % This is just a temporary value so that 'const' has the field 'design' used in the parfor loop
 
 %% Generate designs
-fig = figure;
-t = tiledlayout('flow');
+if isUsePresetFigurePosition
+    data = load([mfn '_preset_figure_position']);
+    preset_figure_position = data.preset_figure_position;
+    fig = figure('Position',preset_figure_position);
+else
+    fig = figure;
+end
+
+tlo = tiledlayout('flow');
+tlo.TileSpacing = 'compact';
 for struct_idx = 1:N_struct
     pfc = const;
     pfdp = design_params;
@@ -42,10 +54,24 @@ for struct_idx = 1:N_struct
 
     designs(struct_idx,:,:,:) = pfc.design;
     
-    nexttile
+    ax = nexttile;
     imagesc(pfc.design(:,:,1))
     colormap(cmap)
     daspect([1 1 1])
+    if ~isShowTicks
+        set(ax,'XTickLabel',[])
+        set(ax,'YTickLabel',[])
+        set(ax,'XTick',[])
+        set(ax,'YTick',[])
+    end
+
 %     colorbar
 end
+
+% Export figure
+exportgraphics(fig,[mfn '_export.pdf'],'contenttype','vector')
+
+% Save preset_figure_position
+% preset_figure_position = fig.Position;
+% save([mfn '_preset_figure_position'],"preset_figure_position")
 

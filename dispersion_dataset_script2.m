@@ -1,32 +1,38 @@
 clear; close all;
+
+orig_cd = cd;
+cd('C:\Users\alex\OneDrive - California Institute of Technology\Documents\Graduate\Research\2D-dispersion')
+
 datetime_var = datetime;
 mfilename_fullpath_var = mfilename('fullpath');
 mfilename_var = mfilename;
 
-isSaveOutput = true;
-isSaveEigenvectors = false;
+isSaveOutput = false;
+isSaveEigenvectors = true;
 isIncludeHomogeneous = false;
 isProfile = false;
-N_struct = 20;
+
+N_struct = 1;
 imag_tol = 1e-3;
 rng_seed_offset = 0;
 
 const.a = 1; % [m]
 const.N_ele = 1;
-const.N_pix = 16;
-const.N_wv = [51 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % used for full IBZ calculations
+const.N_pix = 32;
+const.N_wv = [25 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % used for full IBZ calculations
 % const.N_wv = [16 31];
 const.N_k = []; % used for IBZ contour calculations
-const.N_eig = 5;
+const.N_eig = 6;
 const.isUseGPU = false;
 const.isUseImprovement = true;
+const.isUseSecondImprovement = false;
 const.isUseParallel = true; % parallelize dispersion loop, not structure loop
 const.isSaveEigenvectors = isSaveEigenvectors;
 
 design_params = design_parameters;
 design_params.design_number = []; % leave empty
 design_params.design_style = 'kernel';
-design_params.design_options = struct('kernel','periodic','sigma_f',1,'sigma_l',0.5,'symmetry_type','none','N_value',2);
+design_params.design_options = struct('kernel','periodic','sigma_f',1,'sigma_l',1,'symmetry_type','none','N_value',inf);
 design_params.N_pix = [const.N_pix const.N_pix];
 design_params = design_params.prepare();
 
@@ -54,9 +60,13 @@ if isProfile
     mpiprofile on
 end
 
+if ~isSaveOutput
+    warning('isSaveOutput is set to false. Output will not be saved.')
+end
+
 %% Generate dataset
 pfwb = parfor_wait(N_struct,'Waitbar', true);
-for struct_idx = 1:N_struct
+for struct_idx = 1:N_struct % THIS MUST NOT BE PARFOR
 % for struct_idx = 1:N_struct
     pfc = const;
     pfdp = design_params;
@@ -67,12 +77,12 @@ for struct_idx = 1:N_struct
         pfdp.design_number = struct_idx + rng_seed_offset;
         pfdp = pfdp.prepare();
         pfc.design = get_design2(pfdp);
-%         pfc.design = get_design(struct_idx + rng_seed_offset,pfc.N_pix);
+        % pfc.design = repmat([0.25 0.5; 0.75 1],1,1,3); warning('design set to something weird')        
         pfc.design = convert_design(pfc.design,'linear',pfc.design_scale,pfc.E_min,pfc.E_max,pfc.rho_min,pfc.rho_max);
     end
     
     
-    designs(struct_idx,:,:,:) = pfc.design;
+    designs(:,:,:,struct_idx) = pfc.design;
     
     % Solve the dispersion problem
     [wv,fr,ev] = dispersion(pfc,pfc.wavevectors);
@@ -105,9 +115,6 @@ end
 % end
 
 %% Set up save locations
-if ~isSaveOutput
-    warning('isSaveOutput is set to false. Output will not be saved.')
-end
 script_start_time = replace(char(datetime_var),':','-');
 if isSaveOutput
     output_folder = ['OUTPUT/output ' script_start_time];
@@ -116,7 +123,7 @@ if isSaveOutput
 end
 
 %% Save the results
-vars_to_save = {'WAVEVECTOR_DATA','EIGENVALUE_DATA','CONSTITUTIVE_DATA','const','design_params','N_struct','imag_tol','rng_seed_offset'};
+vars_to_save = {'WAVEVECTOR_DATA','EIGENVALUE_DATA','CONSTITUTIVE_DATA','const','design_params','designs','N_struct','imag_tol','rng_seed_offset'};
 if isSaveEigenvectors
     vars_to_save{end+1} = 'EIGENVECTOR_DATA';
 end
@@ -152,3 +159,4 @@ end
 %     plot_dispersion_surface(wv_plot,fr_plot,[],[],ax);
 % end
 % view(3)
+cd(orig_cd)

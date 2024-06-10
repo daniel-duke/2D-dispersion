@@ -17,6 +17,8 @@ designs = cat(4,designs_cell{:});
 designs = repmat(designs,1,1,3,1); % One pane for each of modulus, density, poisson
 designs = 1 - designs; % My code uses opposite 0/1-->soft/stiff convention as you
 
+designs = designs(:,:,:,1);
+
 % Set flags
 isSaveOutput = false;
 isSaveEigenvectors = true;
@@ -27,7 +29,7 @@ N_design = size(designs,4);
 
 const.N_ele = 1; % Number of elements along the side of each pixel (i.e. N_ele = 2 --> 4 elements per pixel, N_ele = 3 --> 9 elements per pixel)
 const.N_pix = size(designs,1); % Number of pixels along each side of the unit cell. Currently still requires unit cell to have same number of pixels along each side I think
-const.N_wv = [25 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % Used for full IBZ calculations. Defines number of wavevectors in each direction of the IBZ discretization.
+const.N_wv = [51 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % Used for full IBZ calculations. Defines number of wavevectors in each direction of the IBZ discretization.
 const.N_k = []; % Used for IBZ contour calculations. Defines number of wavevectors along each segment of the IBZ contour.
 
 const.N_eig = 6; % Number of dispersion bands to comptue
