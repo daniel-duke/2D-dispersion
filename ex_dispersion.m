@@ -36,7 +36,7 @@ isSaveEigenvectors = true;
 isProfile = false;
 isPlotWavevectors = false;
 isPlotDesign = true;
-isPlotDispersion = false;
+isPlotDispersion = true;
 isGetMesh = true; % Computes mesh for one design (probably same mesh for all designs?)
 isPlotMesh = true;
 isPlotModes = true;
@@ -46,7 +46,7 @@ N_design = size(designs,4);
 
 const.N_ele = 1; % Number of elements along the side of each pixel (i.e. N_ele = 2 --> 4 elements per pixel, N_ele = 3 --> 9 elements per pixel)
 const.N_pix = size(designs,1); % Number of pixels along each side of the unit cell. Currently still requires unit cell to have same number of pixels along each side I think
-const.N_wv = [5 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % Used for full IBZ calculations. Defines number of wavevectors in each direction of the IBZ discretization.
+const.N_wv = [51 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % Used for full IBZ calculations. Defines number of wavevectors in each direction of the IBZ discretization.
 const.N_k = []; % Used for IBZ contour calculations. Defines number of wavevectors along each segment of the IBZ contour.
 
 const.N_eig = 6; % Number of dispersion bands to comptue

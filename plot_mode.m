@@ -59,7 +59,8 @@ function [fig_handle,ax_handle] = plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,sca
         hold(ax,'on')
         N_cycles = 3.25;
         for t = 1:100
-            c = scale*sin(2*pi*t*N_cycles/100);
+            % c = scale*sin(2*pi*t*N_cycles/100);
+            c = scale*exp(2*pi*i*t*N_cycles/100);
             p2 = plot(ax,real(X_plot + c*U_plot), real(Y_plot + c*V_plot),'r.');
             pause(.1)
             delete(p2);
