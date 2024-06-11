@@ -6,6 +6,7 @@ function [fig_handle,ax_handle] = plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,sca
         cla(ax);
     end
     
+    % mesh = get_mesh(const);
     original_nodal_locations = linspace(0,const.a,const.N_ele*const.N_pix + 1); %const.a*(0:(const.N_ele*const.N_pix))./(const.N_ele*const.N_pix);
     high_resolution_locations = linspace(0,const.a,100);
     [X,Y] = meshgrid(original_nodal_locations,flip(original_nodal_locations));
@@ -13,7 +14,8 @@ function [fig_handle,ax_handle] = plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,sca
     u_reduced = squeeze(ev(:,k_idx,eig_idx));
     %     u_reduced = u_reduced/max(u_reduced)*(1/10)*const.a;
     T = get_transformation_matrix(wv(k_idx,:),const);
-    u = conj(T)*u_reduced;
+    % u = conj(T)*u_reduced;
+    u = T*u_reduced;
     u = u/max(abs(u))*(1/10)*const.a;
     U_vec = u(1:2:end);
     U_mat = reshape(U_vec,const.N_ele*const.N_pix + 1,const.N_ele*const.N_pix + 1)';
@@ -25,8 +27,7 @@ function [fig_handle,ax_handle] = plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,sca
     V_mat_h = interp2(X,Y,V_mat,X_h,Y_h);
     
     
-    
-    if true
+    if false % true
         V_plot = V_mat_h;
         U_plot = U_mat_h;
         X_plot = X_h;

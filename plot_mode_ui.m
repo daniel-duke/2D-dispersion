@@ -3,11 +3,14 @@ function plot_mode_ui(wv,fr,ev,const)
     eig_idx = 1;
     scale = .1;
     fig = uifigure('handlevisibility','on');
-    ax = uiaxes('Parent', fig, 'Position', [10 10 400 400],'handlevisibility','on');
+    ax_still = uiaxes('Parent', fig, 'Position', [10 10 200 200],'DataAspectRatio',[1 1 1],'handlevisibility','on'); % In future data aspect ratio can be defined by const.a (if unit cell is rectangle)
+    ax_animation = uiaxes('Parent', fig, 'Position', [10 210 200 200],'DataAspectRatio',[1 1 1],'handlevisibility','on'); % In future data aspect ratio can be defined by const.a (if unit cell is rectangle)
 %     axes(ax);
 %     figure(fig);
+
+    % mesh = get_mesh(const);
     
-    plot_mode(wv,fr,ev,eig_idx,k_idx,'stillui',scale,const,ax);
+    plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax_still);
     
     dd_wv = uidropdown(fig,...
         'Position',[430 150 100 22],...
@@ -23,7 +26,7 @@ function plot_mode_ui(wv,fr,ev,const)
     sld = uislider(fig,...
         'Position',[450 200 150 3],...
         'Orientation','vertical',...
-        'Limits',[-.1 .1],...
+        'Limits',[-1 1],...
         'Value',.1,...
         'MajorTicks',linspace(-.1,.1,11),...
         'ValueChangedFcn',@(sld, event) update_scale(sld));
@@ -39,25 +42,25 @@ function plot_mode_ui(wv,fr,ev,const)
         k_idx = dd_wv.Value;
 %         axes(ax);
 %         figure(fig);
-        plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax);
+        plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax_still);
     end
     
     function update_plot_ev(dd_ev)
         eig_idx = dd_ev.Value;
 %         axes(ax);
 %         figure(fig);
-        plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax);
+        plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax_still);
     end
     
     function update_scale(sld)
         scale = sld.Value;
 %         axes(ax);
 %         figure(fig);
-        plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax);
+        plot_mode(wv,fr,ev,eig_idx,k_idx,'still',scale,const,ax_still);
     end
     
     function play_animation()
-        plot_mode(wv,fr,ev,eig_idx,k_idx,'animation',scale,const,ax);
+        plot_mode(wv,fr,ev,eig_idx,k_idx,'animation',scale,const,ax_animation);
     end
     
     function C = array2cell(A)
