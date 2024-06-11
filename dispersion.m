@@ -1,9 +1,12 @@
-function [wv,fr,ev] = dispersion(const,wavevectors)
+function [wv,fr,ev,mesh] = dispersion(const,wavevectors)
     
     N_dof = ((const.N_ele*const.N_pix)^2)*2; % Total number of degrees of freedom in the model *after* boundary conditions have been applied
     % if const.N_eig>N_dof
     %     error('Number of requested eigenvalues is larger than the number of degrees of freedom in the finite element model.')
     % end
+    if const.isSaveMesh
+        mesh = get_mesh(const);
+    end
     
     fr = zeros(size(wavevectors,2),const.N_eig);
     if const.isSaveEigenvectors
