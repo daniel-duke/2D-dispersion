@@ -8,7 +8,7 @@ function [fig_handle,ax_handle] = plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,sca
     
     % mesh = get_mesh(const);
     original_nodal_locations = linspace(0,const.a,const.N_ele*const.N_pix + 1); %const.a*(0:(const.N_ele*const.N_pix))./(const.N_ele*const.N_pix);
-    high_resolution_locations = linspace(0,const.a,100);
+    high_resolution_locations = linspace(0,const.a,50);
     [X,Y] = meshgrid(original_nodal_locations,flip(original_nodal_locations));
     [X_h,Y_h] = meshgrid(high_resolution_locations,flip(high_resolution_locations));
     u_reduced = squeeze(ev(:,k_idx,eig_idx));
@@ -53,16 +53,22 @@ function [fig_handle,ax_handle] = plot_mode(wv,fr,ev,eig_idx,k_idx,plot_type,sca
     end
     
     function plot_animation()
+        cla(ax)
         plot(ax,X,Y,'k.');
         axis(ax,[-.2 1.2 -.2 1.2]*const.a);
         daspect(ax,[1 1 1])
         hold(ax,'on')
-        N_cycles = 3.25;
+        N_cycles = 3;
         for t = 1:100
             % c = scale*sin(2*pi*t*N_cycles/100);
             c = scale*exp(2*pi*i*t*N_cycles/100);
             p2 = plot(ax,real(X_plot + c*U_plot), real(Y_plot + c*V_plot),'r.');
             pause(.1)
+            % if t == 1
+            %     gif('temp_animation.gif','frame',ax,'DelayTime',1/30)
+            % else
+            %     gif
+            % end
             delete(p2);
         end
         plot(ax,real(X_plot + scale*U_plot), real(Y_plot + scale*V_plot),'r.');
