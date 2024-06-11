@@ -8,13 +8,13 @@ function [T,dTdwavevector] = get_transformation_matrix(wavevector,const)
         dxphasedwavevector = 1i*r*xphase;
     end
     
-    r = [0; -const.a];
+    r = [0; -const.a]; % [0; -const.a] --> [0; const.a]?
     yphase = exp(1i*dot(wavevector,r));
     if nargout == 2
         dyphasedwavevector = 1i*r*yphase;
     end
     
-    r = [const.a; -const.a];
+    r = [const.a; -const.a]; % [const.a; -const.a] --> [const.a; const.a]?
     cornerphase = exp(1i*dot(wavevector,r));
     if nargout == 2
         dcornerphasedwavevector = 1i*r*cornerphase;
@@ -22,6 +22,8 @@ function [T,dTdwavevector] = get_transformation_matrix(wavevector,const)
     
     node_idx_x = [reshape(meshgrid(1:(N_node-1),1:(N_node - 1)),[],1)' N_node*ones(1,N_node - 1) 1:(N_node-1) N_node];
     node_idx_y = [reshape(meshgrid(1:(N_node-1),1:(N_node - 1))',[],1)' 1:(N_node-1) N_node*ones(1,N_node - 1) N_node];
+    % should we change to ndgrid? they are the unch_idxs --> node_idx_x = [reshape(ndgrid(1:(N_node-1),1:(N_node - 1)),[],1)' N_node*ones(1,N_node - 1) 1:(N_node-1) N_node];
+    % should we change to ndgrid? they are the unch_idxs --> node_idx_y = [reshape(ndgrid(1:(N_node-1),1:(N_node - 1))',[],1)' 1:(N_node-1) N_node*ones(1,N_node - 1) N_node];
     global_node_idx = (node_idx_y - 1)*N_node + node_idx_x;
     global_dof_idxs = [2*global_node_idx - 1 2*global_node_idx];
     unch_idxs = 1:((N_node-1)^2);

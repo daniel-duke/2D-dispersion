@@ -1,4 +1,9 @@
 function [K,M] = get_system_matrices_VEC(const)
+    % % Linear quadrilateral elements
+    % N_node_per_element = 4;
+    % N_dof_per_node = 2;
+    % N_dof_per_element = N_node_per_element*N_dof_per_node; % 8
+    % N_ele_global = const.N_pix.*const.N_ele;
     
     N_ele_x = const.N_pix*const.N_ele; % Total number of elements along x direction
     N_ele_y = const.N_pix*const.N_ele; % Total number of elements along y direction
