@@ -2,8 +2,8 @@ clear; close all; %delete(findall(0));
 
 isSaveOutput = false;
 isPlotDesign = true;
-design_parameters.design_number = [];
-design_parameters.design_style = 'matern52';
+design_parameters.design_number = 1;
+design_parameters.design_style = 'qr_code';
 design_parameters.design_options = struct('sigma_f',0.5,'sigma_l',0.1,'symmetry_type','c1m1','N_value',2);
 design_parameters.N_pix = [const.N_pix const.N_pix];
 const.symmetry_type = 'c1m1';

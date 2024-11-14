@@ -31,7 +31,7 @@ const.poisson_max = 0.3;
 const.t = 1;
 const.sigma_eig = 1;
 
-design_options = struct('lambda',const.N_pix/2, 'thresholds',[-0.5 0.5], 'symmetry',2, 'symmetry_type','none', 'N_value',inf);
+design_options = struct('lambda',const.N_pix/2, 'thresholds',[0 0], 'symmetry',1, 'symmetry_type','none', 'N_value',inf);
 
 % const.wavevectors = create_wavevector_array(const.N_k,const.a);
 symmetry_type = 'none'; IBZ_shape = 'rectangle'; num_tesselations = 1;

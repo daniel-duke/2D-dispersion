@@ -76,6 +76,13 @@ function prop = get_prop(design_parameters,prop_idx)
             rows = (ratio*(30 - 28) + 1):(ratio*(30-4));
             mask(rows,cols) = triu(true(ratio*24));
             prop(mask) = 0;
+
+        case 'qr_code'
+            prop = get_qr_code(N_pix,design_number);
+
+        case 'gaussian'
+            prop = get_gaussian(N_pix,design_number,design_options);
+
         otherwise
             error(['design not recognized: ' design_style])
     end

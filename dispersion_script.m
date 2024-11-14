@@ -18,27 +18,30 @@ output_folder = ['OUTPUT/output ' script_start_time];
 %%
 const.a = .01; % [m]
 const.N_ele = 1;
-const.N_pix = 16;
+const.N_pix = 64;
 const.N_wv = [16 31];
 const.N_eig = 3;
 const.isUseGPU = false;
 const.isUseImprovement = true;
 const.isUseParallel = true;
 const.isSaveEigenvectors = false;
+const.isSaveMesh = false;
+const.isUseSecondImprovement = false;
 
-const.E_min = 200e6;
+const.E_min = 2e9;
 const.E_max = 200e9;
-const.rho_min = 8e2;
+const.rho_min = 1e3;
 const.rho_max = 8e3;
-const.poisson_min = 0;
-const.poisson_max = .5;
-const.t = .01;
+const.poisson_min = 0.3;
+const.poisson_max = 0.3;
+const.t = 1;
 const.sigma_eig = 1;
 
 design_params = design_parameters;
-design_params.design_number = 15;
-design_params.design_style = 'kernel';
-design_params.design_options = struct('kernel','periodic','sigma_f',1,'sigma_l',0.5,'symmetry_type','none','N_value',2);
+design_params.design_number = 1;
+design_params.design_style = 'gaussian';
+design_params.design_options = struct('lambda',const.N_pix/2, 'thresholds',[0 0], 'symmetry',1,'symmetry_type','none','N_value',inf);
+%design_params.design_options = struct('kernel','periodic','sigma_f',1,'sigma_l',0.5,'symmetry_type','none','N_value',inf);
 design_params.N_pix = [const.N_pix const.N_pix];
 design_params = design_params.prepare();
 

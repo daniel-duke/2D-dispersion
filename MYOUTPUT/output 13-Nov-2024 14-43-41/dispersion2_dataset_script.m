@@ -4,7 +4,7 @@ isSaveOutput = true;
 isSaveEigenvectors = false;
 isIncludeHomogeneous = false;
 isProfile = false;
-N_struct = 100;
+N_struct = 10;
 imag_tol = 1e-3;
 rng_seed_offset = 0;
 

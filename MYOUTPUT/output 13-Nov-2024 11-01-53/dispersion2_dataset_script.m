@@ -4,13 +4,13 @@ isSaveOutput = true;
 isSaveEigenvectors = false;
 isIncludeHomogeneous = false;
 isProfile = false;
-N_struct = 100;
+N_struct = 10;
 imag_tol = 1e-3;
 rng_seed_offset = 0;
 
 const.a = 1; % [m]
 const.N_ele = 2;
-const.N_pix = 16;
+const.N_pix = 8;
 const.N_wv = [11 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % used for full IBZ calculations
 const.N_k = []; % used for IBZ contour calculations
 const.N_eig = 4;
@@ -31,7 +31,7 @@ const.poisson_max = 0.3;
 const.t = 1;
 const.sigma_eig = 1;
 
-design_options = struct('lambda',const.N_pix/2, 'thresholds',[-0.5 0.5], 'symmetry',2, 'symmetry_type','none', 'N_value',inf);
+design_options = struct('lambda',const.N_pix/4, 'thresholds',[0 0], 'symmetry',0, 'symmetry_type','none', 'N_value',inf);
 
 % const.wavevectors = create_wavevector_array(const.N_k,const.a);
 symmetry_type = 'none'; IBZ_shape = 'rectangle'; num_tesselations = 1;
@@ -69,11 +69,7 @@ for struct_idx = 1:N_struct
         pfc.design = get_design('homogeneous',pfc.N_pix);
         pfc.design = convert_design(pfc.design,'linear',pfc.design_scale,pfc.E_min,pfc.E_max,pfc.rho_min,pfc.rho_max);
     else
-        prop = get_gaussian([pfc.N_pix,pfc.N_pix],struct_idx,design_options);
-        design(:,:,1) = prop;
-        design(:,:,2) = prop;
-        design(:,:,3) = prop;
-        pfc.design = design;
+        pfc.design = get_design('gaussian',pfc.N_pix,design_options);
         pfc.design = convert_design(pfc.design,'linear',pfc.design_scale,pfc.E_min,pfc.E_max,pfc.rho_min,pfc.rho_max);
     end
     
@@ -121,9 +117,9 @@ if isSaveOutput
         ' N_eig' num2str(const.N_eig)...
         ' offset' num2str(rng_seed_offset) ' ' script_start_time '.mat'];
     if isSaveEigenvectors
-        save(output_file_path,'const','WAVEVECTOR_DATA','EIGENVALUE_DATA','EIGENVECTOR_DATA','CONSTITUTIVE_DATA','-v7.3');
+        save(output_file_path,'WAVEVECTOR_DATA','EIGENVALUE_DATA','EIGENVECTOR_DATA','CONSTITUTIVE_DATA','-v7.3');
     else
-        save(output_file_path,'const','WAVEVECTOR_DATA','EIGENVALUE_DATA','CONSTITUTIVE_DATA','-v7.3');
+        save(output_file_path,'WAVEVECTOR_DATA','EIGENVALUE_DATA','CONSTITUTIVE_DATA','-v7.3');
     end
 end
 

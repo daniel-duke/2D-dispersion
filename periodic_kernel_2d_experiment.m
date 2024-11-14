@@ -1,6 +1,6 @@
 clear; close all;
 
-N = 20;
+N = 40;
 sigma_f = 1;
 sigma_l = 1;
 p = [1 1];
@@ -29,5 +29,20 @@ min(eig(C))
 
 z = mvnrnd(zeros(N^2,1),C);
 Z = reshape(z,N,N);
+
+for i = 1:N
+    for j = 1:N
+        % if Z(i,j) > 0
+        %     Z(i,j) = Z(i,j)^(1/3);
+        % else
+        %     Z(i,j)
+        % end
+        Z(i,j) = rand;
+    end
+end
+
 imagesc([0 1],[0 1],Z);
 set(gca,'YDir','normal')
+
+set(gca,'YTickLabel',[]);
+set(gca,'XTickLabel',[]);

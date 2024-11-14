@@ -4,13 +4,13 @@ isSaveOutput = true;
 isSaveEigenvectors = false;
 isIncludeHomogeneous = false;
 isProfile = false;
-N_struct = 100;
+N_struct = 10;
 imag_tol = 1e-3;
 rng_seed_offset = 0;
 
 const.a = 1; % [m]
 const.N_ele = 2;
-const.N_pix = 16;
+const.N_pix = 32;
 const.N_wv = [11 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % used for full IBZ calculations
 const.N_k = []; % used for IBZ contour calculations
 const.N_eig = 4;
@@ -31,7 +31,7 @@ const.poisson_max = 0.3;
 const.t = 1;
 const.sigma_eig = 1;
 
-design_options = struct('lambda',const.N_pix/2, 'thresholds',[-0.5 0.5], 'symmetry',2, 'symmetry_type','none', 'N_value',inf);
+design_options = struct('lambda',const.N_pix/2, 'thresholds',[-1 1], 'symmetry',0, 'symmetry_type','none', 'N_value',inf);
 
 % const.wavevectors = create_wavevector_array(const.N_k,const.a);
 symmetry_type = 'none'; IBZ_shape = 'rectangle'; num_tesselations = 1;

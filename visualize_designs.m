@@ -1,6 +1,7 @@
 clear; close all;
 
 mfn = mfilename;
+disp(mfn)
 
 N_struct = 8;
 rng_seed_offset = 2;

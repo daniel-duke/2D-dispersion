@@ -3,14 +3,16 @@ clear; close all;
 isSaveOutput = true;
 isSaveEigenvectors = false;
 isIncludeHomogeneous = false;
+isUseSecondImprovement = false;
 isProfile = false;
+isSaveMesh = false;
 N_struct = 1000;
 imag_tol = 1e-3;
 rng_seed_offset = 0;
 
 const.a = 1; % [m]
 const.N_ele = 2;
-const.N_pix = 2;
+const.N_pix = 8;
 const.N_wv = [11 NaN]; const.N_wv(2) = ceil(const.N_wv(1)/2); % used for full IBZ calculations
 const.N_k = []; % used for IBZ contour calculations
 const.N_eig = 10;
@@ -18,6 +20,8 @@ const.isUseGPU = false;
 const.isUseImprovement = true;
 const.isUseParallel = false; % parallelize structure loop, not dispersion loop
 const.isSaveEigenvectors = isSaveEigenvectors;
+const.isSaveMesh = isSaveMesh;
+const.isUseSecondImprovement = isUseSecondImprovement;
 
 const.E_min = 2e9;
 const.E_max = 200e9;
@@ -44,7 +48,7 @@ if ~isSaveOutput
 end
 script_start_time = replace(char(datetime),':','-');
 if isSaveOutput
-    output_folder = ['OUTPUT/output ' script_start_time];
+    output_folder = ['MYOUTPUT/output ' script_start_time];
     mkdir(output_folder);
     copyfile([mfilename('fullpath') '.m'],[output_folder '/' mfilename '.m']);
 end
@@ -64,7 +68,7 @@ parfor struct_idx = 1:N_struct
         pfc.design = get_design('homogeneous',pfc.N_pix);
         pfc.design = convert_design(pfc.design,'linear',pfc.design_scale,pfc.E_min,pfc.E_max,pfc.rho_min,pfc.rho_max);
     else
-        pfc.design = get_design(struct_idx + rng_seed_offset,pfc.N_pix);
+        pfc.design = get_design('gaussian',pfc.N_pix);
         pfc.design = convert_design(pfc.design,'linear',pfc.design_scale,pfc.E_min,pfc.E_max,pfc.rho_min,pfc.rho_max);
     end
     

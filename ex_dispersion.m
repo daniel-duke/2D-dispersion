@@ -4,7 +4,7 @@ clear; close all;
 
 % Initialize
 orig_cd = cd;
-cd('C:\Users\alex\OneDrive - California Institute of Technology\Documents\Graduate\Research\2D-dispersion')
+cd('/Users/dduke/Files/aiM_capstone/2D-dispersion')
 datetime_var = datetime;
 mfilename_fullpath_var = mfilename('fullpath');
 mfilename_var = mfilename;

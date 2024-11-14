@@ -60,6 +60,20 @@ function design = get_design(design_name,N_pix)
                 temp = load("C:\Users\alex\OneDrive - California Institute of Technology\Documents\Graduate\Research\GPR-dispersion-paper\gpr-paper\fig\code_for_figures\density_2D.mat");
                 design(:,:,2) = temp.prop;
                 design(:,:,3) = .6*ones(size(design(:,:,1)));
+
+            case 'qr_code'
+                prop = get_qr_code(N_pix,design_number);
+                design(:,:,1) = prop;
+                design(:,:,2) = prop;
+                design(:,:,3) = prop;
+
+            case 'gaussian'
+                disp(rand)
+                prop = get_gaussian([N_pix,N_pix],design_number);
+                design(:,:,1) = prop;
+                design(:,:,2) = prop;
+                design(:,:,3) = prop;
+
             otherwise
                 error(['design not recognized: ' design_name])
         end
