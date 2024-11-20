@@ -2,12 +2,12 @@
 clc; clear; close all;
 
 % Storage Location
-design_tag = 'control_32pix_small';
+design_tag = 'control_32pix';
 save_file = ['./design_datasets/design_dataset_' design_tag];
-isSaveOutput = true;
+isSaveOutput = false;
 
 % Size of dataset
-N_design = 10;
+N_design = 1000;
 
 % Design parameters
 design_params = design_parameters;
@@ -39,6 +39,11 @@ design_options.fill = 'min';                % material type for fudging
 % Apply design options
 design_params.design_options = design_options;
 
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Plotting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Plot example design
 fig = figure();
 magic_plot_local(fig);
@@ -46,7 +51,17 @@ dp = design_params;
 dp.design_number = 1;
 dp = dp.prepare();
 design = get_design(dp);
-fig = plot_design(design,fig);
+plot_design(design,fig);
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Dataset %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% If not saving, warn user
+if isSaveOutput == false
+    warning('isSaveOutput is set to false. Output will not be saved.')
+end
 
 % Generate designs
 designs = zeros(design_params.N_pix,design_params.N_pix,3,N_design);

@@ -1,20 +1,16 @@
 % Housekeeping
 clc; clear; close all;
 
-% Initialize location
-orig_cd = cd;
-cd('/Users/dduke/Files/aiM_capstone/2D-dispersion-daniel')
-
 % Load design dataset
-design_tag = 'control_32pix_small';
+design_tag = 'control_32pix';
 load_file = ['./design_datasets/design_dataset_' design_tag '.mat'];
 load(load_file);
 
 % Storage location
-dispersion_tag = 'control_32pix_small';
+dispersion_tag = 'control_32pix';
 save_folder = ['./dispersion_datasets/' dispersion_tag '/'];
 save_file = ['dispersion_dataset_' dispersion_tag '.mat'];
-isSaveOutput = true;
+isSaveOutput = false;
 
 % Subsample the designs for faster debugging
 downsample_factor = 1;
@@ -22,10 +18,10 @@ designs = designs(:,:,:,1:downsample_factor:end);
 
 % Analysis flags
 design_idx_to_plot = 1;
-isProfile = false;
 isPlotWavevectors = false;
 isPlotDesign = true;
 isPlotDispersion = true;
+isProfile = false;
 
 % Dispersion parameters and flags
 N_design = size(designs,4);                 % Number of designs to calculate the dispersion relation for
@@ -69,6 +65,18 @@ else
     const.N_wv(2) = 1;
 end
 
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Plotting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Plot chosen design
+if isPlotDesign == true
+    fig = figure();
+    magic_plot_local(fig);
+    plot_design(designs(:,:,:,design_idx_to_plot),fig);
+end
+
 % Plot the wavevectors
 if isPlotWavevectors == true
     fig = figure();
@@ -77,12 +85,29 @@ if isPlotWavevectors == true
     plot_wavevectors(const.wavevectors,ax);
 end
 
-% Plot chosen design
-if isPlotDesign == true
+% Plot chosen dispersion relation
+if isPlotDispersion == true
     fig = figure();
     magic_plot_local(fig);
-    plot_design(designs(:,:,:,design_idx_to_plot),fig);
+    ax = axes(fig);
+    const.design = designs(:,:,:,design_idx_to_plot);
+    if isUseDispersion2 == false
+        [wv,fr,ev] = dispersion(const,const.wavevectors);
+    else
+        [wv,fr,ev] = dispersion2(const,const.wavevectors);
+    end
+    if isUseContour == false
+        plot_dispersion_surface(wv,fr,const.N_wv(1),const.N_wv(2),ax);
+    else
+        wn = repmat(contour_info.wavenumber,1,const.N_eig);
+        plot_dispersion_curve(wn,fr,contour_info,ax);
+    end
 end
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Dataset %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % If not saving, warn user
 if isSaveOutput == false
@@ -104,31 +129,31 @@ POISSON_DATA = zeros(const.N_pix,const.N_pix,N_design);
 
 % Loop over designs
 pfwb = parfor_wait(N_design,'Waitbar',true);
-parfor struct_idx = 1:N_design
+parfor design_idx = 1:N_design
     % Parfor varaibles
     pfc = const;
 
     % Assign the current design to const
-    pfc.design = designs(:,:,:,struct_idx);
+    pfc.design = designs(:,:,:,design_idx);
 
     % Solve the dispersion problem
-    if isUseDispersion2 == 0
+    if isUseDispersion2 == false
         [wv,fr,ev] = dispersion(pfc,pfc.wavevectors);
     else
         [wv,fr,ev] = dispersion2(pfc,pfc.wavevectors);
     end
 
     % Save data
-    WAVEVECTOR_DATA(:,:,struct_idx) = wv;
-    EIGENVALUE_DATA(:,:,struct_idx) = real(fr);
+    WAVEVECTOR_DATA(:,:,design_idx) = wv;
+    EIGENVALUE_DATA(:,:,design_idx) = real(fr);
     if pfc.isSaveEigenvectors
-        EIGENVECTOR_DATA(:,:,:,struct_idx) = ev;
+        EIGENVECTOR_DATA(:,:,:,design_idx) = ev;
     end
 
     % Save the material properties
-    ELASTIC_MODULUS_DATA(:,:,struct_idx) = pfc.E_min + (pfc.E_max - pfc.E_min)*pfc.design(:,:,1);
-    DENSITY_DATA(:,:,struct_idx) = pfc.rho_min + (pfc.rho_max - pfc.rho_min)*pfc.design(:,:,2);
-    POISSON_DATA(:,:,struct_idx) = pfc.poisson_min + (pfc.poisson_max - pfc.poisson_min)*pfc.design(:,:,3);
+    ELASTIC_MODULUS_DATA(:,:,design_idx) = pfc.E_min + (pfc.E_max - pfc.E_min)*pfc.design(:,:,1);
+    DENSITY_DATA(:,:,design_idx) = pfc.rho_min + (pfc.rho_max - pfc.rho_min)*pfc.design(:,:,2);
+    POISSON_DATA(:,:,design_idx) = pfc.poisson_min + (pfc.poisson_max - pfc.poisson_min)*pfc.design(:,:,3);
     pfwb.Send; %#ok
 end
 pfwb.Destroy;
@@ -136,22 +161,6 @@ pfwb.Destroy;
 % View profiling
 if isProfile == true
     mpiprofile viewer
-end
-
-% Plot chosen dispersion relation
-if isPlotDispersion == true
-    fig = figure();
-    magic_plot_local(fig);
-    ax = axes(fig);
-    if isUseContour == false
-        wv = WAVEVECTOR_DATA(:,:,design_idx_to_plot);
-        fr = EIGENVALUE_DATA(:,:,design_idx_to_plot);
-        plot_dispersion_surface(wv,fr,const.N_wv(1),const.N_wv(2),ax);
-    else
-        wn = repmat(contour_info.wavenumber,1,const.N_eig);
-        fr = EIGENVALUE_DATA(:,:,design_idx_to_plot);
-        plot_dispersion_curve(wn,fr,contour_info,ax);
-    end
 end
 
 % Save the results
@@ -164,6 +173,3 @@ if isSaveOutput == true
     save([save_folder save_file],vars_to_save{:});
     copyfile([mfilename('fullpath') '.m'],[save_folder mfilename '.m']);
 end
-
-% Go back to the directory you started in
-cd(orig_cd)
