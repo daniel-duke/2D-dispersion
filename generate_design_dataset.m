@@ -2,7 +2,7 @@
 clc; clear; close all;
 
 % Storage Location
-design_tag = 'control';
+design_tag = 'control2';
 save_file = ['./design_datasets/design_dataset_' design_tag];
 isSaveOutput = true;
 
@@ -12,7 +12,7 @@ N_design = 1000;
 % Design parameters
 design_params = design_parameters;
 design_params.design_style = 'kernel';
-design_params.N_pix = 16;
+design_params.N_pix = 32;
 
 % Universal design options
 design_options.symmetry_type = 'p4mm';      % none or c1m1 or pmm or p4mm

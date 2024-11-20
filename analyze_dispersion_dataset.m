@@ -2,12 +2,12 @@
 clc; clear; close all;
 
 % Load dispersion dataset
-dispersion_tag = 'control';
+dispersion_tag = 'control2';
 load_file = ['./dispersion_datasets/' dispersion_tag '/dispersion_dataset_' dispersion_tag '.mat'];
 load(load_file)
 
 % Storage Location
-complete_tag = 'control';
+complete_tag = 'control2';
 save_file = ['./complete_datasets/complete_dataset_' complete_tag];
 isSaveOutput = true;
 
