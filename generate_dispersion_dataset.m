@@ -6,12 +6,12 @@ orig_cd = cd;
 cd('/Users/dduke/Files/aiM_capstone/2D-dispersion-daniel')
 
 % Load design dataset
-design_tag = 'control2';
+design_tag = 'control_32pix_small';
 load_file = ['./design_datasets/design_dataset_' design_tag '.mat'];
 load(load_file);
 
 % Storage location
-dispersion_tag = 'control2';
+dispersion_tag = 'control_32pix_small';
 save_folder = ['./dispersion_datasets/' dispersion_tag '/'];
 save_file = ['dispersion_dataset_' dispersion_tag '.mat'];
 isSaveOutput = true;

@@ -2,12 +2,12 @@
 clc; clear; close all;
 
 % Load dispersion dataset
-dispersion_tag = 'control2';
+dispersion_tag = 'control_32pix_small';
 load_file = ['./dispersion_datasets/' dispersion_tag '/dispersion_dataset_' dispersion_tag '.mat'];
 load(load_file)
 
 % Storage Location
-complete_tag = 'control2';
+complete_tag = 'control_32pix_small';
 save_file = ['./complete_datasets/complete_dataset_' complete_tag];
 isSaveOutput = true;
 
@@ -39,7 +39,7 @@ fig = figure();
 magic_plot_local(fig);
 color = [0.5 0.5 0.5];
 plot_bandgap_edges(bandgap_edges,color)
-ylim([0 2000])
+ylim([0 3000])
 ylabel("Bandgap Location [Hz]")
 
 % Pick design to plot

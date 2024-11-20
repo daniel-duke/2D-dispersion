@@ -2,12 +2,12 @@
 clc; clear; close all;
 
 % Storage Location
-design_tag = 'control2';
+design_tag = 'control_32pix_small';
 save_file = ['./design_datasets/design_dataset_' design_tag];
 isSaveOutput = true;
 
 % Size of dataset
-N_design = 1000;
+N_design = 10;
 
 % Design parameters
 design_params = design_parameters;
