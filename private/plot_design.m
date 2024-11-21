@@ -8,7 +8,7 @@ function [fig,subax,cbar] = plot_design(design,fig)
     titles = {'Modulus','Density','Poisson'};
     useTiles = false;
     
-    if ~useTiles
+    if useTiles == false
         for prop_idx = 1:3
             subax(prop_idx) = subplot(1,3,prop_idx);
             imagesc(squeeze(design(:,:,prop_idx)));
@@ -21,7 +21,7 @@ function [fig,subax,cbar] = plot_design(design,fig)
         cbar_height = 0.3;
 
     else
-        t = tiledlayout(1,3); %#ok
+        t = tiledlayout(1,3);
         t.Padding = 'compact';
         for prop_idx = 1:3
             subax(prop_idx) = nexttile;

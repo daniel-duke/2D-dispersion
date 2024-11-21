@@ -2,12 +2,12 @@
 clc; clear; close all;
 
 % Storage Location
-design_tag = 'control_32pix';
+design_tag = 'test';
 save_file = ['./design_datasets/design_dataset_' design_tag];
-isSaveOutput = false;
+isSaveOutput = true;
 
 % Size of dataset
-N_design = 1000;
+N_design = 100;
 
 % Design parameters
 design_params = design_parameters;
@@ -16,13 +16,13 @@ design_params.N_pix = 32;
 
 % Universal design options
 design_options.symmetry_type = 'p4mm';      % none or c1m1 or pmm or p4mm
-design_options.N_value = inf;               % discretization of material gradient
+design_options.N_value = 2;                 % discretization of material gradient
 design_options.offset = 0;                  % random seed offset
 
 % Kernel design options
 design_options.kernel = 'periodic';         % matern52 or periodic
 design_options.sigma_f = 1;                 % standard deviation
-design_options.sigma_l = 0.5;                 % length scale
+design_options.sigma_l = 0.5;               % length scale
 
 % Gaussian design options
 design_options.thresholds = [0 0];          % field cuts
@@ -57,6 +57,7 @@ plot_design(design,fig);
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Dataset %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+tic
 
 % If not saving, warn user
 if isSaveOutput == false
@@ -76,3 +77,5 @@ end
 if isSaveOutput == true
     save(save_file,'design_params','designs');
 end
+
+toc

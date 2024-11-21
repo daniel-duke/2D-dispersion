@@ -2,7 +2,7 @@
 clear; close all;
 
 % Load design dataset
-dataset_tag = 'control_16pix';
+dataset_tag = 'control_32pix_corr05_p4mm_semicont';
 load_file = ['./design_datasets/design_dataset_' dataset_tag '.mat'];
 design_data = load(load_file);
 designs = design_data.designs;

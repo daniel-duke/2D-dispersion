@@ -2,20 +2,25 @@
 clc; clear; close all;
 
 % Load dispersion dataset
-dispersion_tag = 'control_32pix';
+dispersion_tag = 'test';
 load_file = ['./dispersion_datasets/' dispersion_tag '/dispersion_dataset_' dispersion_tag '.mat'];
 load(load_file)
 
 % Storage Location
-complete_tag = 'control_32pix';
+complete_tag = dispersion_tag;
 save_file = ['./complete_datasets/complete_dataset_' complete_tag];
+isSaveOutput = false;
 
 % What to do
-isSaveOutput = false;
+isSaveFigures = false;
 isPlotBandgapDist = true;
 isPlotBandgaps = true;
-isPlotDesign = false;
+isPlotDesign = true;
 isPlotDispersion = false;
+
+% Plotting parameters
+max_bandgap_width = 800;
+max_bandgap_location = 2400;
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Dataset %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,19 +49,22 @@ end
 if isPlotBandgapDist == true
     fig = figure();
     magic_plot_local(fig);
-    bandgap_max_widths = max(bandgap_widths);
-    histogram(bandgap_max_widths(bandgap_max_widths>0))
-    xlim([0 800])
-    xlabel("Bandgap Width [Hz]")
+    ax = axes(fig);
+    plot_bandgap_dist(bandgap_widths,max_bandgap_width,ax)
+    if isSaveFigures == true
+        saveas(fig,['./figures/' complete_tag '_gapDistribution.png'])
+    end
 end
 
 % Bandgap location
 if isPlotBandgaps == true
     fig = figure();
     magic_plot_local(fig);
-    plot_bandgaps(bandgap_widths,bandgap_locations)
-    ylim([0 3000])
-    ylabel("Bandgap Location [Hz]")
+    ax = axes(fig);
+    plot_bandgaps(bandgap_widths,bandgap_locations,max_bandgap_width,max_bandgap_location,ax)
+    if isSaveFigures == true
+        saveas(fig,['./figures/' complete_tag '_gapLocations.png'])
+    end
 end
 
 % Plot chosen design
@@ -76,10 +84,28 @@ if isPlotDesign == true
     fig = figure();
     magic_plot_local(fig);
     plot_design(cat(3,modulus, density, poisson),fig);
+    if isSaveFigures == true
+        saveas(fig,['./figures/' complete_tag '_design.png'])
+    end
+
+    % Design image
+    if isSaveFigures == true
+        fig = figure('Visible','off');
+        ax = axes(fig);
+        imagesc(squeeze(designs(:,:,1,design_idx_to_plot)))
+        set(ax,'XTick',[])
+        set(ax,'YTick',[])
+        colormap('gray')
+        daspect([1 1 1])
+        imwrite(frame2im(getframe(ax)),['./figures/' complete_tag '_modulus.png'])
+    end
 end
 
 % Plot chosen dispersion relation
 if isPlotDispersion == true
+    % Pick design to plot
+    design_idx_to_plot = 1;
+
     % Dispersion data
     N_eig = size(EIGENVALUE_DATA,2);
     wv = squeeze(WAVEVECTOR_DATA(:,:,design_idx_to_plot));
@@ -90,6 +116,9 @@ if isPlotDispersion == true
     magic_plot_local(fig);
     ax = axes(fig);
     plot_dispersion_surface(wv,ev,const.N_wv(1),const.N_wv(2),ax);
+    if isSaveFigures == true
+        saveas(fig,['./figures/' complete_tag '_dispersion.png'])
+    end
 end
 
 
@@ -114,18 +143,37 @@ function [bandgap_widths,bandgap_locations] = calc_bandgaps(eigs)
     end
 end
 
-function plot_bandgaps(bandgap_widths,bandgap_locations)
+function plot_bandgap_dist(bandgap_widths,max_bandgap_width,ax)
+    bandgap_max_widths = max(bandgap_widths);
+    histogram(ax,bandgap_max_widths(bandgap_max_widths>0),'BinEdges',linspace(0,max_bandgap_width,max_bandgap_width/100+1))
+    xlim([0 max_bandgap_width])
+    ylim([0 20])
+    xlabel("Bandgap Width [Hz]")
+end
+
+function plot_bandgaps(bandgap_widths,bandgap_locations,max_bandgap_width,max_bandgap_location,ax)
     N_struct = size(bandgap_widths,2);
     N_eig_pair = size(bandgap_widths,1);
+    cmap = flipud(colormap);
     hold on
     for struct_idx = 1:N_struct
         for eig_pair_idx = 1:N_eig_pair
             if bandgap_widths(eig_pair_idx,struct_idx) > 0
                 y_upper = bandgap_locations(eig_pair_idx,struct_idx) + bandgap_widths(eig_pair_idx,struct_idx)/2;
                 y_lower = bandgap_locations(eig_pair_idx,struct_idx) - bandgap_widths(eig_pair_idx,struct_idx)/2;
-                fill([0,1,1,0], [y_lower, y_lower, y_upper, y_upper], 'k', 'FaceAlpha', 4/N_struct, 'EdgeColor', 'none');
+                bandgap_ratio = min(1,bandgap_widths(eig_pair_idx,struct_idx)/max_bandgap_width);
+                color_idx = round(bandgap_ratio*(size(cmap,1)-1))+1;
+                fill(ax,[0,1,1,0], [y_lower, y_lower, y_upper, y_upper], cmap(color_idx,:), 'FaceAlpha', 10/N_struct, 'EdgeColor', 'none');
             end
         end
     end
     hold off
+    ylim([0 max_bandgap_location])
+    ylabel("Bandgap Location [Hz]")
+    clim([0 max_bandgap_width]);
+    cbar = colorbar('colormap',cmap);
+    cbar.Label.String  = "Bandgap Width [Hz]";
+    cbar.Label.Interpreter = ax.TickLabelInterpreter;
+    cbar.TickLabelInterpreter = ax.TickLabelInterpreter;
+    cbar.FontSize = ax.FontSize;
 end

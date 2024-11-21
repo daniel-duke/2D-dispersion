@@ -2,12 +2,12 @@
 clc; clear; close all;
 
 % Load design dataset
-design_tag = 'test';
+design_tag = 'control_32pix_corr05_p4mm_discrete';
 load_file = ['./design_datasets/design_dataset_' design_tag '.mat'];
 load(load_file);
 
 % Storage location
-dispersion_tag = design_tag;
+dispersion_tag = 'control_32pix_corr05_p4mm_discrete';
 save_folder = ['./dispersion_datasets/' dispersion_tag '/'];
 save_file = ['dispersion_dataset_' dispersion_tag '.mat'];
 isSaveOutput = true;
@@ -108,7 +108,6 @@ end
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Dataset %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-tic
 
 % If not saving, warn user
 if isSaveOutput == false
@@ -130,7 +129,7 @@ POISSON_DATA = zeros(const.N_pix,const.N_pix,N_design);
 
 % Loop over designs
 pfwb = parfor_wait(N_design,'Waitbar',true);
-for design_idx = 1:N_design
+parfor design_idx = 1:N_design
     % Parfor varaibles
     pfc = const;
 
@@ -155,7 +154,7 @@ for design_idx = 1:N_design
     ELASTIC_MODULUS_DATA(:,:,design_idx) = pfc.E_min + (pfc.E_max - pfc.E_min)*pfc.design(:,:,1);
     DENSITY_DATA(:,:,design_idx) = pfc.rho_min + (pfc.rho_max - pfc.rho_min)*pfc.design(:,:,2);
     POISSON_DATA(:,:,design_idx) = pfc.poisson_min + (pfc.poisson_max - pfc.poisson_min)*pfc.design(:,:,3);
-    pfwb.Send;
+    pfwb.Send; %#ok
 end
 pfwb.Destroy;
 
@@ -174,5 +173,3 @@ if isSaveOutput == true
     save([save_folder save_file],vars_to_save{:});
     copyfile([mfilename('fullpath') '.m'],[save_folder mfilename '.m']);
 end
-
-toc
