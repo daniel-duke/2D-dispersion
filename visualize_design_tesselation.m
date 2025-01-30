@@ -4,8 +4,7 @@ clear; close all;
 % Load design dataset
 dataset_tag = 'control_32pix';
 load_file = ['./design_datasets/design_dataset_' dataset_tag '.mat'];
-design_data = load(load_file);
-designs = design_data.designs;
+load(load_file);
 
 % Pick dimensions of design tiling
 design_idx_to_plot = 1;

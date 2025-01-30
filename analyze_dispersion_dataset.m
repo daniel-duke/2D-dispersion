@@ -3,18 +3,18 @@ clc; clear; close all;
 
 % Load dispersion dataset
 dispersion_tag = 'test';
-load_file = ['./dispersion_datasets/' dispersion_tag '/dispersion_dataset_' dispersion_tag '.mat'];
+load_file = ['./dispersion_datasets/dispersion_' dispersion_tag '.mat'];
 load(load_file)
 
 % Storage Location
 complete_tag = dispersion_tag;
-save_file = ['./complete_datasets/complete_dataset_' complete_tag];
-isSaveOutput = false;
+save_file = ['./complete_datasets/complete_' complete_tag];
+isSaveOutput = true;
 
 % What to do
 isSaveFigures = false;
-isPlotBandgapDist = true;
-isPlotBandgaps = true;
+isPlotBandgapDist = false;
+isPlotBandgaps = false;
 isPlotDesign = true;
 isPlotDispersion = false;
 
@@ -37,7 +37,7 @@ success_rate = sum(sum(bandgap_widths)>0)/length(bandgap_widths);
 
 % Save output
 if isSaveOutput == true
-    vars_to_save = {'design_params','designs','const','ELASTIC_MODULUS_DATA', 'DENSITY_DATA', 'POISSON_DATA', 'WAVEVECTOR_DATA','EIGENVALUE_DATA','bandgap_widths','bandgap_locations'};
+    vars_to_save = {'design_params','designs','const','MODULUS_DATA', 'DENSITY_DATA', 'POISSON_DATA', 'WAVEVECTOR_DATA','EIGENVALUE_DATA','bandgap_widths','bandgap_locations'};
     save(save_file,vars_to_save{:});
 end 
 
@@ -73,7 +73,7 @@ if isPlotDesign == true
     design_idx_to_plot = 1;
     
     % Constitutive data
-    modulus = squeeze(ELASTIC_MODULUS_DATA(:,:,design_idx_to_plot));
+    modulus = squeeze(MODULUS_DATA(:,:,design_idx_to_plot));
     density = squeeze(DENSITY_DATA(:,:,design_idx_to_plot));
     poisson = squeeze(POISSON_DATA(:,:,design_idx_to_plot));
     modulus = (modulus-my_min(modulus))/(my_max(modulus)-my_min(modulus));
@@ -108,7 +108,7 @@ if isPlotDispersion == true
 
     % Dispersion data
     N_eig = size(EIGENVALUE_DATA,2);
-    wv = squeeze(WAVEVECTOR_DATA(:,:,design_idx_to_plot));
+    wv = WAVEVECTOR_DATA;
     ev = squeeze(EIGENVALUE_DATA(:,:,design_idx_to_plot));
     
     % Plot dispersion surface

@@ -1,7 +1,5 @@
-function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
-    
-    orig_wavevectors = wavevectors;
-    
+function [fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
+        
     [wavevectors,~,unique_wavevector_idxs] = unique(wavevectors,'stable','rows'); % Don't repeat computations where unnecessary
     
     fr = zeros(size(wavevectors,1),const.N_eig);
@@ -241,5 +239,4 @@ function [wv,fr,ev,cg,dfrddesign,dcgddesign] = dispersion2(const,wavevectors)
         ev = ev(:,unique_wavevector_idxs,:);
     end
     
-    wv = orig_wavevectors;
 end

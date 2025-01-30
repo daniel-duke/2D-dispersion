@@ -1,4 +1,4 @@
-function [wv,fr,ev] = dispersion(const,wavevectors)
+function [fr,ev] = dispersion(const,wavevectors)
     
     N_dof = ((const.N_ele*const.N_pix)^2)*2; % Total number of degrees of freedom in the model *after* boundary conditions have been applied
     % if const.N_eig>N_dof
@@ -52,7 +52,6 @@ function [wv,fr,ev] = dispersion(const,wavevectors)
         fr(k_idx,:) = fr(k_idx,:)/(2*pi); % convert angular frequency to hertz
         
     end
-    wv = wavevectors;
     
 end
 
