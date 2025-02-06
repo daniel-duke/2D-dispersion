@@ -3,7 +3,7 @@ clc; clear; close all;
 
 % Storage Location
 design_tag = 'test';
-save_file = ['../datasets/design_datasets/design_' design_tag];
+save_file = ['../datasets/designs/design_' design_tag];
 isSaveOutput = true;
 
 % Size of dataset
