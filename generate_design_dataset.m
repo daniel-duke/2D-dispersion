@@ -7,7 +7,7 @@ save_file = ['../datasets/designs/design_' design_tag];
 isSaveOutput = true;
 
 % Size of dataset
-N_design = 24;                              % 1000      - number of designs 
+N_design = 48;                              % 1000      - number of designs 
 
 % Design parameters
 design_params = design_parameters;
