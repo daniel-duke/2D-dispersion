@@ -3,13 +3,13 @@ clc; clear; close all;
 
 % Load design dataset
 design_tag = 'testy';
-load_file = ['./design_datasets/design_' design_tag '.mat'];
+load_file = ['../datasets/design_datasets/design_' design_tag '.mat'];
 load(load_file);
 
 % Storage location
 dispersion_tag = design_tag;
-save_folder = ['./dispersion_datasets/scripts/' dispersion_tag '/'];
-save_file = ['./dispersion_datasets/dispersion_' dispersion_tag '.mat'];
+save_folder = ['../datasets/dispersion_datasets/scripts/' dispersion_tag '/'];
+save_file = ['../datasets/dispersion_datasets/dispersion_' dispersion_tag '.mat'];
 isSaveOutput = true;
 
 % Subsample the designs for faster debugging

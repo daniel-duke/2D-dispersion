@@ -2,8 +2,8 @@
 clear; close all;
 
 % Load design dataset
-dataset_tag = 'control_32pix';
-load_file = ['./design_datasets/design_dataset_' dataset_tag '.mat'];
+dataset_tag = 'control_big_nosym';
+load_file = ['../datasets/design_datasets/design_' dataset_tag '.mat'];
 load(load_file);
 
 % Pick dimensions of design tiling

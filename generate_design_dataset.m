@@ -2,8 +2,8 @@
 clc; clear; close all;
 
 % Storage Location
-design_tag = 'testy';
-save_file = ['./design_datasets/design_' design_tag];
+design_tag = 'test';
+save_file = ['../datasets/design_datasets/design_' design_tag];
 isSaveOutput = true;
 
 % Size of dataset
@@ -22,7 +22,7 @@ design_options.offset = 0;                  % 0         - random seed offset
 % Kernel design options
 design_options.kernel = 'periodic';         % periodic  - matern52 or periodic
 design_options.sigma_f = 1;                 % 1         - standard deviation
-design_options.sigma_l = 1;                 % 0.5       - length scale
+design_options.sigma_l = 0.5;               % 0.5       - length scale
 
 % Gaussian design options
 design_options.thresholds = [0 0];          % field cuts
