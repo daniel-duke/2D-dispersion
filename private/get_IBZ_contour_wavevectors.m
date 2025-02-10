@@ -38,6 +38,6 @@ end
 function wavevectors = get_contour_from_vertices(vertices,N_k)
     wavevectors = [];
     for vertex_idx = 1:size(vertices,1)-1
-        wavevectors = [wavevectors(1:(end-1),:); linspaceNDim(vertices(vertex_idx,:),vertices(vertex_idx+1,:),N_k)'];
+        wavevectors = [wavevectors(1:(end-1),:); filex.linspaceNDim(vertices(vertex_idx,:),vertices(vertex_idx+1,:),N_k)'];
     end
 end

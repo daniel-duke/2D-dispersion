@@ -8,8 +8,7 @@ N_dataset = length(dataset_tags);
 load_files = strings(1,N_dataset);
 for i = 1:N_dataset
     load_files(i) = "../datasets/" + data_type + ...
-                    "_datasets/" + data_type + ...
-                    "_" + dataset_tags(i) + ".mat";
+                    "s/" + dataset_tags(i) + ".mat";
 end
 
 % Storage location

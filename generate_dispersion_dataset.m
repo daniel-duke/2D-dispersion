@@ -2,14 +2,14 @@
 clc; clear; close all;
 
 % Load design dataset
-design_tag = 'testy';
-load_file = ['../datasets/design_datasets/design_' design_tag '.mat'];
+design_tag = 'test';
+load_file = ['../datasets/design/' design_tag '.mat'];
 load(load_file);
 
 % Storage location
 dispersion_tag = design_tag;
-save_folder = ['../datasets/dispersion_datasets/scripts/' dispersion_tag '/'];
-save_file = ['../datasets/dispersion_datasets/dispersion_' dispersion_tag '.mat'];
+save_folder = ['../datasets/dispersion/scripts/' dispersion_tag '/'];
+save_file = ['../datasets/dispersion/' dispersion_tag '.mat'];
 isSaveOutput = true;
 
 % Subsample the designs for faster debugging
@@ -73,14 +73,14 @@ end
 % Plot chosen design
 if isPlotDesign == true
     fig = figure();
-    magic_plot_local(fig);
+    ars.magic_plot_local(fig);
     plot_design(designs(:,:,:,design_idx_to_plot),fig);
 end
 
 % Plot the wavevectors
 if isPlotWavevectors == true
     fig = figure();
-    magic_plot_local(fig);
+    ars.magic_plot_local(fig);
     ax = axes(fig);
     plot_wavevectors(const.wavevectors,ax);
 end
@@ -88,7 +88,7 @@ end
 % Plot chosen dispersion relation
 if isPlotDispersion == true
     fig = figure();
-    magic_plot_local(fig);
+    ars.magic_plot_local(fig);
     ax = axes(fig);
     const.design = designs(:,:,:,design_idx_to_plot);
     if isUseDispersion2 == false
@@ -129,7 +129,7 @@ DENSITY_DATA = zeros(const.N_pix,const.N_pix,N_design);
 POISSON_DATA = zeros(const.N_pix,const.N_pix,N_design);
 
 % Loop over designs
-pfwb = parfor_wait(N_design,'Waitbar',true);
+pfwb = filex.parfor_wait(N_design,'Waitbar',true);
 for design_idx = 1:N_design
     % Parfor varaibles
     pfc = const;
@@ -170,7 +170,7 @@ if isSaveOutput == true
         vars_to_save{end+1} = 'EIGENVECTOR_DATA';
     end
     save(save_file,vars_to_save{:});
-    createEmptyFold(save_folder)
+    ars.createEmptyFold(save_folder)
     copyfile([mfilename('fullpath') '.m'],[save_folder mfilename '.m']);
 end
 

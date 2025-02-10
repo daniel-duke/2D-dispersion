@@ -3,18 +3,18 @@ clc; clear; close all;
 
 % Load dispersion dataset
 dispersion_tag = 'test';
-load_file = ['../datasets/dispersion_datasets/dispersion_' dispersion_tag '.mat'];
+load_file = ['../datasets/dispersion/' dispersion_tag '.mat'];
 load(load_file)
 
 % Storage Location
 complete_tag = dispersion_tag;
-save_file = ['../datasets/complete_datasets/complete_' complete_tag];
+save_file = ['../datasets/complete/' complete_tag];
 isSaveOutput = true;
 
 % What to do
 isSaveFigures = false;
-isPlotBandgapDist = false;
-isPlotBandgaps = false;
+isPlotBandgapDist = true;
+isPlotBandgaps = true;
 isPlotDesign = true;
 isPlotDispersion = false;
 
@@ -48,7 +48,7 @@ end
 % Bandgap width
 if isPlotBandgapDist == true
     fig = figure();
-    magic_plot_local(fig);
+    ars.magic_plot_local(fig);
     ax = axes(fig);
     plot_bandgap_dist(bandgap_widths,max_bandgap_width,ax)
     if isSaveFigures == true
@@ -59,7 +59,7 @@ end
 % Bandgap location
 if isPlotBandgaps == true
     fig = figure();
-    magic_plot_local(fig);
+    ars.magic_plot_local(fig);
     ax = axes(fig);
     plot_bandgaps(bandgap_widths,bandgap_locations,max_bandgap_width,max_bandgap_location,ax)
     if isSaveFigures == true
@@ -76,13 +76,13 @@ if isPlotDesign == true
     modulus = squeeze(MODULUS_DATA(:,:,design_idx_to_plot));
     density = squeeze(DENSITY_DATA(:,:,design_idx_to_plot));
     poisson = squeeze(POISSON_DATA(:,:,design_idx_to_plot));
-    modulus = (modulus-my_min(modulus))/(my_max(modulus)-my_min(modulus));
-    density = (density-my_min(density))/(my_max(density)-my_min(density));
-    poisson = (poisson-my_min(poisson))/(my_max(poisson)-my_min(poisson));
+    modulus = (modulus-ars.my_min(modulus))/(ars.my_max(modulus)-ars.my_min(modulus));
+    density = (density-ars.my_min(density))/(ars.my_max(density)-ars.my_min(density));
+    poisson = (poisson-ars.my_min(poisson))/(ars.my_max(poisson)-ars.my_min(poisson));
     
     % Plot design
     fig = figure();
-    magic_plot_local(fig);
+    ars.magic_plot_local(fig);
     plot_design(cat(3,modulus, density, poisson),fig);
     if isSaveFigures == true
         saveas(fig,['./figures/' complete_tag '_design.png'])
@@ -113,7 +113,7 @@ if isPlotDispersion == true
     
     % Plot dispersion surface
     fig = figure();
-    magic_plot_local(fig);
+    ars.magic_plot_local(fig);
     ax = axes(fig);
     plot_dispersion_surface(wv,ev,const.N_wv(1),const.N_wv(2),ax);
     if isSaveFigures == true

@@ -3,7 +3,7 @@ clc; clear; close all;
 
 % Storage Location
 design_tag = 'test';
-save_file = ['../datasets/designs/' design_tag];
+save_file = ['../datasets/design/' design_tag];
 isSaveOutput = true;
 
 % Size of dataset
@@ -46,7 +46,7 @@ design_params.design_options = design_options;
 
 % Plot example design
 fig = figure();
-magic_plot_local(fig);
+ars.magic_plot_local(fig);
 dp = design_params;
 dp.design_number = 1;
 dp = dp.prepare();

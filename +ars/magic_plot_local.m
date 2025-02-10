@@ -1,7 +1,7 @@
-%%% set default plot and text options (applies to given figure)
+%%% set pretty plot properties (applies to given figure)
 function colors = magic_plot_local(fig)
-    if nargin < 1
-        fig = gcf;
+    arguments
+        fig matlab.ui.Figure = gcf
     end
     set(fig,'defaultTextInterpreter','latex')
     set(fig,'defaultLegendInterpreter','latex')

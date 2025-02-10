@@ -3,7 +3,7 @@ clear; close all;
 
 % Load design dataset
 dataset_tag = 'control_big_nosym';
-load_file = ['../datasets/design_datasets/design_' dataset_tag '.mat'];
+load_file = ['../datasets/designs/' dataset_tag '.mat'];
 load(load_file);
 
 % Pick dimensions of design tiling
