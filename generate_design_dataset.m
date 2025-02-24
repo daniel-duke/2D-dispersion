@@ -46,7 +46,7 @@ design_params.design_options = design_options;
 
 % Plot example design
 fig = figure();
-ars.magic_plot_local(fig);
+ars.magicPlotLocal(fig);
 dp = design_params;
 dp.design_number = 1;
 dp = dp.prepare();

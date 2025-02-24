@@ -73,14 +73,14 @@ end
 % Plot chosen design
 if isPlotDesign == true
     fig = figure();
-    ars.magic_plot_local(fig);
+    ars.magicPlotLocal(fig);
     plot_design(designs(:,:,:,design_idx_to_plot),fig);
 end
 
 % Plot the wavevectors
 if isPlotWavevectors == true
     fig = figure();
-    ars.magic_plot_local(fig);
+    ars.magicPlotLocal(fig);
     ax = axes(fig);
     plot_wavevectors(const.wavevectors,ax);
 end
@@ -88,7 +88,7 @@ end
 % Plot chosen dispersion relation
 if isPlotDispersion == true
     fig = figure();
-    ars.magic_plot_local(fig);
+    ars.magicPlotLocal(fig);
     ax = axes(fig);
     const.design = designs(:,:,:,design_idx_to_plot);
     if isUseDispersion2 == false

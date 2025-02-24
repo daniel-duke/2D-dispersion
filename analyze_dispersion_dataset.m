@@ -48,7 +48,7 @@ end
 % Bandgap width
 if isPlotBandgapDist == true
     fig = figure();
-    ars.magic_plot_local(fig);
+    ars.magicPlotLocal(fig);
     ax = axes(fig);
     plot_bandgap_dist(bandgap_widths,max_bandgap_width,ax)
     if isSaveFigures == true
@@ -59,7 +59,7 @@ end
 % Bandgap location
 if isPlotBandgaps == true
     fig = figure();
-    ars.magic_plot_local(fig);
+    ars.magicPlotLocal(fig);
     ax = axes(fig);
     plot_bandgaps(bandgap_widths,bandgap_locations,max_bandgap_width,max_bandgap_location,ax)
     if isSaveFigures == true
@@ -76,13 +76,13 @@ if isPlotDesign == true
     modulus = squeeze(MODULUS_DATA(:,:,design_idx_to_plot));
     density = squeeze(DENSITY_DATA(:,:,design_idx_to_plot));
     poisson = squeeze(POISSON_DATA(:,:,design_idx_to_plot));
-    modulus = (modulus-ars.my_min(modulus))/(ars.my_max(modulus)-ars.my_min(modulus));
-    density = (density-ars.my_min(density))/(ars.my_max(density)-ars.my_min(density));
-    poisson = (poisson-ars.my_min(poisson))/(ars.my_max(poisson)-ars.my_min(poisson));
+    modulus = (modulus-ars.myMin(modulus))/(ars.myMax(modulus)-ars.myMin(modulus));
+    density = (density-ars.myMin(density))/(ars.myMax(density)-ars.myMin(density));
+    poisson = (poisson-ars.myMin(poisson))/(ars.myMax(poisson)-ars.myMin(poisson));
     
     % Plot design
     fig = figure();
-    ars.magic_plot_local(fig);
+    ars.magicPlotLocal(fig);
     plot_design(cat(3,modulus, density, poisson),fig);
     if isSaveFigures == true
         saveas(fig,['./figures/' complete_tag '_design.png'])
@@ -113,7 +113,7 @@ if isPlotDispersion == true
     
     % Plot dispersion surface
     fig = figure();
-    ars.magic_plot_local(fig);
+    ars.magicPlotLocal(fig);
     ax = axes(fig);
     plot_dispersion_surface(wv,ev,const.N_wv(1),const.N_wv(2),ax);
     if isSaveFigures == true

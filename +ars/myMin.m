@@ -1,4 +1,4 @@
 %%% return the global minimum of array
-function minimum = my_min(A)
+function minimum = myMin(A)
     minimum = min(A,[],"all");
 end

@@ -1,5 +1,5 @@
 %%% set pretty plot properties (applies to given figure)
-function colors = magic_plot_local(fig)
+function colors = magicPlotLocal(fig)
     arguments
         fig matlab.ui.Figure = gcf
     end

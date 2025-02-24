@@ -1,5 +1,5 @@
 %%% recursively remove folder
-function my_rmdir(dirPath)
+function myRmdir(dirPath)
     if ~isfolder(dirPath)
         error('The specified path is not a directory or does not exist.');
     end
@@ -11,7 +11,7 @@ function my_rmdir(dirPath)
         end
         filePath = fullfile(dirPath, files(i).name);
         if isfolder(filePath)
-            my_rmdir(filePath);
+            myRmdir(filePath);
         else
             delete(filePath);
         end
