@@ -2,7 +2,7 @@
 clc; clear; close all;
 
 % Load dispersion dataset
-dispersion_tag = 'test';
+dispersion_tag = 'control_big_nosym';
 load_file = ['../datasets/dispersion/' dispersion_tag '.mat'];
 load(load_file)
 
@@ -16,7 +16,7 @@ isSaveFigures = false;
 isPlotBandgapDist = true;
 isPlotBandgaps = true;
 isPlotDesign = true;
-isPlotDispersion = false;
+isPlotDispersion = true;
 
 % Plotting parameters
 max_bandgap_width = 800;
@@ -147,7 +147,7 @@ function plot_bandgap_dist(bandgap_widths,max_bandgap_width,ax)
     bandgap_max_widths = max(bandgap_widths);
     histogram(ax,bandgap_max_widths(bandgap_max_widths>0),'BinEdges',linspace(0,max_bandgap_width,max_bandgap_width/100+1))
     xlim([0 max_bandgap_width])
-    ylim([0 20])
+    % ylim([0 20])
     xlabel("Bandgap Width [Hz]")
 end
 
@@ -163,7 +163,7 @@ function plot_bandgaps(bandgap_widths,bandgap_locations,max_bandgap_width,max_ba
                 y_lower = bandgap_locations(eig_pair_idx,struct_idx) - bandgap_widths(eig_pair_idx,struct_idx)/2;
                 bandgap_ratio = min(1,bandgap_widths(eig_pair_idx,struct_idx)/max_bandgap_width);
                 color_idx = round(bandgap_ratio*(size(cmap,1)-1))+1;
-                fill(ax,[0,1,1,0], [y_lower, y_lower, y_upper, y_upper], cmap(color_idx,:), 'FaceAlpha', 10/N_struct, 'EdgeColor', 'none');
+                fill(ax,[0,1,1,0], [y_lower, y_lower, y_upper, y_upper], cmap(color_idx,:), 'FaceAlpha', 1/sqrt(10*N_struct), 'EdgeColor', 'none');
             end
         end
     end
