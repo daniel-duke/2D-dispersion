@@ -2,7 +2,7 @@
 clc; clear; close all;
 
 % Load dispersion dataset
-dispersion_tag = 'control_big_nosym';
+dispersion_tag = 'control_big';
 load_file = ['../datasets/dispersion/' dispersion_tag '.mat'];
 load(load_file)
 

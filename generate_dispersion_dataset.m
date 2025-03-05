@@ -2,7 +2,7 @@
 clc; clear; close all;
 
 % Load design dataset
-design_tag = 'test';
+design_tag = 'control_big';
 load_file = ['../datasets/design/' design_tag '.mat'];
 load(load_file);
 

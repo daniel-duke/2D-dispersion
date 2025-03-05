@@ -2,12 +2,12 @@
 clc; clear; close all;
 
 % Storage Location
-design_tag = 'test';
+design_tag = 'control_big';
 save_file = ['../datasets/design/' design_tag];
 isSaveOutput = true;
 
 % Size of dataset
-N_design = 24;                              % 1000      - number of designs 
+N_design = 10000;                           % 1000      - number of designs 
 
 % Design parameters
 design_params = design_parameters;
