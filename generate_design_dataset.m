@@ -2,12 +2,12 @@
 clc; clear; close all;
 
 % Storage Location
-design_tag = 'control_big';
+design_tag = 'test';
 save_file = ['../datasets/design/' design_tag];
 isSaveOutput = true;
 
 % Size of dataset
-N_design = 10000;                           % 1000      - number of designs 
+N_design = 24;                             % 1000      - number of designs 
 
 % Design parameters
 design_params = design_parameters;
@@ -21,7 +21,7 @@ design_options.offset = 0;                  % 0         - random seed offset
 
 % Kernel design options
 design_options.kernel = 'periodic';         % periodic  - matern52 or periodic
-design_options.sigma_f = 1;                 % 1         - standard deviation
+design_options.sigma_f = 2;                 % 1         - standard deviation
 design_options.sigma_l = 0.5;               % 0.5       - length scale
 
 % Gaussian design options

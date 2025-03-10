@@ -1,9 +1,9 @@
 % Housekeeping
-clear; close all;
+clc; clear; close all;
 
 % Load design dataset
-dataset_tag = 'control_big_nosym';
-load_file = ['../datasets/designs/' dataset_tag '.mat'];
+dataset_tag = 'control';
+load_file = ['../datasets/design/' dataset_tag '.mat'];
 load(load_file);
 
 % Pick dimensions of design tiling
@@ -18,8 +18,8 @@ t.Padding = 'compact';
 for row = 1:grid(1)
     for col = 1:grid(2)
         subax(row,col) = nexttile;
-        % design_idx = sub2ind(N_design,row,col);
-        design_idx = randi(N_design);
+        design_idx = sub2ind(grid,row,col);
+        % design_idx = randi(N_design);
         imagesc(squeeze(designs(:,:,1,design_idx)))
         set(subax(row,col),'XTick',[])
         set(subax(row,col),'YTick',[])

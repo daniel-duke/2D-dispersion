@@ -37,7 +37,7 @@ success_rate = sum(sum(bandgap_widths)>0)/length(bandgap_widths);
 
 % Save output
 if isSaveOutput == true
-    vars_to_save = {'design_params','designs','const','MODULUS_DATA', 'DENSITY_DATA', 'POISSON_DATA', 'WAVEVECTOR_DATA','EIGENVALUE_DATA','bandgap_widths','bandgap_locations'};
+    vars_to_save = {'design_params','designs','const','MODULUS_DATA', 'DENSITY_DATA', 'POISSON_DATA', 'WAVEVECTOR_DATA','EIGENVALUE_DATA','bandgap_widths','bandgap_locations','success_rate'};
     save(save_file,vars_to_save{:});
 end 
 
@@ -141,13 +141,12 @@ function [bandgap_widths,bandgap_locations] = calc_bandgaps(eigs)
             end
         end
     end
-end
+end 
 
 function plot_bandgap_dist(bandgap_widths,max_bandgap_width,ax)
     bandgap_max_widths = max(bandgap_widths);
-    histogram(ax,bandgap_max_widths(bandgap_max_widths>0),'BinEdges',linspace(0,max_bandgap_width,max_bandgap_width/100+1))
+    histogram(ax,bandgap_max_widths(bandgap_max_widths>0),'BinEdges',linspace(0,max_bandgap_width,max_bandgap_width/10+1))
     xlim([0 max_bandgap_width])
-    % ylim([0 20])
     xlabel("Bandgap Width [Hz]")
 end
 
@@ -155,6 +154,7 @@ function plot_bandgaps(bandgap_widths,bandgap_locations,max_bandgap_width,max_ba
     N_struct = size(bandgap_widths,2);
     N_eig_pair = size(bandgap_widths,1);
     cmap = flipud(colormap);
+    transparency = 1/sqrt(10*N_struct);
     hold on
     for struct_idx = 1:N_struct
         for eig_pair_idx = 1:N_eig_pair
@@ -163,7 +163,7 @@ function plot_bandgaps(bandgap_widths,bandgap_locations,max_bandgap_width,max_ba
                 y_lower = bandgap_locations(eig_pair_idx,struct_idx) - bandgap_widths(eig_pair_idx,struct_idx)/2;
                 bandgap_ratio = min(1,bandgap_widths(eig_pair_idx,struct_idx)/max_bandgap_width);
                 color_idx = round(bandgap_ratio*(size(cmap,1)-1))+1;
-                fill(ax,[0,1,1,0], [y_lower, y_lower, y_upper, y_upper], cmap(color_idx,:), 'FaceAlpha', 1/sqrt(10*N_struct), 'EdgeColor', 'none');
+                fill(ax,[0,1,1,0], [y_lower, y_lower, y_upper, y_upper], cmap(color_idx,:), 'FaceAlpha', transparency, 'EdgeColor', 'none');
             end
         end
     end

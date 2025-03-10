@@ -2,16 +2,16 @@
 clear; close all;
 
 % Load design dataset
-dataset_tag = 'test';
+dataset_tag = 'control';
 load_file = ['../datasets/design/' dataset_tag '.mat'];
 load(load_file);
 
 % Pick dimensions of design tiling
 design_idx_to_plot = 1;
-N_design = [1 1];
+N_design = [3 3];
 
 % Noise the image
-sigma = 10;
+sigma = 0;
 cap = false;
 design_plot = repmat(squeeze(designs(:,:,1,design_idx_to_plot)),N_design(1),N_design(2));
 for i = 1:design_params.N_pix
