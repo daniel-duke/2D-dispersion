@@ -1,8 +1,9 @@
-function generate_dispersion_dataset(design_tag)
+function generate_dispersion_dataset(design_tag, isDisplay)
 
 % Defaults arguments
 arguments
     design_tag char = 'control';
+    isDisplay logical = true;
 end
 
 % Load design dataset
@@ -14,7 +15,6 @@ dispersion_tag = design_tag;
 save_folder = ['../datasets/dispersion/scripts/' dispersion_tag '/'];
 save_file = ['../datasets/dispersion/' dispersion_tag '.mat'];
 isSaveOutput = true;
-isDisplay = true;
 
 % Subsample the designs for faster debugging
 downsample_factor = 1;

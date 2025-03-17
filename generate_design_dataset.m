@@ -1,4 +1,4 @@
-function generate_design_dataset(design_tag, N_design, sigma_f, sigma_l)
+function generate_design_dataset(design_tag, N_design, sigma_f, sigma_l, isDisplay)
 
 % Defaults arguments
 arguments
@@ -6,12 +6,12 @@ arguments
     N_design double = 1000;         % number of designs 
     sigma_f double = 1;             % kernel standard deviation
     sigma_l double = 0.5;           % kernel length scale
+    isDisplay logical = true;       % whether a display is available
 end
 
 % Storage Location
 save_file = ['../datasets/design/' design_tag];
 isSaveOutput = true;
-isDisplay = false;
 
 % Design parameters
 design_params = design_parameters;
