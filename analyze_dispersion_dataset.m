@@ -2,7 +2,7 @@
 clc; clear; close all;
 
 % Load dispersion dataset
-dispersion_tag = 'control_sigF02_sigLCombo';
+dispersion_tag = 'control';
 load_file = ['../datasets/dispersion/' dispersion_tag '.mat'];
 load(load_file)
 

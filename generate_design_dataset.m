@@ -3,7 +3,7 @@ function generate_design_dataset(design_tag, N_design, sigma_f, sigma_l)
 % Defaults arguments
 arguments
     design_tag char = 'control';    % name of dataset
-    N_design double = 10;         % number of designs 
+    N_design double = 1000;         % number of designs 
     sigma_f double = 1;             % kernel standard deviation
     sigma_l double = 0.5;           % kernel length scale
 end
@@ -11,7 +11,7 @@ end
 % Storage Location
 save_file = ['../datasets/design/' design_tag];
 isSaveOutput = true;
-isPlotDesign = false;
+isDisplay = false;
 
 % Design parameters
 design_params = design_parameters;
@@ -49,7 +49,7 @@ design_params.design_options = design_options;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Plot example design
-if isPlotDesign == true
+if isDisplay == true
     fig = figure();
     ars.magicPlotLocal(fig);
     dp = design_params;

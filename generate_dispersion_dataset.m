@@ -1,10 +1,11 @@
-% Housekeeping
-clc; clear; close all;
+function generate_dispersion_dataset(design_tag)
 
-% set design_tag from the command line
+% Defaults arguments
+arguments
+    design_tag char = 'control';
+end
 
 % Load design dataset
-design_tag = 'control_N10000_sigF02_sigL08';
 load_file = ['../datasets/design/' design_tag '.mat'];
 load(load_file);
 
@@ -13,6 +14,7 @@ dispersion_tag = design_tag;
 save_folder = ['../datasets/dispersion/scripts/' dispersion_tag '/'];
 save_file = ['../datasets/dispersion/' dispersion_tag '.mat'];
 isSaveOutput = true;
+isDisplay = true;
 
 % Subsample the designs for faster debugging
 downsample_factor = 1;
@@ -73,14 +75,14 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Plot chosen design
-if isPlotDesign == true
+if isPlotDesign == true && isDisplay == true
     fig = figure();
     ars.magicPlotLocal(fig);
     plot_design(designs(:,:,:,design_idx_to_plot),fig);
 end
 
 % Plot the wavevectors
-if isPlotWavevectors == true
+if isPlotWavevectors == true && isDisplay == true
     fig = figure();
     ars.magicPlotLocal(fig);
     ax = axes(fig);
@@ -88,15 +90,15 @@ if isPlotWavevectors == true
 end
 
 % Plot chosen dispersion relation
-if isPlotDispersion == true
+if isPlotDispersion == true && isDisplay == true
     fig = figure();
     ars.magicPlotLocal(fig);
     ax = axes(fig);
     const.design = designs(:,:,:,design_idx_to_plot);
     if isUseDispersion2 == false
-        [fr,ev] = dispersion(const,const.wavevectors);
+        [fr,~] = dispersion(const,const.wavevectors);
     else
-        [fr,ev] = dispersion2(const,const.wavevectors);
+        [fr,~] = dispersion2(const,const.wavevectors);
     end
     if isUseContour == false
         plot_dispersion_surface(const.wavevectors,fr,const.N_wv(1),const.N_wv(2),ax);
@@ -118,7 +120,7 @@ if isSaveOutput == false
 end
 
 % Start profiling
-if isProfile == true
+if isProfile == true && isDisplay == true
     mpiprofile on
 end
 
@@ -130,8 +132,12 @@ MODULUS_DATA = zeros(const.N_pix,const.N_pix,N_design);
 DENSITY_DATA = zeros(const.N_pix,const.N_pix,N_design);
 POISSON_DATA = zeros(const.N_pix,const.N_pix,N_design);
 
+% Create waitbar
+if isDisplay == true
+    pfwb = filex.parfor_wait(N_design,'Waitbar',true);
+end
+
 % Loop over designs
-pfwb = filex.parfor_wait(N_design,'Waitbar',true);
 for design_idx = 1:N_design
     % Parfor varaibles
     pfc = const;
@@ -156,18 +162,20 @@ for design_idx = 1:N_design
     MODULUS_DATA(:,:,design_idx) = pfc.E_min + (pfc.E_max - pfc.E_min)*pfc.design(:,:,1);
     DENSITY_DATA(:,:,design_idx) = pfc.rho_min + (pfc.rho_max - pfc.rho_min)*pfc.design(:,:,2);
     POISSON_DATA(:,:,design_idx) = pfc.poisson_min + (pfc.poisson_max - pfc.poisson_min)*pfc.design(:,:,3);
-    pfwb.Send;
+
+    % Updated waitbar
+    if isDisplay == true; pfwb.Send; end
 end
-pfwb.Destroy;
+if isDisplay == true; pfwb.Destroy; end
 
 % View profiling
-if isProfile == true
+if isProfile == true && isDisplay == true
     mpiprofile viewer
 end
 
 % Save the results
 if isSaveOutput == true
-    vars_to_save = {'design_params','designs','const','MODULUS_DATA', 'DENSITY_DATA', 'POISSON_DATA', 'WAVEVECTOR_DATA','EIGENVALUE_DATA'};
+    vars_to_save = {'design_params','designs','const','MODULUS_DATA','DENSITY_DATA','POISSON_DATA','WAVEVECTOR_DATA','EIGENVALUE_DATA'};
     if const.isSaveEigenvectors
         vars_to_save = [vars_to_save,{'EIGENVECTOR_DATA'}];
     end
