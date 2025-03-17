@@ -3,12 +3,13 @@ clc; clear; close all;
 
 % Load dispersion dataset
 dispersion_tag = 'control';
-load_file = ['../datasets/dispersion/' dispersion_tag '.mat'];
+load_folder = 'datasets/dispersion/';
+load_file = [load_folder dispersion_tag '.mat'];
 load(load_file)
 
 % Storage Location
 complete_tag = dispersion_tag;
-save_file = ['../datasets/complete/' complete_tag];
+save_folder = 'datasets/complete/';
 isSaveOutput = true;
 
 % Trimming parameters
@@ -19,7 +20,7 @@ isSaveFigures = false;
 isPlotBandgapDist = true;
 isPlotBandgaps = true;
 isPlotDesign = false;
-isPlotDispersion = true;
+isPlotDispersion = false;
 
 % Plotting parameters
 min_bandgap_width = 50;
@@ -61,6 +62,8 @@ if isSaveOutput == true
     if exist('const_arr','var')
         vars_to_save = [vars_to_save,{'const_arr'}];
     end
+    ars.createSafeFold(save_folder)
+    save_file = [save_folder complete_tag '.mat'];
     save(save_file,vars_to_save{:});
 end 
 

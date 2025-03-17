@@ -3,14 +3,14 @@ function generate_design_dataset(design_tag, N_design, sigma_f, sigma_l, isDispl
 % Defaults arguments
 arguments
     design_tag char = 'control';    % name of dataset
-    N_design double = 1000;         % number of designs 
-    sigma_f double = 1;             % kernel standard deviation
-    sigma_l double = 0.5;           % kernel length scale
-    isDisplay logical = true;       % whether a display is available
+    N_design double = 1000;         % 1000 - number of designs 
+    sigma_f double = 1;             % 1 - kernel standard deviation
+    sigma_l double = 0.5;           % 0.5 - kernel length scale
+    isDisplay logical = true;       % true - whether a display is available
 end
 
 % Storage Location
-save_file = ['../datasets/design/' design_tag];
+save_folder = 'datasets/design/';
 isSaveOutput = true;
 
 % Design parameters
@@ -82,6 +82,8 @@ end
 % Save the data
 if isSaveOutput == true
     vars_to_save = {'design_params','designs'};
+    ars.createSafeFold(save_folder)
+    save_file = [save_folder design_tag '.mat'];
     save(save_file,vars_to_save{:});
 end
 

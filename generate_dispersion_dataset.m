@@ -7,13 +7,13 @@ arguments
 end
 
 % Load design dataset
-load_file = ['../datasets/design/' design_tag '.mat'];
+load_folder = 'datasets/design/';
+load_file = [load_folder design_tag '.mat'];
 load(load_file);
 
 % Storage location
 dispersion_tag = design_tag;
-save_folder = ['../datasets/dispersion/scripts/' dispersion_tag '/'];
-save_file = ['../datasets/dispersion/' dispersion_tag '.mat'];
+save_folder = 'datasets/dispersion/';
 isSaveOutput = true;
 
 % Subsample the designs for faster debugging
@@ -41,7 +41,7 @@ const.isUseParallel = true;                 % Leave this as true (parallelize di
 const.isSaveEigenvectors = false;           % Leave this as false (whether to save the eigenvectors)
 
 % Dispersion2 flags
-isUseDispersion2 = false;
+const.isUseDispersion2 = false;
 const.isComputeFrequencyDesignSensitivity = false;
 const.isComputeGroupVelocity = false;
 const.isComputeGroupVelocityDesignSensitivity = false;
@@ -95,7 +95,7 @@ if isPlotDispersion == true && isDisplay == true
     ars.magicPlotLocal(fig);
     ax = axes(fig);
     const.design = designs(:,:,:,design_idx_to_plot);
-    if isUseDispersion2 == false
+    if const.isUseDispersion2 == false
         [fr,~] = dispersion(const,const.wavevectors);
     else
         [fr,~] = dispersion2(const,const.wavevectors);
@@ -146,7 +146,7 @@ for design_idx = 1:N_design
     pfc.design = designs(:,:,:,design_idx);
 
     % Solve the dispersion problem
-    if isUseDispersion2 == false
+    if const.isUseDispersion2 == false
         [fr,ev] = dispersion(pfc,pfc.wavevectors);
     else
         [fr,ev] = dispersion2(pfc,pfc.wavevectors);
@@ -182,9 +182,9 @@ if isSaveOutput == true
     if exist('dataset_index','var')
         vars_to_save = [vars_to_save,{'dataset_index','design_params_arr'}];
     end
+    ars.createSafeFold(save_folder)
+    save_file = [save_folder dispersion_tag '.mat'];
     save(save_file,vars_to_save{:});
-    ars.createEmptyFold(save_folder)
-    copyfile([mfilename('fullpath') '.m'],[save_folder mfilename '.m']);
 end
 
 toc
