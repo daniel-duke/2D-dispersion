@@ -1,8 +1,8 @@
 # 2D-Dispersion
 
-This code contains three primary functionalities
+This code contains three primary functionalities:
 
-- Generating datasets of possible metamaterial geometries.
+- Generating datasets of metamaterial geometries.
 
 - Calculating the dispersion curves and/or surfaces of the geometry datasets.
 
@@ -16,12 +16,12 @@ Output: dataset of metamaterial geometries, generated according to the specified
 
 ## Dispersion Calculation
 
-Inputs: number and path/grid for wavevectors, number of eigenvectors to calculate, and material properties (elastic modulus, density, poisson ratio).
+Inputs: geometry dataset, number and path/grid for wavevectors, number of eigenvectors to calculate, and material properties (elastic modulus, density, poisson ratio).
 
 Output: dataset of dispersion curves/surfaces for the metamaterial geometries.
 
 ## Analysis
 
-Inputs: maximum bandgap width/location to consider, and bandgap width threshold for classification as bandgap.
+Inputs: dispersion dataset, maximum bandgap width/location to consider, and bandgap width threshold for classification as bandgap.
 
 Output: distribution of bandgap widths and locations for  the dataset, as well as success rate for bandgap existence in the dataset.

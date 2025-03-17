@@ -1,12 +1,32 @@
-
-*.mph
-
+# Windows default autosave extension
 *.asv
 
-*.lock
+# OSX / Unix default autosave extension
+*.m~
 
-*.mw
+# Compiled MEX binaries
+*.mex*
 
-*.pdf
+# Packaged app and toolbox files
+*.mlappinstall
+*.mltbx
 
-*.gif
+# Generated helpsearch folders
+helpsearch*/
+
+# Simulink code generation folders
+slprj/
+sccprj/
+
+# Matlab code generation folders
+codegen/
+
+# Simulink autosave extension
+*.autosave
+
+# Simulink cache files
+*.slxc
+
+# Octave session info
+octave-workspace
+
