@@ -1,8 +1,10 @@
 % Housekeeping
 clc; clear; close all;
 
+% set design_tag from the command line
+
 % Load design dataset
-design_tag = 'test';
+design_tag = 'control_N10000_sigF02_sigL08';
 load_file = ['../datasets/design/' design_tag '.mat'];
 load(load_file);
 
@@ -19,7 +21,7 @@ designs = designs(:,:,:,1:downsample_factor:end);
 % Analysis flags
 design_idx_to_plot = 1;
 isPlotWavevectors = false;
-isPlotDesign = true;
+isPlotDesign = false;
 isPlotDispersion = true;
 isProfile = false;
 
@@ -167,7 +169,10 @@ end
 if isSaveOutput == true
     vars_to_save = {'design_params','designs','const','MODULUS_DATA', 'DENSITY_DATA', 'POISSON_DATA', 'WAVEVECTOR_DATA','EIGENVALUE_DATA'};
     if const.isSaveEigenvectors
-        vars_to_save{end+1} = 'EIGENVECTOR_DATA';
+        vars_to_save = [vars_to_save,{'EIGENVECTOR_DATA'}];
+    end
+    if exist('dataset_index','var')
+        vars_to_save = [vars_to_save,{'dataset_index','design_params_arr'}];
     end
     save(save_file,vars_to_save{:});
     ars.createEmptyFold(save_folder)

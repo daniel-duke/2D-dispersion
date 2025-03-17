@@ -1,0 +1,13 @@
+control
+    10
+
+     1
+
+    0.5000
+
+Starting parallel pool (parpool) using the 'Processes' profile ...
+2025-03-17 09:49:43.628 MATLAB_maca64[49575:308651] +[IMKClient subclass]: chose IMKClient_Modern
+2025-03-17 09:49:43.628 MATLAB_maca64[49575:308651] +[IMKInputSession subclass]: chose IMKInputSession_Modern
+Connected to parallel pool with 16 workers.
+Elapsed time is 9.842549 seconds.
+Parallel pool using the 'Processes' profile is shutting down.

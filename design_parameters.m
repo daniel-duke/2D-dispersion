@@ -9,9 +9,9 @@ classdef design_parameters
         function obj = design_parameters(design_number)
             if nargin == 1
                 obj.design_number = design_number;
-                obj.design_style = 'periodic';
-                obj.design_options = struct('sigma_f',1,'sigma_l',0.5,'symmetry_type','none','N_value',3);
-                obj.N_pix = 8;
+                obj.design_style = 'kernel';
+                obj.design_options = struct('sigma_f',1,'sigma_l',0.5,'symmetry_type','p4mm','N_value',inf);
+                obj.N_pix = 32;
             end
         end
 
