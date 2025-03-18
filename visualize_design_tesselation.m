@@ -3,7 +3,7 @@ clear; close all;
 
 % Load design dataset
 dataset_tag = 'control';
-load_file = ['../datasets/design/' dataset_tag '.mat'];
+load_file = ['datasets/design/' dataset_tag '.mat'];
 load(load_file);
 
 % Pick dimensions of design tiling

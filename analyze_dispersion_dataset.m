@@ -2,7 +2,7 @@
 clc; clear; close all;
 
 % Load dispersion dataset
-dispersion_tag = 'control';
+dispersion_tag = 'control_sigF02_sigLCombo';
 load_folder = 'datasets/dispersion/';
 load_file = [load_folder dispersion_tag '.mat'];
 load(load_file)
@@ -13,7 +13,7 @@ save_folder = 'datasets/complete/';
 isSaveOutput = true;
 
 % Trimming parameters
-ideal_success_rate = 0.9;
+ideal_success_rate = 0;
 
 % What to do
 isSaveFigures = false;

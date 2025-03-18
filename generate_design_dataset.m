@@ -3,7 +3,7 @@ function generate_design_dataset(design_tag, N_design, sigma_f, sigma_l, isDispl
 % Defaults arguments
 arguments
     design_tag char = 'control';    % name of dataset
-    N_design double = 1000;         % 1000 - number of designs 
+    N_design double = 100;          % 100 - number of designs 
     sigma_f double = 1;             % 1 - kernel standard deviation
     sigma_l double = 0.5;           % 0.5 - kernel length scale
     isDisplay logical = true;       % true - whether a display is available

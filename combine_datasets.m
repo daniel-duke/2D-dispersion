@@ -7,13 +7,13 @@ dataset_tags = ["control_sigF02_sigL07","control_sigF02_sigL08"];
 N_dataset = length(dataset_tags);
 load_files = strings(1,N_dataset);
 for i = 1:N_dataset
-    load_files(i) = "../datasets/" + data_type + ...
+    load_files(i) = "datasets/" + data_type + ...
                     "/" + dataset_tags(i) + ".mat";
 end
 
 % Storage location
 combined_tag = "control_sigF02_sigLCombo";
-save_file = "../datasets/" + data_type + ...
+save_file = "datasets/" + data_type + ...
             "/" + combined_tag + ".mat";
 
 %%% load first dataset parameters
