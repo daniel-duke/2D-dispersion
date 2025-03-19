@@ -1,5 +1,5 @@
 % Housekeeping
-clear; close all;
+clc; clear; close all;
 
 % Load design dataset
 dataset_tag = 'control';

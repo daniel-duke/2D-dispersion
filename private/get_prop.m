@@ -130,22 +130,27 @@ function prop = get_prop(design_parameters,prop_idx)
             error(['design not recognized: ' design_style])
     end
 
+    %%% apply symmerty
     if isfield(design_options,'symmetry_type')
-        % switch design_options.symmetry_type
-        %     case 'none'
-        %         % do nothing
-        %     case 'c1m1'
-        %         prop = apply_c1m1_symmetry(prop);
-        %     case 'pmm'
-        %         prop = apply_pmm_symmetry(prop);
-        %     case 'p4mm'
-        %         prop = apply_p4mm_symmetry(prop);
-        %     otherwise
-        %         error(['symmetry not recognized:' symmetry_type])
-        % end
-        prop = apply_symmetry(prop,design_options.symmetry_type);
+        prop_nosym = prop;
+        prop = apply_symmetry(prop_nosym,design_options.symmetry_type);
+
+        %%% rotate and flip prop until symmetric version is nonuniform
+        attempts = 0;
+        while isscalar(unique(prop))
+            attempts = attempts + 1;
+            if attempts == 5
+                prop_nosym = flipud(prop_nosym);
+            end
+            if attempts == 9
+                error("could not apply symmetry without getting uniform prop")
+            end
+            prop_nosym = rot90(prop_nosym);
+            prop = apply_symmetry(prop_nosym,design_options.symmetry_type);
+        end
     end
 
+    %%% apply discretization
     if isfield(design_options,'N_value') && design_options.N_value ~= inf
         prop = round((design_options.N_value - 1)*prop)/(design_options.N_value - 1);
     end

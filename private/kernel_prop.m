@@ -21,4 +21,14 @@ function prop = kernel_prop(N_pix,design_options)
     prop = reshape(prop,[N_pix N_pix]);
     prop(prop<0) = 0;
     prop(prop>1) = 1;
+
+    %%% if property is uniform, subtract mean before applying limits
+    if isscalar(unique(prop))
+        prop = mvnrnd(mu,C);
+        prop = reshape(prop,[N_pix N_pix]);
+        prop = prop - mean(prop,'all') + 0.5;
+        prop(prop<0) = 0;
+        prop(prop>1) = 1;
+    end
+
 end
