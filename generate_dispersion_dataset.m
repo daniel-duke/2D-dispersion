@@ -112,7 +112,9 @@ end
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Dataset %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-tic
+
+%%% start parallel pool
+if isempty(gcp('nocreate')); parpool; end
 
 % If not saving, warn user
 if isSaveOutput == false
@@ -138,6 +140,7 @@ if isDisplay == true
 end
 
 % Loop over designs
+tic
 for design_idx = 1:N_design
     % Parfor varaibles
     pfc = const;
@@ -167,6 +170,7 @@ for design_idx = 1:N_design
     if isDisplay == true; pfwb.Send; end
 end
 if isDisplay == true; pfwb.Destroy; end
+toc
 
 % View profiling
 if isProfile == true && isDisplay == true
@@ -186,5 +190,3 @@ if isSaveOutput == true
     save_file = [save_folder dispersion_tag '.mat'];
     save(save_file,vars_to_save{:});
 end
-
-toc

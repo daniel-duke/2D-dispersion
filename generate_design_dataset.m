@@ -63,7 +63,9 @@ end
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Dataset %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-tic
+
+%%% start parallel pool
+if isempty(gcp('nocreate')); parpool; end
 
 % If not saving, warn user
 if isSaveOutput == false
@@ -71,6 +73,7 @@ if isSaveOutput == false
 end
 
 % Generate designs
+tic
 designs = zeros(design_params.N_pix,design_params.N_pix,3,N_design);
 parfor i = 1:N_design
     pfdp = design_params;
@@ -78,6 +81,7 @@ parfor i = 1:N_design
     pfdp = pfdp.prepare();
     designs(:,:,:,i) = get_design(pfdp);
 end
+toc
 
 % Save the data
 if isSaveOutput == true
@@ -86,5 +90,3 @@ if isSaveOutput == true
     save_file = [save_folder design_tag '.mat'];
     save(save_file,vars_to_save{:});
 end
-
-toc
