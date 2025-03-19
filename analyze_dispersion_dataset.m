@@ -174,16 +174,19 @@ function idxs_trimmed = trim_datset(bandgap_widths,ideal_success_rate)
     N_bandgap = sum(sum(bandgap_widths)>0);
     N_design_trimmed = floor(N_bandgap/ideal_success_rate);
     idxs_trimmed = zeros(1,N_design_trimmed);
+    failure_perm = randperm(N_design-N_bandgap);
     failure_count = 0;
     trimmed_count = 0;
     for i = 1:N_design
         if sum(bandgap_widths(:,i)) > 0
             trimmed_count = trimmed_count + 1;
             idxs_trimmed(trimmed_count) = i;
-        elseif failure_count < N_design_trimmed-N_bandgap
+        else
             failure_count = failure_count + 1;
-            trimmed_count = trimmed_count + 1;
-            idxs_trimmed(trimmed_count) = i;
+            if failure_perm(failure_count) <= N_design_trimmed-N_bandgap
+                trimmed_count = trimmed_count + 1;
+                idxs_trimmed(trimmed_count) = i;
+            end
         end
     end
 end

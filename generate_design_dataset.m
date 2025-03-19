@@ -1,4 +1,4 @@
-function generate_design_dataset(design_tag, N_design, sigma_f, sigma_l, isDisplay)
+function generate_design_dataset(design_tag, N_design, sigma_f, sigma_l, offset, isDisplay)
 
 % Defaults arguments
 arguments
@@ -6,6 +6,7 @@ arguments
     N_design double = 100;          % 100 - number of designs 
     sigma_f double = 1;             % 1 - kernel standard deviation
     sigma_l double = 0.5;           % 0.5 - kernel length scale
+    offset double = 0;              % 0 - random seed offset
     isDisplay logical = true;       % true - whether a display is available
 end
 
@@ -21,7 +22,7 @@ design_params.N_pix = 32;                       % 32        - number of pixels a
 % Universal design options
 design_options.symmetry_type = 'p4mm';          % p4mm      - none or c1m1 or pmm or p4mm
 design_options.N_value = inf;                   % inf       - discretization of material gradient
-design_options.offset = 0;                      % 0         - random seed offset
+design_options.offset = offset;                 % 0         - random seed offset
 
 % Kernel design options
 design_options.kernel = 'periodic';             % periodic  - matern52 or periodic
