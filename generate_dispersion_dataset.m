@@ -2,7 +2,7 @@ function generate_dispersion_dataset(design_tag, isDisplay)
 
 % Defaults arguments
 arguments
-    design_tag char = 'control';
+    design_tag char = 'control_npix64';
     isDisplay logical = true;
 end
 
@@ -188,5 +188,5 @@ if isSaveOutput == true
     end
     ars.createSafeFold(save_folder)
     save_file = [save_folder dispersion_tag '.mat'];
-    save(save_file,vars_to_save{:});
+    save(save_file,vars_to_save{:},'-v7.3');
 end

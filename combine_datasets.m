@@ -1,26 +1,29 @@
 % Housekeeping
 clc; clear; close all;
 
-% Load dataset (only design or dispersion)
-data_type = "dispersion";
-dataset_tags = ["control_sigF02_sigL07","control_sigF02_sigL08"];
+% Describe datasets
+dataset_tags = {'control_sigF20_sigL07',...
+                'control_sigF20_sigL08'};
+data_type = 'dispersion';
 N_dataset = length(dataset_tags);
 load_files = strings(1,N_dataset);
+
+% Load datasets
 for i = 1:N_dataset
-    load_files(i) = "datasets/" + data_type + ...
-                    "/" + dataset_tags(i) + ".mat";
+    load_files(i) = [ 'datasets/' data_type '/' ...
+                      dataset_tags{i} '.mat' ];
 end
 
 % Storage location
-combined_tag = "control_sigF02_sigLCombo";
-save_file = "datasets/" + data_type + ...
-            "/" + combined_tag + ".mat";
+combined_tag = 'control_sigF20_sigLCombo';
+save_folder = [ 'datasets/' data_type '/' ];
+save_file = [ save_folder combined_tag '.mat' ];
 
 %%% load first dataset parameters
 load(load_files(1));
 dataset_index = ones(1,size(designs,4));
 design_params_arr(1) = design_params;
-if data_type == "dispersion"
+if strcmp(data_type,'dispersion')
     const_arr(1) = const;
 end
 
@@ -39,7 +42,7 @@ for i = 2:N_dataset
     designs = cat(4,designs,data_add.designs);
 
     %%% only if dispersion data included
-    if data_type == "dispersion"
+    if strcmp(data_type,'dispersion')
 
         %%% check design parameters
         if data_add.const.N_ele ~= const.N_ele
@@ -71,11 +74,12 @@ end
 
 % Save the results
 vars_to_save = {'dataset_index','design_params','design_params_arr','designs'};
-if data_type == "dispersion"
+if strcmp(data_type,'dispersion')
     vars_to_save = [vars_to_save,{'const','const_arr','MODULUS_DATA','DENSITY_DATA','POISSON_DATA','WAVEVECTOR_DATA','EIGENVALUE_DATA'}];
     if const.isSaveEigenvectors
         vars_to_save = [vars_to_save,{'EIGENVECTOR_DATA'}];
     end
 end
-save(save_file,vars_to_save{:});
+ars.createSafeFold(save_folder)
+save(save_file,vars_to_save{:},'-v7.3');
 

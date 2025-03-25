@@ -2,8 +2,8 @@
 clc; clear; close all;
 
 % Load design dataset
-dataset_tag = 'control';
-load_file = ['datasets/design/' dataset_tag '.mat'];
+dataset_tag = 'control_sigF20_sigL04';
+load_file = ['datasets/production/design/' dataset_tag '.mat'];
 load(load_file);
 
 % Pick dimensions of design tiling
@@ -26,3 +26,4 @@ for row = 1:grid(1)
     end
 end
 colormap('gray')
+

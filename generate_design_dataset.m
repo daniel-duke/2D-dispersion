@@ -89,5 +89,5 @@ if isSaveOutput == true
     vars_to_save = {'design_params','designs'};
     ars.createSafeFold(save_folder)
     save_file = [save_folder design_tag '.mat'];
-    save(save_file,vars_to_save{:});
+    save(save_file,vars_to_save{:},'-v7.3');
 end
