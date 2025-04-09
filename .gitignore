@@ -31,5 +31,6 @@ codegen/
 octave-workspace
 
 # Output
+datasets
 datasets/
 figures/
