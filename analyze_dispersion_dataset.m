@@ -1,21 +1,22 @@
-% Housekeeping
-clc; clear; close all;
+function analyze_dispersion_dataset(dispersion_tag)
+
+% Default arguments
+arguments
+    dispersion_tag char = 'control';
+end
 
 % Load dispersion dataset
-dispersion_tag = 'control_sigF20_sigLCombo';
-load_folder = 'datasets/production/dispersion/';
+load_folder = 'datasets/dispersion/';
 load_file = [load_folder dispersion_tag '.mat'];
 load(load_file)
 
 % Storage Location
-complete_tag = [dispersion_tag '_sr90'];
-save_folder = 'datasets/production/complete/';
+complete_tag = [ dispersion_tag '_sr90' ];
+save_folder = 'datasets/complete/';
 isSaveOutput = true;
 
-% Trimming parameters
-ideal_success_rate = 0;
-
-% Plotting parameters
+% Analysis parameters
+ideal_success_rate = 0.9;
 min_bandgap_width = 50;
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -29,7 +30,7 @@ end
 
 % Bandgap analyis
 [bandgap_widths,bandgap_locations] = calc_bandgaps(EIGENVALUE_DATA,min_bandgap_width);
-success_rate = sum(sum(bandgap_widths)>0)/length(bandgap_widths);
+success_rate = sum(sum(bandgap_widths)>0)/size(bandgap_widths,2);
 
 % Trimming
 if success_rate < ideal_success_rate
@@ -41,7 +42,10 @@ if success_rate < ideal_success_rate
     EIGENVALUE_DATA = EIGENVALUE_DATA(:,:,idxs_trimmed);
     bandgap_widths = bandgap_widths(:,idxs_trimmed);
     bandgap_locations = bandgap_locations(:,idxs_trimmed);
-    success_rate = sum(sum(bandgap_widths)>0)/length(bandgap_widths);
+    success_rate = sum(sum(bandgap_widths)>0)/size(bandgap_widths,2);
+    if exist('dataset_index','var')
+        dataset_index = dataset_index(idxs_trimmed);
+    end
 end
 
 % Save output
@@ -57,6 +61,8 @@ if isSaveOutput == true
     save_file = [save_folder complete_tag '.mat'];
     save(save_file,vars_to_save{:},'-v7.3');
 end 
+
+end
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

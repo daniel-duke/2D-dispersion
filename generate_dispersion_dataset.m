@@ -2,7 +2,7 @@ function generate_dispersion_dataset(design_tag, isDisplay)
 
 % Defaults arguments
 arguments
-    design_tag char = 'control_npix64';
+    design_tag char = 'control';
     isDisplay logical = true;
 end
 
@@ -12,7 +12,7 @@ load_file = [load_folder design_tag '.mat'];
 load(load_file);
 
 % Storage location
-dispersion_tag = design_tag;
+dispersion_tag = [design_tag '_contour'];
 save_folder = 'datasets/dispersion/';
 isSaveOutput = true;
 
@@ -57,7 +57,7 @@ const.poisson_max = 0.3;                    % 0.3   - Poisson's ratio of max mat
 const.t = 1;                                % Leave as 1 (irrelevant parameter for dynamics)
 
 % Symmetry and wavevector parameters
-isUseContour = false;
+isUseContour = true;
 symmetry_type = 'none';
 if isUseContour == false
     const.N_wv(1) = const.N_k;
@@ -182,6 +182,9 @@ if isSaveOutput == true
     vars_to_save = {'design_params','designs','const','MODULUS_DATA','DENSITY_DATA','POISSON_DATA','WAVEVECTOR_DATA','EIGENVALUE_DATA'};
     if const.isSaveEigenvectors
         vars_to_save = [vars_to_save,{'EIGENVECTOR_DATA'}];
+    end
+    if isUseContour == true
+        vars_to_save = [vars_to_save,{'contour_info'}];
     end
     if exist('dataset_index','var')
         vars_to_save = [vars_to_save,{'dataset_index','design_params_arr'}];
