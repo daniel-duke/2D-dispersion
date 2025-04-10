@@ -1,19 +1,21 @@
-function generate_dispersion_dataset(design_tag, isDisplay)
+function generate_dispersion_dataset(isDisplay, data_folder, design_tag, dispersion_tag)
 
 % Defaults arguments
 arguments
-    design_tag char = 'control';
-    isDisplay logical = true;
+    isDisplay logical = true;           % whether a display is available
+    data_folder char = 'datasets_mac';  % where to get and save data
+    design_tag char = 'control';        % name of input design dataset
+    dispersion_tag char = design_tag;   % name of output dispersion datset  
 end
 
 % Load design dataset
-load_folder = 'datasets/design/';
+load_folder = [data_folder '/design/'];
 load_file = [load_folder design_tag '.mat'];
 load(load_file);
 
 % Storage location
-dispersion_tag = [design_tag '_contour'];
-save_folder = 'datasets/dispersion/';
+save_folder = [data_folder '/dispersion/'];
+save_file = [save_folder dispersion_tag '.mat'];
 isSaveOutput = true;
 
 % Subsample the designs for faster debugging
@@ -35,10 +37,10 @@ const.N_k = 21;                             % 21 - number of wavevectors in x di
 const.N_eig = 6;                            % 6  - number of dispersion bands to comptue
 const.sigma_eig = 1;                        % leave this as 1 (eigensolver looks for eigenvalues around this value. Unless material properties get crazy (super high density, super low modulus), this should work fine)
 const.design_scale = 'linear';              % leave this as linear (scaling gradient between min and max material)
-const.isUseImprovement = true;              % Leave this as true (whether to use "VEC" matrices)
-const.isUseSecondImprovement = false;       % Leave this as false (whether to use "VEC_simplified" matrices)
-const.isUseParallel = true;                 % Leave this as true (parallelize dispersion loop; structure loop is already parallelized)
-const.isSaveEigenvectors = false;           % Leave this as false (whether to save the eigenvectors)
+const.isUseImprovement = true;              % leave this as true (whether to use "VEC" matrices)
+const.isUseSecondImprovement = false;       % leave this as false (whether to use "VEC_simplified" matrices)
+const.isUseParallel = true;                 % leave this as true (parallelize dispersion loop; structure loop is already parallelized)
+const.isSaveEigenvectors = false;           % leave this as false (whether to save the eigenvectors)
 
 % Dispersion2 flags
 const.isUseDispersion2 = false;
@@ -54,11 +56,11 @@ const.rho_min = 1e3;                        % 1e3   - [kg/m^3], density of min m
 const.rho_max = 8e3;                        % 8e3   - [kg/m^3], density of max material
 const.poisson_min = 0.3;                    % 0.3   - Poisson's ratio of min material
 const.poisson_max = 0.3;                    % 0.3   - Poisson's ratio of max mateiral
-const.t = 1;                                % Leave as 1 (irrelevant parameter for dynamics)
+const.t = 1;                                % leave as 1 (irrelevant parameter for dynamics)
 
-% Symmetry and wavevector parameters
-isUseContour = true;
-symmetry_type = 'none';
+% Wavevector parameters
+isUseContour = false;                       % usually false
+symmetry_type = 'none';                     % leave as none
 if isUseContour == false
     const.N_wv(1) = const.N_k;
     const.N_wv(2) = ceil(const.N_wv(1)/2);
@@ -190,6 +192,5 @@ if isSaveOutput == true
         vars_to_save = [vars_to_save,{'dataset_index','design_params_arr'}];
     end
     ars.createSafeFold(save_folder)
-    save_file = [save_folder dispersion_tag '.mat'];
     save(save_file,vars_to_save{:},'-v7.3');
 end

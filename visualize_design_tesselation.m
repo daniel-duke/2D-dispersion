@@ -3,7 +3,7 @@ clc; clear; close all;
 
 % Load design dataset
 dataset_tag = 'control';
-load_file = ['datasets/design/' dataset_tag '.mat'];
+load_file = ['datasets_mac/design/' dataset_tag '.mat'];
 load(load_file);
 
 % Pick dimensions of design tiling
@@ -24,7 +24,7 @@ for i = 1:design_params.N_pix
     end
 end
 
-% Plot the designs
+% Plot the tesselation
 fig = figure();
 ax = axes(fig);
 imagesc(design_plot)

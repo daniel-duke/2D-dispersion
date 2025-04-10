@@ -4,7 +4,7 @@ clc; clear; close all;
 % Load design dataset
 isContour = false;
 dataset_tag = 'control';
-load_file = ['datasets/dispersion/' dataset_tag '.mat'];
+load_file = ['datasets_mac/dispersion/' dataset_tag '.mat'];
 load(load_file);
 
 % Options

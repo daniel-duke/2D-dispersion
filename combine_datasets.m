@@ -18,7 +18,7 @@ load_files = strings(1,N_dataset);
 
 % Load datasets
 for i = 1:N_dataset
-    load_files(i) = [ 'datasets/production/' data_type '/' ...
+    load_files(i) = [ 'datasets_dcc/' data_type '/' ...
                       dataset_tags{i} '.mat' ];
 end
 

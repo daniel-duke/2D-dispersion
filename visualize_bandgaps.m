@@ -3,7 +3,7 @@ clc; clear; close all;
 
 % Load complete dataset
 complete_tag = 'control_N10000';
-load_folder = 'datasets/complete/';
+load_folder = 'datasets_mac/complete/';
 load_file = [load_folder complete_tag '.mat'];
 load(load_file)
 disp("Data loaded...")

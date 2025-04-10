@@ -1,22 +1,24 @@
-function analyze_dispersion_dataset(dispersion_tag)
+function analyze_dispersion_dataset(data_folder, dispersion_tag, complete_tag)
 
-% Default arguments
+% Defaults arguments
 arguments
-    dispersion_tag char = 'control';
+    data_folder char = 'datasets_mac';  % where to get and save data
+    dispersion_tag char = 'control';    % name of input design dataset
+    complete_tag char = dispersion_tag; % name of output dispersion datset  
 end
 
 % Load dispersion dataset
-load_folder = 'datasets/dispersion/';
+load_folder = [data_folder '/dispersion/'];
 load_file = [load_folder dispersion_tag '.mat'];
 load(load_file)
 
 % Storage Location
-complete_tag = [ dispersion_tag '_sr90' ];
-save_folder = 'datasets/complete/';
+save_folder = [data_folder '/complete/'];
+save_file = [save_folder complete_tag '.mat'];
 isSaveOutput = true;
 
 % Analysis parameters
-ideal_success_rate = 0.9;
+ideal_success_rate = 0;
 min_bandgap_width = 50;
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,7 +60,6 @@ if isSaveOutput == true
         vars_to_save = [vars_to_save,{'const_arr'}];
     end
     ars.createSafeFold(save_folder)
-    save_file = [save_folder complete_tag '.mat'];
     save(save_file,vars_to_save{:},'-v7.3');
 end 
 
