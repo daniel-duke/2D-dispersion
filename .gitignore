@@ -31,6 +31,6 @@ codegen/
 octave-workspace
 
 # Output
-datasets
-datasets/
+datasets_mac
+datasets_dcc
 figures/
