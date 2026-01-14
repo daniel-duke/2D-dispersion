@@ -30,6 +30,9 @@ codegen/
 # Octave session info
 octave-workspace
 
+# Apple
+.DS_Store
+
 # Output
 datasets_mac
 datasets_dcc
